@@ -62,6 +62,44 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
+		using Class = ballistics<model::point_mass, integrator::runge_kutta_4, environment::realistic, projectile::realistic>;
+		auto nb_class = nb::class_<Class>(m, "PMRK4RealisticEnvironmentRealisticProjectile").def(nb::init<>());
+		nb_class
+			.def_rw("integrator", &Class::integrator)
+			.def_rw("environment", &Class::environment)
+			.def_rw("projectile", &Class::projectile);
+		nb_class
+			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar>(&Class::compute_final_position, nb::const_))
+			.def("compute_final_position", nb::overload_cast<const vector3 &, const angles &, const vector3 &, const scalar, scalar>(&Class::compute_final_position, nb::const_))
+			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
+			.def("compute_trajectory", nb::overload_cast<const vector3 &, const angles &, const vector3 &, const scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
+			.def("optimize_launch_direction", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, uint32_t>(&Class::optimize_launch_direction, nb::const_))
+			.def("optimize_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, uint32_t>(&Class::optimize_launch_angles, nb::const_))
+			.def("solve_launch_direction", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, scalar, uint32_t>(&Class::solve_launch_direction, nb::const_))
+			.def("solve_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, scalar, uint32_t>(&Class::solve_launch_angles, nb::const_))
+			.def("solve_launch_direction_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_direction_and_time_of_flight, nb::const_))
+			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
+	}
+	{
+		using Class = ballistics<model::point_mass, integrator::runge_kutta_dormand_prince_5, environment::realistic, projectile::realistic>;
+		auto nb_class = nb::class_<Class>(m, "PMRKDP5RealisticEnvironmentRealisticProjectile").def(nb::init<>());
+		nb_class
+			.def_rw("integrator", &Class::integrator)
+			.def_rw("environment", &Class::environment)
+			.def_rw("projectile", &Class::projectile);
+		nb_class
+			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar>(&Class::compute_final_position, nb::const_))
+			.def("compute_final_position", nb::overload_cast<const vector3 &, const angles &, const vector3 &, const scalar, scalar>(&Class::compute_final_position, nb::const_))
+			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
+			.def("compute_trajectory", nb::overload_cast<const vector3 &, const angles &, const vector3 &, const scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
+			.def("optimize_launch_direction", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, uint32_t>(&Class::optimize_launch_direction, nb::const_))
+			.def("optimize_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, uint32_t>(&Class::optimize_launch_angles, nb::const_))
+			.def("solve_launch_direction", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, scalar, uint32_t>(&Class::solve_launch_direction, nb::const_))
+			.def("solve_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const scalar, scalar, scalar, uint32_t>(&Class::solve_launch_angles, nb::const_))
+			.def("solve_launch_direction_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_direction_and_time_of_flight, nb::const_))
+			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
+	}
+	{
 		using Class = integrator::runge_kutta_4;
 		auto nb_class = nb::class_<Class>(m, "RK4").def(nb::init<>());
 		nb_class

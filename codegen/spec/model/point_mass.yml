@@ -10,7 +10,7 @@ weapon_parameters:
     description: Initial projectile velocity at the muzzle. [m/s]
 
 environment_compatibilities:
-  - id: ENV_R
+  - id: ENV-R
 
 projectile_compatibilities:
-  - id: PROJ_R
+  - id: PROJ-R

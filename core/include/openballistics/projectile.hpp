@@ -1,0 +1,6 @@
+#ifndef OPENBALLISTICS_PROJECTILE_HPP
+#define OPENBALLISTICS_PROJECTILE_HPP
+
+#include "./projectile/realistic.hpp"
+
+#endif // OPENBALLISTICS_PROJECTILE_HPP

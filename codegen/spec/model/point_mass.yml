@@ -1,0 +1,16 @@
+id: MODEL-PM
+class_name: point_mass
+nb_class_name: PM
+description: Basic point mass trajectory model with aerodynamic drag.
+
+weapon_parameters:
+  - name: muzzle_velocity
+    type: scalar
+    qualifier: const
+    description: Initial projectile velocity at the muzzle. [m/s]
+
+environment_compatibilities:
+  - id: ENV_R
+
+projectile_compatibilities:
+  - id: PROJ_R

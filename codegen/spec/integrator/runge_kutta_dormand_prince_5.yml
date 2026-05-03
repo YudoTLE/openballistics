@@ -1,0 +1,29 @@
+id: INT-RKDP5
+class_name: runge_kutta_dormand_prince_5
+nb_class_name: RKDP5
+description: Adaptive-step fifth-order Runge-Kutta Dormand-Prince integrator.
+
+properties:
+  - name: absolute_tolerance
+    type: scalar
+    category: constant
+    default: 1e-6
+    description: Absolute error tolerance for step size control.
+
+  - name: relative_tolerance
+    type: scalar
+    category: constant
+    default: 1e-6
+    description: Relative error tolerance for step size control.
+
+  - name: max_step
+    type: scalar
+    category: constant
+    default: std::numeric_limits<scalar>::infinity()
+    description: Maximum allowed integration time step. [s]
+
+  - name: first_step
+    type: scalar
+    category: constant
+    default: 1e-3
+    description: Initial integration time step. [s]

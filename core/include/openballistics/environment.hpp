@@ -1,0 +1,6 @@
+#ifndef OPENBALLISTICS_ENVIRONMENT_HPP
+#define OPENBALLISTICS_ENVIRONMENT_HPP
+
+#include "./environment/realistic.hpp"
+
+#endif // OPENBALLISTICS_ENVIRONMENT_HPP

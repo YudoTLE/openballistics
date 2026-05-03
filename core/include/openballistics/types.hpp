@@ -1,0 +1,30 @@
+#ifndef OPENBALLISTICS_TYPES_HPP
+#define OPENBALLISTICS_TYPES_HPP
+
+#include <Eigen/Dense>
+
+#define OPENBALLISTICS_PRECISION_FLOAT       0
+#define OPENBALLISTICS_PRECISION_DOUBLE      1
+#define OPENBALLISTICS_PRECISION_LONG_DOUBLE 2
+
+#ifndef OPENBALLISTICS_SCALAR_PRECISION
+    #define OPENBALLISTICS_SCALAR_PRECISION OPENBALLISTICS_PRECISION_DOUBLE
+#endif
+
+namespace openballistics
+{
+#if OPENBALLISTICS_SCALAR_PRECISION == OPENBALLISTICS_PRECISION_FLOAT
+    using scalar = float;
+#elif OPENBALLISTICS_SCALAR_PRECISION == OPENBALLISTICS_PRECISION_DOUBLE
+    using scalar = double;
+#elif OPENBALLISTICS_SCALAR_PRECISION == OPENBALLISTICS_PRECISION_LONG_DOUBLE
+    using scalar = long double;
+#else
+    #error "Invalid OPENBALLISTICS_SCALAR_PRECISION value"
+#endif
+
+    using vector3 = Eigen::Matrix<scalar, 3, 1>;
+    using vectorx = Eigen::Matrix<scalar, Eigen::Dynamic, 1>;
+}
+
+#endif // OPENBALLISTICS_TYPES_HPP

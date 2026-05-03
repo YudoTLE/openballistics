@@ -1,0 +1,18 @@
+name: openballistics
+channels:
+- conda-forge
+dependencies:
+- python=3.13
+- cmake=4.2
+- ninja=1.13
+- cxx-compiler=1.11
+- boost=1.84
+- eigen=3.4
+- nanobind=2.10
+- pip
+- pip:
+  - build
+  - twine
+  - pytest
+  - numpy
+  - pyyaml

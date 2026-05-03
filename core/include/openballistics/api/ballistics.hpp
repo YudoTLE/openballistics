@@ -1,0 +1,775 @@
+#ifndef OPENBALLISTICS_API_BALLISTICS_HPP
+#define OPENBALLISTICS_API_BALLISTICS_HPP
+
+#include "../types.hpp"
+#include "../model.hpp"
+
+namespace openballistics::api::detail
+{
+    template <typename Derived, typename Model>
+    struct ballistics;
+
+#pragma region "CODEGEN MODEL-PM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+	template <typename Derived>
+	struct ballistics<Derived, model::point_mass<Derived>>
+	{
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				platform_velocity,
+				{muzzle_velocity},
+				time_of_flight);
+		}
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				vector3::Zero(),
+				{muzzle_velocity},
+				time_of_flight);
+		}
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				platform_velocity,
+				{muzzle_velocity},
+				time_of_flight);
+		}
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				vector3::Zero(),
+				{muzzle_velocity},
+				time_of_flight);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				platform_velocity,
+				{muzzle_velocity},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const scalar muzzle_velocity,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				vector3::Zero(),
+				{muzzle_velocity},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				platform_velocity,
+				{muzzle_velocity},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const scalar muzzle_velocity,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				vector3::Zero(),
+				{muzzle_velocity},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] vector3 optimize_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+				launch_position,
+				platform_velocity,
+				target_position,
+				{muzzle_velocity},
+				time_of_flight,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] vector3 optimize_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+				launch_position,
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity},
+				time_of_flight,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] angles optimize_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return angles::from_unit_direction(
+				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+					launch_position,
+					platform_velocity,
+					target_position,
+					{muzzle_velocity},
+					time_of_flight,
+					max_launch_direction_optimizer_iterations));
+		}
+		[[nodiscard]] angles optimize_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return angles::from_unit_direction(
+				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+					launch_position,
+					vector3::Zero(),
+					target_position,
+					{muzzle_velocity},
+					time_of_flight,
+					max_launch_direction_optimizer_iterations));
+		}
+		[[nodiscard]] std::optional<vector3> solve_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				platform_velocity,
+				target_position,
+				{muzzle_velocity},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<vector3> solve_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<angles> solve_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				platform_velocity,
+				target_position,
+				{muzzle_velocity},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+			if (!launch_direction.has_value())
+				return std::nullopt;
+			return angles::from_unit_direction(launch_direction.value());
+		}
+		[[nodiscard]] std::optional<angles> solve_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+			if (!launch_direction.has_value())
+				return std::nullopt;
+			return angles::from_unit_direction(launch_direction.value());
+		}
+		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				platform_velocity,
+				target_motion,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
+			const vector3 &launch_position,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				vector3::Zero(),
+				target_motion,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				platform_velocity,
+				target_motion,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+			if (!result.has_value())
+				return std::nullopt;
+			return std::make_pair(angles::from_unit_direction(result->first), result->second);
+		}
+		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
+			const vector3 &launch_position,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				vector3::Zero(),
+				target_motion,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+			if (!result.has_value())
+				return std::nullopt;
+			return std::make_pair(angles::from_unit_direction(result->first), result->second);
+		}
+	};
+#pragma endregion "CODEGEN MODEL-PM-API"
+
+#pragma region "CODEGEN MODEL-MPM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+	template <typename Derived>
+	struct ballistics<Derived, model::modified_point_mass<Derived>>
+	{
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				platform_velocity,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight);
+		}
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				vector3::Zero(),
+				{muzzle_velocity, rifling_twist},
+				time_of_flight);
+		}
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				platform_velocity,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight);
+		}
+		[[nodiscard]] vector3 compute_final_position(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight) const
+		{
+			return static_cast<const Derived *>(this)->compute_final_position_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				vector3::Zero(),
+				{muzzle_velocity, rifling_twist},
+				time_of_flight);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				platform_velocity,
+				{muzzle_velocity, rifling_twist},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				vector3::Zero(),
+				{muzzle_velocity, rifling_twist},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &platform_velocity,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				platform_velocity,
+				{muzzle_velocity, rifling_twist},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] std::vector<vector3> compute_trajectory(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar start_time,
+			const scalar end_time,
+			const scalar sample_interval = 0.2) const
+		{
+			return static_cast<const Derived *>(this)->compute_trajectory_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				vector3::Zero(),
+				{muzzle_velocity, rifling_twist},
+				start_time,
+				end_time,
+				sample_interval);
+		}
+		[[nodiscard]] vector3 optimize_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+				launch_position,
+				platform_velocity,
+				target_position,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] vector3 optimize_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+				launch_position,
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] angles optimize_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return angles::from_unit_direction(
+				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+					launch_position,
+					platform_velocity,
+					target_position,
+					{muzzle_velocity, rifling_twist},
+					time_of_flight,
+					max_launch_direction_optimizer_iterations));
+		}
+		[[nodiscard]] angles optimize_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return angles::from_unit_direction(
+				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
+					launch_position,
+					vector3::Zero(),
+					target_position,
+					{muzzle_velocity, rifling_twist},
+					time_of_flight,
+					max_launch_direction_optimizer_iterations));
+		}
+		[[nodiscard]] std::optional<vector3> solve_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				platform_velocity,
+				target_position,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<vector3> solve_launch_direction(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<angles> solve_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				platform_velocity,
+				target_position,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+			if (!launch_direction.has_value())
+				return std::nullopt;
+			return angles::from_unit_direction(launch_direction.value());
+		}
+		[[nodiscard]] std::optional<angles> solve_launch_angles(
+			const vector3 &launch_position,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
+				launch_position,
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity, rifling_twist},
+				time_of_flight,
+				miss_distance_threshold,
+				max_launch_direction_optimizer_iterations);
+			if (!launch_direction.has_value())
+				return std::nullopt;
+			return angles::from_unit_direction(launch_direction.value());
+		}
+		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				platform_velocity,
+				target_motion,
+				{muzzle_velocity, rifling_twist},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
+			const vector3 &launch_position,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				vector3::Zero(),
+				target_motion,
+				{muzzle_velocity, rifling_twist},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+		}
+		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &platform_velocity,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				platform_velocity,
+				target_motion,
+				{muzzle_velocity, rifling_twist},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+			if (!result.has_value())
+				return std::nullopt;
+			return std::make_pair(angles::from_unit_direction(result->first), result->second);
+		}
+		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
+			const vector3 &launch_position,
+			const std::function<vector3(scalar)> &target_motion,
+			const scalar muzzle_velocity,
+			const scalar rifling_twist,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const scalar segment_size = 0.5,
+			const uint32_t max_time_of_flight_optimizer_iterations = 30,
+			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+		{
+			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
+				launch_position,
+				vector3::Zero(),
+				target_motion,
+				{muzzle_velocity, rifling_twist},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				segment_size,
+				max_time_of_flight_optimizer_iterations,
+				max_launch_direction_optimizer_iterations);
+			if (!result.has_value())
+				return std::nullopt;
+			return std::make_pair(angles::from_unit_direction(result->first), result->second);
+		}
+	};
+#pragma endregion "CODEGEN MODEL-MPM-API"
+}
+
+#endif // OPENBALLISTICS_API_BALLISTICS_HPP

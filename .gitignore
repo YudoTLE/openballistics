@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.installed.cfg
+*.egg
+dist/
+build/
+*.whl
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+.pixi/
+
+# IDEs
+.vscode/
+.idea/
+
+# CMake
+.cmake/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+# Build directories
+build/
+
+# Compiled binaries
+*.exe
+*.dll
+*.dylib
+*.so
+*.pyd
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+
+# Environment files
+.env
+.envrc
+
+# Numba cache (from your __pycache__ listing)
+*.nbc
+*.nbi

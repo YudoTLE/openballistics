@@ -1,0 +1,41 @@
+id: ENV-R
+class_name: realistic
+nb_class_name: RealisticEnvironment
+description: A realistic environment model with physical atmospheric properties.
+
+properties:
+  - name: adiabatic_index
+    type: scalar
+    category: constant
+    default: 1.4
+    description: Ratio of specific heats for dry air.
+
+  - name: specific_gas_constant
+    type: scalar
+    category: constant
+    default: 287.058
+    description: Specific gas constant for dry air. [J/(kg·K)]
+
+  - name: temperature
+    type: scalar
+    category: field
+    default: 288.15
+    description: Ambient air temperature. [K]
+
+  - name: pressure
+    type: scalar
+    category: field
+    default: 101325.0
+    description: Ambient air pressure. [Pa]
+
+  - name: gravity
+    type: vector3
+    category: field
+    default: vector3(0.0, 0.0, -9.80665)
+    description: Gravitational acceleration vector. [m/s²]
+
+  - name: wind_velocity
+    type: vector3
+    category: field
+    default: vector3(0.0, 0.0, 0.0)
+    description: Ambient wind velocity vector. [m/s]

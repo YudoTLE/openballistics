@@ -1,0 +1,11 @@
+id: INT-RK4
+class_name: runge_kutta_4
+nb_class_name: RK4
+description: Fixed-step fourth-order Runge-Kutta integrator.
+
+properties:
+  - name: step
+    type: scalar
+    category: constant
+    default: 1e-3
+    description: Fixed integration time step. [s]

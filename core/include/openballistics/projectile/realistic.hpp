@@ -43,7 +43,7 @@ namespace openballistics::projectile
 					 1.06, 1.15, 2.20, 2.70, 3.10, 3.30, 3.50},
 					{2.48, 2.48, 2.54, 2.60, 2.76, 3.07,
 					 2.80, 2.72, 2.16, 1.93, 1.80, 1.77, 1.75})
-				.set_spin_damping_moment_coefficient(0.013)
+				.set_spin_damping_moment_coefficient(-0.0065)
 				.set_magnus_force_coefficient(0.0);
 		}
 

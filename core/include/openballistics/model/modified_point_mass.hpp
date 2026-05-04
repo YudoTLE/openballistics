@@ -67,7 +67,7 @@ namespace openballistics::model
             const scalar Ix = projectile.axial_moment_of_inertia();
 
             const scalar C_D = projectile.drag_force_coefficient(mach);
-            const scalar C_lp = projectile.spin_damping_moment_coefficient(mach);
+            const scalar C_spin = projectile.spin_damping_moment_coefficient(mach);
 
             const scalar K_drag = (0.5 * rho * V * S * C_D) / m;
 
@@ -82,13 +82,13 @@ namespace openballistics::model
                 if (std::abs(C_Ma) >= epsilon_cma)
                 {
                     const scalar C_La = projectile.lift_force_coefficient(mach);
-                    const scalar C_Npa = projectile.magnus_force_coefficient(mach);
+                    const scalar C_mag_f = projectile.magnus_force_coefficient(mach);
 
                     const scalar Ix_p = Ix * p;
                     const scalar denom = m * V2 * C_Ma;
 
                     const scalar K_lift = (Ix_p * C_La) / (denom * d);
-                    const scalar K_magnus = (0.5 * Ix_p * p * C_Npa) / denom;
+                    const scalar K_magnus = (Ix_p * p * C_mag_f) / denom;
 
                     W_g += K_magnus;
                     W_v -= K_magnus * (V_rel.dot(g) / V2);
@@ -98,7 +98,7 @@ namespace openballistics::model
 
             dxdt.head<3>() = v;
             dxdt.segment<3>(3) = (W_g * g) + (W_v * V_rel) + (W_c * V_rel.cross(g));
-            dxdt(6) = (-0.25 * rho * V * S * d * d * p * C_lp) / Ix;
+            dxdt(6) = (0.5 * rho * V * S * d * d * p * C_spin) / Ix;
         }
     };
 }

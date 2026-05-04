@@ -87,6 +87,14 @@ namespace openballistics::integrator
         }
 
     public:
+        runge_kutta_4()
+        {
+#pragma region "CODEGEN INT-RK4-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+			set_step(1e-3);
+#pragma endregion "CODEGEN INT-RK4-DEF"
+        }
+
+    public:
 #pragma region "CODEGEN INT-RK4-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		runge_kutta_4 &set_step(const scalar value)
 		{

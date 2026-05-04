@@ -92,6 +92,17 @@ namespace openballistics::integrator
         }
 
     public:
+        runge_kutta_dormand_prince_5()
+        {
+#pragma region "CODEGEN INT-RKDP5-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+			set_absolute_tolerance(1e-6);
+			set_relative_tolerance(1e-6);
+			set_max_step(std::numeric_limits<scalar>::infinity());
+			set_first_step(1e-3);
+#pragma endregion "CODEGEN INT-RKDP5-DEF"
+        }
+
+    public:
 #pragma region "CODEGEN INT-RKDP5-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		runge_kutta_dormand_prince_5 &set_absolute_tolerance(const scalar value)
 		{

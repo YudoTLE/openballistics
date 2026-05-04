@@ -1,3 +1,6 @@
+from .spec import Property
+
+
 def property_setter(
     *,
     name: str,
@@ -16,7 +19,7 @@ def property_setter(
         name=name,
         type=type,
         class_name=class_name,
-        prefix=base_indent,
+        base_indent=base_indent,
         indent=indent,
     )
 
@@ -34,7 +37,9 @@ def property_getter(
         "curve": _curve_property_getter,
         "field": _field_property_getter,
     }
-    return dispatch[category](name=name, type=type, prefix=base_indent, indent=indent)
+    return dispatch[category](
+        name=name, type=type, base_indent=base_indent, indent=indent
+    )
 
 
 def property_member(
@@ -49,11 +54,20 @@ def property_member(
         "curve": _curve_property_member,
         "field": _field_property_member,
     }
-    return dispatch[category](name=name, type=type, prefix=base_indent)
+    return dispatch[category](name=name, type=type, base_indent=base_indent)
+
+
+def property_default(
+    *,
+    properties: list[Property],
+    base_indent: str = "",
+) -> list[str]:
+    lines = [f"set_{p.name}({p.default});" for p in properties if p.default is not None]
+    return [base_indent + line for line in lines]
 
 
 def _constant_property_setter(
-    *, name: str, type: str, class_name: str, prefix: str, indent: str
+    *, name: str, type: str, class_name: str, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
     lines = [
@@ -64,11 +78,11 @@ def _constant_property_setter(
         f"{__}return *this;",
         f"}}",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
 def _constant_property_getter(
-    *, name: str, type: str, prefix: str, indent: str
+    *, name: str, type: str, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
     lines = [
@@ -78,19 +92,19 @@ def _constant_property_getter(
         f"{__}throw std::bad_optional_access{{}};",
         f"}}",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
-def _constant_property_member(*, name: str, type: str, prefix: str) -> list[str]:
+def _constant_property_member(*, name: str, type: str, base_indent: str) -> list[str]:
     lines = [
         f"bool m_{name}_source = 0;",
         f"{type} m_{name}_constant;",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
 def _curve_property_setter(
-    *, name: str, type: str, class_name: str, prefix: str, indent: str
+    *, name: str, type: str, class_name: str, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
     lines = [
@@ -127,11 +141,11 @@ def _curve_property_setter(
         f"{__}return *this;",
         f"}}",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
 def _curve_property_getter(
-    *, name: str, type: str, prefix: str, indent: str
+    *, name: str, type: str, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
     lines = [
@@ -148,10 +162,10 @@ def _curve_property_getter(
         f"{__}}}",
         f"}}",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
-def _curve_property_member(*, name: str, type: str, prefix: str) -> list[str]:
+def _curve_property_member(*, name: str, type: str, base_indent: str) -> list[str]:
     lines = [
         f"uint8_t m_{name}_source = 0;",
         f"{type} m_{name}_constant;",
@@ -162,11 +176,11 @@ def _curve_property_member(*, name: str, type: str, prefix: str) -> list[str]:
         f"scalar m_{name}_table_min;",
         f"scalar m_{name}_table_max;",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
 def _field_property_setter(
-    *, name: str, type: str, class_name: str, prefix: str, indent: str
+    *, name: str, type: str, class_name: str, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
     lines = [
@@ -213,11 +227,11 @@ def _field_property_setter(
         f"{__}return *this;",
         f"}}",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
 def _field_property_getter(
-    *, name: str, type: str, prefix: str, indent: str
+    *, name: str, type: str, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
     lines = [
@@ -236,10 +250,10 @@ def _field_property_getter(
         f"{__}}}",
         f"}}",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]
 
 
-def _field_property_member(*, name: str, type: str, prefix: str) -> list[str]:
+def _field_property_member(*, name: str, type: str, base_indent: str) -> list[str]:
     lines = [
         f"uint8_t m_{name}_source = 0;",
         f"{type} m_{name}_constant;",
@@ -250,4 +264,4 @@ def _field_property_member(*, name: str, type: str, prefix: str) -> list[str]:
         f"interpolator::lazy_linear<{type}> m_{name}_profile_interpolator;",
         f"interpolator::lazy_trilinear<{type}> m_{name}_field_property_interpolator;",
     ]
-    return [prefix + line for line in lines]
+    return [base_indent + line for line in lines]

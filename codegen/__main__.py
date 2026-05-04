@@ -107,8 +107,10 @@ def generate_integrator_core():
     global patches
 
     BASE_INDENT = "\t\t"
+    INDENT = "\t"
 
     for integrator_spec in integrator_specs:
+        DEFAULT_CODE = integrator_spec.id + "-DEF"
         SETTER_CODE = integrator_spec.id + "-SET"
         GETTER_CODE = integrator_spec.id + "-GET"
         MEMBER_CODE = integrator_spec.id + "-MEM"
@@ -117,6 +119,11 @@ def generate_integrator_core():
         getter_patch: list[str] = []
         member_patch: list[str] = []
 
+        default_patch = "\n".join(
+            property_default(
+                properties=integrator_spec.properties, base_indent=BASE_INDENT + INDENT
+            )
+        )
         for property in integrator_spec.properties:
             setter_patch.append(
                 "\n".join(
@@ -126,6 +133,7 @@ def generate_integrator_core():
                         category=property.category,
                         class_name=integrator_spec.class_name,
                         base_indent=BASE_INDENT,
+                        indent=INDENT,
                     )
                 )
             )
@@ -136,6 +144,7 @@ def generate_integrator_core():
                         type=property.type,
                         category=property.category,
                         base_indent=BASE_INDENT,
+                        indent=INDENT,
                     )
                 )
             )
@@ -151,6 +160,7 @@ def generate_integrator_core():
             )
 
         patches += [
+            (DEFAULT_CODE, default_patch),
             (SETTER_CODE, "\n\n".join(setter_patch)),
             (GETTER_CODE, "\n\n".join(getter_patch)),
             (MEMBER_CODE, "\n\n".join(member_patch)),
@@ -161,8 +171,10 @@ def generate_environemnt_core():
     global patches
 
     BASE_INDENT = "\t\t"
+    INDENT = "\t"
 
     for environment_spec in environment_specs:
+        DEFAULT_CODE = environment_spec.id + "-DEF"
         SETTER_CODE = environment_spec.id + "-SET"
         GETTER_CODE = environment_spec.id + "-GET"
         MEMBER_CODE = environment_spec.id + "-MEM"
@@ -171,6 +183,11 @@ def generate_environemnt_core():
         getter_patch: list[str] = []
         member_patch: list[str] = []
 
+        default_patch = "\n".join(
+            property_default(
+                properties=environment_spec.properties, base_indent=BASE_INDENT + INDENT
+            )
+        )
         for property in environment_spec.properties:
             setter_patch.append(
                 "\n".join(
@@ -180,6 +197,7 @@ def generate_environemnt_core():
                         category=property.category,
                         class_name=environment_spec.class_name,
                         base_indent=BASE_INDENT,
+                        indent=INDENT,
                     )
                 )
             )
@@ -190,6 +208,7 @@ def generate_environemnt_core():
                         type=property.type,
                         category=property.category,
                         base_indent=BASE_INDENT,
+                        indent=INDENT,
                     )
                 )
             )
@@ -205,6 +224,7 @@ def generate_environemnt_core():
             )
 
         patches += [
+            (DEFAULT_CODE, default_patch),
             (SETTER_CODE, "\n\n".join(setter_patch)),
             (GETTER_CODE, "\n\n".join(getter_patch)),
             (MEMBER_CODE, "\n\n".join(member_patch)),
@@ -215,9 +235,10 @@ def generate_projectile_core():
     global patches
 
     BASE_INDENT = "\t\t"
+    INDENT = "\t"
 
     for projectile_spec in projectile_specs:
-
+        DEFAULT_CODE = projectile_spec.id + "-DEF"
         SETTER_CODE = projectile_spec.id + "-SET"
         GETTER_CODE = projectile_spec.id + "-GET"
         MEMBER_CODE = projectile_spec.id + "-MEM"
@@ -226,6 +247,11 @@ def generate_projectile_core():
         getter_patch: list[str] = []
         member_patch: list[str] = []
 
+        default_patch = "\n".join(
+            property_default(
+                properties=projectile_spec.properties, base_indent=BASE_INDENT + INDENT
+            )
+        )
         for property in projectile_spec.properties:
             setter_patch.append(
                 "\n".join(
@@ -235,6 +261,7 @@ def generate_projectile_core():
                         category=property.category,
                         class_name=projectile_spec.class_name,
                         base_indent=BASE_INDENT,
+                        indent=INDENT,
                     )
                 )
             )
@@ -245,6 +272,7 @@ def generate_projectile_core():
                         type=property.type,
                         category=property.category,
                         base_indent=BASE_INDENT,
+                        indent=INDENT,
                     )
                 )
             )
@@ -260,6 +288,7 @@ def generate_projectile_core():
             )
 
         patches += [
+            (DEFAULT_CODE, default_patch),
             (SETTER_CODE, "\n\n".join(setter_patch)),
             (GETTER_CODE, "\n\n".join(getter_patch)),
             (MEMBER_CODE, "\n\n".join(member_patch)),

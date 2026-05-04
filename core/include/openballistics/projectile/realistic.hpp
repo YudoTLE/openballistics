@@ -15,6 +15,14 @@ namespace openballistics::projectile
 {
     class realistic
     {
+	public:
+		realistic()
+        {
+#pragma region "CODEGEN PROJ-R-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+
+#pragma endregion "CODEGEN PROJ-R-DEF"
+        }
+
     public:
 #pragma region "CODEGEN PROJ-R-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		realistic &set_mass(const scalar value)

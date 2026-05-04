@@ -82,6 +82,19 @@ namespace openballistics::environment
                 .set_wind_velocity(vector3(0.0, 0.0, 0.0));
         }
 
+	public:
+	realistic()
+        {
+#pragma region "CODEGEN ENV-R-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+			set_adiabatic_index(1.4);
+			set_specific_gas_constant(287.058);
+			set_temperature(288.15);
+			set_pressure(101325.0);
+			set_gravity(vector3(0.0, 0.0, -9.80665));
+			set_wind_velocity(vector3(0.0, 0.0, 0.0));
+#pragma endregion "CODEGEN ENV-R-DEF"
+        }
+
     public:
 #pragma region "CODEGEN ENV-R-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		realistic &set_adiabatic_index(const scalar value)

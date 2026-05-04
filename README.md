@@ -24,11 +24,6 @@
 
 ---
 
-## Dependencies
-
-- **Eigen3**
-- **Boost**
-
 ## Contributors
 
 <a href="https://github.com/YudoTLE/openballistics/graphs/contributors">

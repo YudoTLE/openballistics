@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ._core import RK4 as _RK4, RKDP5 as _RKDP5# type: ignore[reportMissingModuleSource]
+from ._core import RK4 as _RK4, RKDP5 as _RKDP5# type: ignore
 
 
 class Integrator:

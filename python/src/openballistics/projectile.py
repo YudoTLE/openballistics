@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import cast
 
-from ._core import RealisticProjectile as _RealisticProjectile  # type: ignore[reportMissingModuleSource]
+from ._core import RealisticProjectile as _RealisticProjectile  # type: ignore
 from .types import Interpolated, Table
 
 _ScalarCurve = Callable[[float], float]

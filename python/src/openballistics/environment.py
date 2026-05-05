@@ -6,7 +6,7 @@ from typing import cast
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-from ._core import RealisticEnvironment as _RealisticEnvironment  # type: ignore[reportMissingModuleSource]
+from ._core import RealisticEnvironment as _RealisticEnvironment  # type: ignore
 from .types import Interpolated
 
 _Vec3 = NDArray[np.float64]

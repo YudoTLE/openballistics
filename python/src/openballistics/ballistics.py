@@ -10,7 +10,7 @@ from .integrator import RK4, RKDP5
 from .environment import RealisticEnvironment
 from .projectile import RealisticProjectile
 
-from ._core import (  # type: ignore[reportMissingModuleSource]
+from ._core import (  # type: ignore
     Angles,
     PMRK4RealisticEnvironmentRealisticProjectile as _PMRK4RealisticEnvironmentRealisticProjectile,
     PMRKDP5RealisticEnvironmentRealisticProjectile as _PMRKDP5RealisticEnvironmentRealisticProjectile,

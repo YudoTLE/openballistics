@@ -13,7 +13,7 @@ _Vec3Curve = Callable[[float], _Vec3]
 _Vec3Field = Callable[[_Vec3], _Vec3]
 
 
-class Interpolated:
+class Interpolator:
     def __init__(
         self, fn: Union[_ScalarCurve, _ScalarField, _Vec3Curve, _Vec3Field], step: float
     ) -> None:

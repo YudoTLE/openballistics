@@ -4,7 +4,7 @@ from collections.abc import Callable
 from typing import cast
 
 from ._core import RealisticProjectile as _RealisticProjectile  # type: ignore
-from .types import Interpolated, Table
+from .types import Interpolator, Table
 
 _ScalarCurve = Callable[[float], float]
 
@@ -24,19 +24,19 @@ class RealisticProjectile(Projectile):
         reference_area: float | None = None,
         axial_moment_of_inertia: float | None = None,
         drag_force_coefficient: (
-            float | _ScalarCurve | Interpolated | Table | None
+            float | _ScalarCurve | Interpolator | Table | None
         ) = None,
         lift_force_coefficient: (
-            float | _ScalarCurve | Interpolated | Table | None
+            float | _ScalarCurve | Interpolator | Table | None
         ) = None,
         overturning_moment_coefficient: (
-            float | _ScalarCurve | Interpolated | Table | None
+            float | _ScalarCurve | Interpolator | Table | None
         ) = None,
         spin_damping_moment_coefficient: (
-            float | _ScalarCurve | Interpolated | Table | None
+            float | _ScalarCurve | Interpolator | Table | None
         ) = None,
         magnus_force_coefficient: (
-            float | _ScalarCurve | Interpolated | Table | None
+            float | _ScalarCurve | Interpolator | Table | None
         ) = None,
     ) -> None:
         self._core = _RealisticProjectile()
@@ -78,12 +78,12 @@ class RealisticProjectile(Projectile):
     def _set_scalar_coefficient(
         self,
         setter: str,
-        value: float | _ScalarCurve | Interpolated | Table,
+        value: float | _ScalarCurve | Interpolator | Table,
     ) -> None:
         fn = getattr(self._core, setter)
         if isinstance(value, Table):
             fn(value.keys, value.values)
-        elif isinstance(value, Interpolated):
+        elif isinstance(value, Interpolator):
             fn(cast(_ScalarCurve, value.fn), value.step)
         elif isinstance(value, (int, float)):
             fn(float(value))
@@ -92,7 +92,7 @@ class RealisticProjectile(Projectile):
 
     def set_drag_force_coefficient(
         self,
-        value: float | _ScalarCurve | Interpolated | Table,
+        value: float | _ScalarCurve | Interpolator | Table,
         /,
     ) -> RealisticProjectile:
         self._set_scalar_coefficient("set_drag_force_coefficient", value)
@@ -100,7 +100,7 @@ class RealisticProjectile(Projectile):
 
     def set_lift_force_coefficient(
         self,
-        value: float | _ScalarCurve | Interpolated | Table,
+        value: float | _ScalarCurve | Interpolator | Table,
         /,
     ) -> RealisticProjectile:
         self._set_scalar_coefficient("set_lift_force_coefficient", value)
@@ -108,7 +108,7 @@ class RealisticProjectile(Projectile):
 
     def set_overturning_moment_coefficient(
         self,
-        value: float | _ScalarCurve | Interpolated | Table,
+        value: float | _ScalarCurve | Interpolator | Table,
         /,
     ) -> RealisticProjectile:
         self._set_scalar_coefficient("set_overturning_moment_coefficient", value)
@@ -116,7 +116,7 @@ class RealisticProjectile(Projectile):
 
     def set_spin_damping_moment_coefficient(
         self,
-        value: float | _ScalarCurve | Interpolated | Table,
+        value: float | _ScalarCurve | Interpolator | Table,
         /,
     ) -> RealisticProjectile:
         self._set_scalar_coefficient("set_spin_damping_moment_coefficient", value)
@@ -124,7 +124,7 @@ class RealisticProjectile(Projectile):
 
     def set_magnus_force_coefficient(
         self,
-        value: float | _ScalarCurve | Interpolated | Table,
+        value: float | _ScalarCurve | Interpolator | Table,
         /,
     ) -> RealisticProjectile:
         self._set_scalar_coefficient("set_magnus_force_coefficient", value)

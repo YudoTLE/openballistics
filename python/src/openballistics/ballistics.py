@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from typing import overload
+from typing import overload, Literal
 
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
@@ -24,22 +24,34 @@ _Vec3 = NDArray[np.float64]
 class PointMassBallistics:
     def __init__(
         self,
-        environment: RealisticEnvironment,
-        projectile: RealisticProjectile,
-        integrator: RK4 | RKDP5,
+        *,
+        integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
+        environment: RealisticEnvironment | Literal["realistic"] = "realistic",
+        projectile: RealisticProjectile | Literal["realistic"] = "realistic",
     ) -> None:
+        if integrator == "rk4":
+            integrator = RK4()
+        elif integrator == "rkdp5":
+            integrator = RKDP5()
+        if environment == "realistic":
+            environment = RealisticEnvironment()
+        if projectile == "realistic":
+            projectile = RealisticProjectile()
+
         if isinstance(integrator, RK4):
             self._core = _PMRK4RealisticEnvironmentRealisticProjectile()
-            self._core.environment = environment._core  # type: ignore[reportPrivateUsage]
-            self._core.projectile = projectile._core  # type: ignore[reportPrivateUsage]
-            self._core.integrator = integrator._core  # type: ignore[reportPrivateUsage]
-        elif isinstance(integrator, RKDP5):  # type: ignore[reportUnnecessaryIsInstance]
+        elif isinstance(integrator, RKDP5):  # type: ignore
             self._core = _PMRKDP5RealisticEnvironmentRealisticProjectile()
-            self._core.environment = environment._core  # type: ignore[reportPrivateUsage]
-            self._core.projectile = projectile._core  # type: ignore[reportPrivateUsage]
-            self._core.integrator = integrator._core  # type: ignore[reportPrivateUsage]
         else:
             raise TypeError("Unsupported integrator")
+        if isinstance(environment, RealisticEnvironment):  # type: ignore
+            self._core.environment = environment  # type: ignore
+        else:
+            raise TypeError("Unsupported environment")
+        if isinstance(projectile, RealisticProjectile):  # type: ignore
+            self._core.projectile = projectile  # type: ignore
+        else:
+            raise TypeError("Unsupported projectile")
 
     @overload
     def compute_final_position(
@@ -288,22 +300,34 @@ class PointMassBallistics:
 class ModifiedPointMassBallistics:
     def __init__(
         self,
-        environment: RealisticEnvironment,
-        projectile: RealisticProjectile,
-        integrator: RK4 | RKDP5,
+        *,
+        integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
+        environment: RealisticEnvironment | Literal["realistic"] = "realistic",
+        projectile: RealisticProjectile | Literal["realistic"] = "realistic",
     ) -> None:
+        if integrator == "rk4":
+            integrator = RK4()
+        elif integrator == "rkdp5":
+            integrator = RKDP5()
+        if environment == "realistic":
+            environment = RealisticEnvironment()
+        if projectile == "realistic":
+            projectile = RealisticProjectile()
+
         if isinstance(integrator, RK4):
             self._core = _MPMRK4RealisticEnvironmentRealisticProjectile()
-            self._core.environment = environment._core  # type: ignore[reportPrivateUsage]
-            self._core.projectile = projectile._core  # type: ignore[reportPrivateUsage]
-            self._core.integrator = integrator._core  # type: ignore[reportPrivateUsage]
-        elif isinstance(integrator, RKDP5):  # type: ignore[reportUnnecessaryIsInstance]
+        elif isinstance(integrator, RKDP5):  # type: ignore
             self._core = _MPMRKDP5RealisticEnvironmentRealisticProjectile()
-            self._core.environment = environment._core  # type: ignore[reportPrivateUsage]
-            self._core.projectile = projectile._core  # type: ignore[reportPrivateUsage]
-            self._core.integrator = integrator._core  # type: ignore[reportPrivateUsage]
         else:
             raise TypeError("Unsupported integrator")
+        if isinstance(environment, RealisticEnvironment):  # type: ignore
+            self._core.environment = environment  # type: ignore
+        else:
+            raise TypeError("Unsupported environment")
+        if isinstance(projectile, RealisticProjectile):  # type: ignore
+            self._core.projectile = projectile  # type: ignore
+        else:
+            raise TypeError("Unsupported projectile")
 
     @overload
     def compute_final_position(

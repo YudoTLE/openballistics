@@ -207,4 +207,13 @@ NB_MODULE(_core, m)
 			.def("magnus_force_coefficient", &Class::magnus_force_coefficient);
 	}
 #pragma endregion "CODEGEN BIND"
+
+	{
+		using Class = environment::realistic;
+		nb::borrow<nb::class_<Class>>(nb::type<Class>()).def_static("isa", &Class::isa);
+	}
+	{
+		using Class = projectile::realistic;
+		nb::borrow<nb::class_<Class>>(nb::type<Class>()).def_static("m56a3", &Class::m56a3);
+	}
 }

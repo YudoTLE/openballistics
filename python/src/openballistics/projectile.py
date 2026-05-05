@@ -156,3 +156,9 @@ class RealisticProjectile(Projectile):
 
     def magnus_force_coefficient(self, mach: float, /) -> float:
         return self._core.magnus_force_coefficient(mach)
+
+    @staticmethod
+    def m56a3() -> RealisticProjectile:
+        projectile = RealisticProjectile.__new__(RealisticProjectile)
+        projectile._core = _RealisticProjectile.m56a3()
+        return projectile

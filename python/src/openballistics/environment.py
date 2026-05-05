@@ -132,3 +132,9 @@ class RealisticEnvironment(Environment):
 
     def wind_velocity(self, position: ArrayLike, /) -> _Vec3:
         return self._core.wind_velocity(np.asarray(position, dtype=np.float64))
+
+    @staticmethod
+    def isa() -> RealisticEnvironment:
+        environment = RealisticEnvironment.__new__(RealisticEnvironment)
+        environment._core = _RealisticEnvironment.isa()
+        return environment

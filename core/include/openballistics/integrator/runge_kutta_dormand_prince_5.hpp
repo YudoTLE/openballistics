@@ -9,7 +9,7 @@
 
 namespace openballistics
 {
-    template <template <typename> class, typename, typename, typename>
+    template <template <typename> class, typename, typename>
     class ballistics;
 }
 
@@ -17,7 +17,7 @@ namespace openballistics::integrator
 {
     class runge_kutta_dormand_prince_5
     {
-        template <template <typename> class, typename, typename, typename>
+        template <template <typename> class, typename, typename>
         friend class openballistics::ballistics;
 
     private:

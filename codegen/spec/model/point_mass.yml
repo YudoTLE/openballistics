@@ -9,8 +9,5 @@ weapon_parameters:
     qualifier: const
     description: Initial projectile velocity at the muzzle. [m/s]
 
-environment_compatibilities:
-  - id: ENV-R
-
 projectile_compatibilities:
   - id: PROJ-R

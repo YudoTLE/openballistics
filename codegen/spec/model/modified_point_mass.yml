@@ -14,8 +14,5 @@ weapon_parameters:
     qualifier: const
     description: Barrel rifling twist rate. [m/turn]
 
-environment_compatibilities:
-  - id: ENV-R
-
 projectile_compatibilities:
   - id: PROJ-R

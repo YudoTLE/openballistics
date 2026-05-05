@@ -4,6 +4,7 @@
 #include "./types.hpp"
 #include "./numbers.hpp"
 #include "./angles.hpp"
+#include "./environment.hpp"
 #include "./api/ballistics.hpp"
 #include <unsupported/Eigen/LevenbergMarquardt>
 #include <boost/math/tools/roots.hpp>
@@ -21,15 +22,14 @@ namespace openballistics
     template <
         template <typename> class Model,
         typename Integrator,
-        typename Environment,
         typename Projectile>
-    class ballistics : public Model<ballistics<Model, Integrator, Environment, Projectile>>,
+    class ballistics : public Model<ballistics<Model, Integrator, Projectile>>,
                        public api::detail::ballistics<
-                           ballistics<Model, Integrator, Environment, Projectile>,
-                           Model<ballistics<Model, Integrator, Environment, Projectile>>>
+                           ballistics<Model, Integrator, Projectile>,
+                           Model<ballistics<Model, Integrator, Projectile>>>
     {
     public:
-        using model = Model<ballistics<Model, Integrator, Environment, Projectile>>;
+        using model = Model<ballistics<Model, Integrator, Projectile>>;
         using typename model::state;
         using typename model::weapon_parameters;
 
@@ -38,7 +38,7 @@ namespace openballistics
 
     public:
         Integrator integrator;
-        Environment environment;
+        environment environment;
         Projectile projectile;
 
     private:

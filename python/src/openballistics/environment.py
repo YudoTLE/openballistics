@@ -6,7 +6,7 @@ from typing import cast
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-from ._core import RealisticEnvironment as _RealisticEnvironment  # type: ignore
+from ._core import Environment as _Environment  # type: ignore
 from .types import Interpolator
 
 _Vec3 = NDArray[np.float64]
@@ -16,11 +16,7 @@ _Vec3Profile = Callable[[float], _Vec3]
 _Vec3Field = Callable[[_Vec3], _Vec3]
 
 
-class Environment:
-    pass
-
-
-class RealisticEnvironment(Environment):
+class Environment():
     def __init__(
         self,
         *,
@@ -33,7 +29,7 @@ class RealisticEnvironment(Environment):
             ArrayLike | _Vec3Profile | _Vec3Field | Interpolator | None
         ) = None,
     ) -> None:
-        self._core = _RealisticEnvironment()
+        self._core = _Environment()
         if adiabatic_index is not None:
             self.set_adiabatic_index(adiabatic_index)
         if specific_gas_constant is not None:
@@ -47,11 +43,11 @@ class RealisticEnvironment(Environment):
         if wind_velocity is not None:
             self.set_wind_velocity(wind_velocity)
 
-    def set_adiabatic_index(self, value: float, /) -> RealisticEnvironment:
+    def set_adiabatic_index(self, value: float, /) -> Environment:
         self._core.set_adiabatic_index(value)
         return self
 
-    def set_specific_gas_constant(self, value: float, /) -> RealisticEnvironment:
+    def set_specific_gas_constant(self, value: float, /) -> Environment:
         self._core.set_specific_gas_constant(value)
         return self
 
@@ -59,7 +55,7 @@ class RealisticEnvironment(Environment):
         self,
         value: float | _ScalarProfile | _ScalarField | Interpolator,
         /,
-    ) -> RealisticEnvironment:
+    ) -> Environment:
         if isinstance(value, Interpolator):
             self._core.set_temperature(
                 cast(_ScalarProfile | _ScalarField, value.fn), value.step
@@ -74,7 +70,7 @@ class RealisticEnvironment(Environment):
         self,
         value: float | _ScalarProfile | _ScalarField | Interpolator,
         /,
-    ) -> RealisticEnvironment:
+    ) -> Environment:
         if isinstance(value, Interpolator):
             self._core.set_pressure(
                 cast(_ScalarProfile | _ScalarField, value.fn), value.step
@@ -89,7 +85,7 @@ class RealisticEnvironment(Environment):
         self,
         value: ArrayLike | _Vec3Profile | _Vec3Field | Interpolator,
         /,
-    ) -> RealisticEnvironment:
+    ) -> Environment:
         if isinstance(value, Interpolator):
             self._core.set_gravity(
                 cast(_Vec3Profile | _Vec3Field, value.fn), value.step
@@ -104,7 +100,7 @@ class RealisticEnvironment(Environment):
         self,
         value: ArrayLike | _Vec3Profile | _Vec3Field | Interpolator,
         /,
-    ) -> RealisticEnvironment:
+    ) -> Environment:
         if isinstance(value, Interpolator):
             self._core.set_wind_velocity(
                 cast(_Vec3Profile | _Vec3Field, value.fn), value.step
@@ -134,7 +130,7 @@ class RealisticEnvironment(Environment):
         return self._core.wind_velocity(np.asarray(position, dtype=np.float64))
 
     @staticmethod
-    def isa() -> RealisticEnvironment:
-        environment = RealisticEnvironment.__new__(RealisticEnvironment)
-        environment._core = _RealisticEnvironment.isa()
+    def isa() -> Environment:
+        environment = Environment.__new__(Environment)
+        environment._core = _Environment.isa()
         return environment

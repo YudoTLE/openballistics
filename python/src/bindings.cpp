@@ -24,8 +24,8 @@ NB_MODULE(_core, m)
 
 #pragma region "CODEGEN BIND" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	{
-		using Class = ballistics<model::modified_point_mass, integrator::runge_kutta_4, environment::realistic, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "MPMRK4RealisticEnvironmentRealisticProjectile").def(nb::init<>());
+		using Class = ballistics<model::modified_point_mass, integrator::runge_kutta_4, projectile::realistic>;
+		auto nb_class = nb::class_<Class>(m, "MPMRK4RealisticProjectile").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -43,8 +43,8 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
-		using Class = ballistics<model::modified_point_mass, integrator::runge_kutta_dormand_prince_5, environment::realistic, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "MPMRKDP5RealisticEnvironmentRealisticProjectile").def(nb::init<>());
+		using Class = ballistics<model::modified_point_mass, integrator::runge_kutta_dormand_prince_5, projectile::realistic>;
+		auto nb_class = nb::class_<Class>(m, "MPMRKDP5RealisticProjectile").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -62,8 +62,8 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
-		using Class = ballistics<model::point_mass, integrator::runge_kutta_4, environment::realistic, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "PMRK4RealisticEnvironmentRealisticProjectile").def(nb::init<>());
+		using Class = ballistics<model::point_mass, integrator::runge_kutta_4, projectile::realistic>;
+		auto nb_class = nb::class_<Class>(m, "PMRK4RealisticProjectile").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -81,8 +81,8 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
-		using Class = ballistics<model::point_mass, integrator::runge_kutta_dormand_prince_5, environment::realistic, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "PMRKDP5RealisticEnvironmentRealisticProjectile").def(nb::init<>());
+		using Class = ballistics<model::point_mass, integrator::runge_kutta_dormand_prince_5, projectile::realistic>;
+		auto nb_class = nb::class_<Class>(m, "PMRKDP5RealisticProjectile").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -123,8 +123,8 @@ NB_MODULE(_core, m)
 			.def("first_step", &Class::first_step);
 	}
 	{
-		using Class = environment::realistic;
-		auto nb_class = nb::class_<Class>(m, "RealisticEnvironment").def(nb::init<>());
+		using Class = environment;
+		auto nb_class = nb::class_<Class>(m, "Environment").def(nb::init<>());
 		nb_class
 			.def("set_adiabatic_index", &Class::set_adiabatic_index)
 			.def("adiabatic_index", &Class::adiabatic_index);
@@ -209,7 +209,7 @@ NB_MODULE(_core, m)
 #pragma endregion "CODEGEN BIND"
 
 	{
-		using Class = environment::realistic;
+		using Class = environment;
 		nb::borrow<nb::class_<Class>>(nb::type<Class>()).def_static("isa", &Class::isa);
 	}
 	{

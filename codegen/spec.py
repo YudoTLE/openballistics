@@ -31,7 +31,6 @@ class BaseSpec:
 @dataclass(kw_only=True)
 class ModelSpec(BaseSpec):
     weapon_parameters: list[Parameter]
-    compatible_environment_ids: list[str]
     compatible_projectile_ids: list[str]
 
 
@@ -66,9 +65,6 @@ def load_model_specs(dir: Path) -> list[ModelSpec]:
                 weapon_parameters=[
                     Parameter(**p) for p in data.get("weapon_parameters", [])
                 ],
-                compatible_environment_ids=[
-                    e["id"] for e in data.get("environment_compatibilities", [])
-                ],
                 compatible_projectile_ids=[
                     p["id"] for p in data.get("projectile_compatibilities", [])
                 ],
@@ -96,23 +92,16 @@ def load_integrator_specs(dir: Path) -> list[IntegratorSpec]:
     return specs
 
 
-def load_environment_specs(dir: Path) -> list[EnvironmentSpec]:
-    specs: list[EnvironmentSpec] = []
-    if not dir.exists():
-        return specs
-    for yaml_file in dir.glob("*.yml"):
-        with open(yaml_file, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-        specs.append(
-            EnvironmentSpec(
-                id=data["id"],
-                class_name=data["class_name"],
-                nb_class_name=data["nb_class_name"],
-                description=data.get("description"),
-                properties=[Property(**prop) for prop in data.get("properties", [])],
-            )
-        )
-    return specs
+def load_environment_spec(file: Path) -> EnvironmentSpec:
+    with open(file, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return EnvironmentSpec(
+        id=data["id"],
+        class_name=data["class_name"],
+        nb_class_name=data["nb_class_name"],
+        description=data.get("description"),
+        properties=[Property(**prop) for prop in data.get("properties", [])],
+    )
 
 
 def load_projectile_specs(dir: Path) -> list[ProjectileSpec]:

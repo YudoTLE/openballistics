@@ -1,7 +1,7 @@
-id: ENV-R
-class_name: realistic
-nb_class_name: RealisticEnvironment
-description: A realistic environment model with physical atmospheric properties.
+id: ENV
+class_name: environment
+nb_class_name: Environment
+description: Environment model with physical atmospheric properties.
 
 properties:
   - name: adiabatic_index

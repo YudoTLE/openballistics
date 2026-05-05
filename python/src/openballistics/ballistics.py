@@ -7,15 +7,15 @@ import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
 from .integrator import RK4, RKDP5
-from .environment import RealisticEnvironment
+from .environment import Environment
 from .projectile import RealisticProjectile
 
 from ._core import (  # type: ignore
     Angles,
-    PMRK4RealisticEnvironmentRealisticProjectile as _PMRK4RealisticEnvironmentRealisticProjectile,
-    PMRKDP5RealisticEnvironmentRealisticProjectile as _PMRKDP5RealisticEnvironmentRealisticProjectile,
-    MPMRK4RealisticEnvironmentRealisticProjectile as _MPMRK4RealisticEnvironmentRealisticProjectile,
-    MPMRKDP5RealisticEnvironmentRealisticProjectile as _MPMRKDP5RealisticEnvironmentRealisticProjectile,
+    PMRK4RealisticProjectile as _PMRK4RealisticProjectile,
+    PMRKDP5RealisticProjectile as _PMRKDP5RealisticProjectile,
+    MPMRK4RealisticProjectile as _MPMRK4RealisticProjectile,
+    MPMRKDP5RealisticProjectile as _MPMRKDP5RealisticProjectile,
 )
 
 _Vec3 = NDArray[np.float64]
@@ -26,25 +26,27 @@ class PointMassBallistics:
         self,
         *,
         integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
-        environment: RealisticEnvironment | Literal["realistic"] = "realistic",
+        environment: Environment | Literal["isa"] | None = None,
         projectile: RealisticProjectile | Literal["realistic"] = "realistic",
     ) -> None:
         if integrator == "rk4":
             integrator = RK4()
         elif integrator == "rkdp5":
             integrator = RKDP5()
-        if environment == "realistic":
-            environment = RealisticEnvironment()
+        if environment == None:
+            environment = Environment()
+        elif environment == "isa":
+            environment = Environment.isa()
         if projectile == "realistic":
             projectile = RealisticProjectile()
 
         if isinstance(integrator, RK4):
-            self._core = _PMRK4RealisticEnvironmentRealisticProjectile()
+            self._core = _PMRK4RealisticProjectile()
         elif isinstance(integrator, RKDP5):  # type: ignore
-            self._core = _PMRKDP5RealisticEnvironmentRealisticProjectile()
+            self._core = _PMRKDP5RealisticProjectile()
         else:
             raise TypeError("Unsupported integrator")
-        if isinstance(environment, RealisticEnvironment):  # type: ignore
+        if isinstance(environment, Environment):  # type: ignore
             self._core.environment = environment  # type: ignore
         else:
             raise TypeError("Unsupported environment")
@@ -302,25 +304,27 @@ class ModifiedPointMassBallistics:
         self,
         *,
         integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
-        environment: RealisticEnvironment | Literal["realistic"] = "realistic",
+        environment: Environment | Literal["isa"] | None = None,
         projectile: RealisticProjectile | Literal["realistic"] = "realistic",
     ) -> None:
         if integrator == "rk4":
             integrator = RK4()
         elif integrator == "rkdp5":
             integrator = RKDP5()
-        if environment == "realistic":
-            environment = RealisticEnvironment()
+        if environment == None:
+            environment = Environment()
+        elif environment == "isa":
+            environment = Environment.isa()
         if projectile == "realistic":
             projectile = RealisticProjectile()
 
         if isinstance(integrator, RK4):
-            self._core = _MPMRK4RealisticEnvironmentRealisticProjectile()
+            self._core = _MPMRK4RealisticProjectile()
         elif isinstance(integrator, RKDP5):  # type: ignore
-            self._core = _MPMRKDP5RealisticEnvironmentRealisticProjectile()
+            self._core = _MPMRKDP5RealisticProjectile()
         else:
             raise TypeError("Unsupported integrator")
-        if isinstance(environment, RealisticEnvironment):  # type: ignore
+        if isinstance(environment, Environment):  # type: ignore
             self._core.environment = environment  # type: ignore
         else:
             raise TypeError("Unsupported environment")

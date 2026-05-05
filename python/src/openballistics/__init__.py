@@ -1,6 +1,6 @@
 from .ballistics import PointMassBallistics, ModifiedPointMassBallistics
 from .integrator import RK4, RKDP5
-from .environment import RealisticEnvironment
+from .environment import Environment
 from .projectile import RealisticProjectile
 from .types import Interpolator, Table
 
@@ -9,7 +9,7 @@ __all__ = [
     "ModifiedPointMassBallistics",
     "RK4",
     "RKDP5",
-    "RealisticEnvironment",
+    "Environment",
     "RealisticProjectile",
     "Interpolator",
     "Table",

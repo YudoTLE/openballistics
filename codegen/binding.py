@@ -87,7 +87,7 @@ def environment_bind(
     ]
     lines: list[str] = [
         f"{{",
-        f"{__}using Class = environment::{class_name};",
+        f"{__}using Class = {class_name};",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
         *property_binds,
         f"}}",

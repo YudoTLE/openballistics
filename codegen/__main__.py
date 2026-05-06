@@ -9,10 +9,10 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 SPEC = ROOT / "codegen" / "spec"
 
-model_specs = load_model_specs(SPEC / "model")
+trajectory_model_specs = load_trajectory_model_specs(SPEC / "trajectory_model")
 integrator_specs = load_integrator_specs(SPEC / "integrator")
 environment_spec = load_environment_spec(SPEC / "environment.yml")
-projectile_specs = load_projectile_specs(SPEC / "projectile")
+projectile_spec = load_projectile_spec(SPEC / "projectile.yml")
 
 patches: list[tuple[str, str]] = []
 
@@ -25,22 +25,18 @@ def generate_binding():
 
     bind_patch: list[str] = []
 
-    for model_spec in model_specs:
+    for trajectory_model_spec in trajectory_model_specs:
         for integrator_spec in integrator_specs:
-            for projectile_spec in projectile_specs:
-                if projectile_spec.id not in model_spec.compatible_projectile_ids:
-                    continue
-
-                bind_patch.append(
-                    "\n".join(
-                        ballistics_bind(
-                            class_name=f"ballistics<model::{model_spec.class_name}, integrator::{integrator_spec.class_name}, projectile::{projectile_spec.class_name}>",
-                            nb_class_name=f"{model_spec.nb_class_name}{integrator_spec.nb_class_name}{projectile_spec.nb_class_name}",
-                            weapon_parameters=model_spec.weapon_parameters,
-                            base_indent=BASE_INDENT,
-                        )
+            bind_patch.append(
+                "\n".join(
+                    ballistics_bind(
+                        class_name=f"ballistics<trajectory_model::{trajectory_model_spec.class_name}, integrator::{integrator_spec.class_name}>",
+                        nb_class_name=f"{trajectory_model_spec.nb_class_name}{integrator_spec.nb_class_name}",
+                        weapon_parameters=trajectory_model_spec.weapon_parameters,
+                        base_indent=BASE_INDENT,
                     )
                 )
+            )
 
     for integrator_spec in integrator_specs:
         bind_patch.append(
@@ -57,7 +53,6 @@ def generate_binding():
     bind_patch.append(
         "\n".join(
             environment_bind(
-                class_name=environment_spec.class_name,
                 nb_class_name=environment_spec.nb_class_name,
                 properties=environment_spec.properties,
                 base_indent=BASE_INDENT,
@@ -65,33 +60,32 @@ def generate_binding():
         )
     )
 
-    for projectile_spec in projectile_specs:
-        bind_patch.append(
-            "\n".join(
-                projectile_bind(
-                    class_name=projectile_spec.class_name,
-                    nb_class_name=projectile_spec.nb_class_name,
-                    properties=projectile_spec.properties,
-                    base_indent=BASE_INDENT,
-                )
+    bind_patch.append(
+        "\n".join(
+            projectile_bind(
+                nb_class_name=projectile_spec.nb_class_name,
+                properties=projectile_spec.properties,
+                base_indent=BASE_INDENT,
             )
         )
+    )
 
     patches.append((BIND_CODE, "\n".join(bind_patch)))
 
 
-def generate_model_core():
+def generate_trajectory_model_core():
     global patches
 
     BASE_INDENT = "\t\t\t"
 
-    for model_spec in model_specs:
+    for trajectory_model_spec in trajectory_model_specs:
 
-        DEFINITION_CODE = model_spec.id + "-DEF"
+        DEFINITION_CODE = trajectory_model_spec.id + "-DEF"
 
         definition_patch = "\n".join(
             model_weapon_definition(
-                weapon_parameters=model_spec.weapon_parameters, base_indent=BASE_INDENT
+                weapon_parameters=trajectory_model_spec.weapon_parameters,
+                base_indent=BASE_INDENT,
             )
         )
 
@@ -189,7 +183,7 @@ def generate_environemnt_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
-                    class_name=environment_spec.class_name,
+                    class_name='environment',
                     base_indent=BASE_INDENT,
                     indent=INDENT,
                 )
@@ -231,62 +225,61 @@ def generate_projectile_core():
     BASE_INDENT = "\t\t"
     INDENT = "\t"
 
-    for projectile_spec in projectile_specs:
-        DEFAULT_CODE = projectile_spec.id + "-DEF"
-        SETTER_CODE = projectile_spec.id + "-SET"
-        GETTER_CODE = projectile_spec.id + "-GET"
-        MEMBER_CODE = projectile_spec.id + "-MEM"
+    DEFAULT_CODE = projectile_spec.id + "-DEF"
+    SETTER_CODE = projectile_spec.id + "-SET"
+    GETTER_CODE = projectile_spec.id + "-GET"
+    MEMBER_CODE = projectile_spec.id + "-MEM"
 
-        setter_patch: list[str] = []
-        getter_patch: list[str] = []
-        member_patch: list[str] = []
+    setter_patch: list[str] = []
+    getter_patch: list[str] = []
+    member_patch: list[str] = []
 
-        default_patch = "\n".join(
-            property_default(
-                properties=projectile_spec.properties, base_indent=BASE_INDENT + INDENT
+    default_patch = "\n".join(
+        property_default(
+            properties=projectile_spec.properties, base_indent=BASE_INDENT + INDENT
+        )
+    )
+    for property in projectile_spec.properties:
+        setter_patch.append(
+            "\n".join(
+                property_setter(
+                    name=property.name,
+                    type=property.type,
+                    category=property.category,
+                    class_name='projectile',
+                    base_indent=BASE_INDENT,
+                    indent=INDENT,
+                )
             )
         )
-        for property in projectile_spec.properties:
-            setter_patch.append(
-                "\n".join(
-                    property_setter(
-                        name=property.name,
-                        type=property.type,
-                        category=property.category,
-                        class_name=projectile_spec.class_name,
-                        base_indent=BASE_INDENT,
-                        indent=INDENT,
-                    )
+        getter_patch.append(
+            "\n".join(
+                property_getter(
+                    name=property.name,
+                    type=property.type,
+                    category=property.category,
+                    base_indent=BASE_INDENT,
+                    indent=INDENT,
                 )
             )
-            getter_patch.append(
-                "\n".join(
-                    property_getter(
-                        name=property.name,
-                        type=property.type,
-                        category=property.category,
-                        base_indent=BASE_INDENT,
-                        indent=INDENT,
-                    )
+        )
+        member_patch.append(
+            "\n".join(
+                property_member(
+                    name=property.name,
+                    type=property.type,
+                    category=property.category,
+                    base_indent=BASE_INDENT,
                 )
             )
-            member_patch.append(
-                "\n".join(
-                    property_member(
-                        name=property.name,
-                        type=property.type,
-                        category=property.category,
-                        base_indent=BASE_INDENT,
-                    )
-                )
-            )
+        )
 
-        patches += [
-            (DEFAULT_CODE, default_patch),
-            (SETTER_CODE, "\n\n".join(setter_patch)),
-            (GETTER_CODE, "\n\n".join(getter_patch)),
-            (MEMBER_CODE, "\n\n".join(member_patch)),
-        ]
+    patches += [
+        (DEFAULT_CODE, default_patch),
+        (SETTER_CODE, "\n\n".join(setter_patch)),
+        (GETTER_CODE, "\n\n".join(getter_patch)),
+        (MEMBER_CODE, "\n\n".join(member_patch)),
+    ]
 
 
 def generate_api_core():
@@ -294,13 +287,13 @@ def generate_api_core():
 
     BASE_INDENT = "\t"
 
-    for model_spec in model_specs:
-        api_code = model_spec.id + "-API"
+    for trajectory_model_spec in trajectory_model_specs:
+        api_code = trajectory_model_spec.id + "-API"
 
         api_patch = "\n".join(
-            api(
-                weapon_parameters=model_spec.weapon_parameters,
-                class_name=model_spec.class_name,
+            ballistics_api(
+                weapon_parameters=trajectory_model_spec.weapon_parameters,
+                class_name=trajectory_model_spec.class_name,
                 base_indent=BASE_INDENT,
             )
         )
@@ -311,7 +304,7 @@ def generate_api_core():
 
 
 generate_binding()
-generate_model_core()
+generate_trajectory_model_core()
 generate_integrator_core()
 generate_environemnt_core()
 generate_projectile_core()

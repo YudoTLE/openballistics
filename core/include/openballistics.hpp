@@ -1,7 +1,7 @@
 #ifndef OPENBALLISTICS_HPP
 #define OPENBALLISTICS_HPP
 
-#include "./openballistics/model.hpp"
+#include "./openballistics/trajectory_model.hpp"
 #include "./openballistics/environment.hpp"
 #include "./openballistics/projectile.hpp"
 #include "./openballistics/integrator.hpp"

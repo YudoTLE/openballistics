@@ -1,4 +1,4 @@
-id: MODEL-MPM
+id: TM-MPM
 class_name: modified_point_mass
 nb_class_name: MPM
 description: Modified point mass trajectory model accounting for spin and aerodynamic asymmetry.
@@ -9,10 +9,10 @@ weapon_parameters:
     qualifier: const
     description: Initial projectile velocity at the muzzle. [m/s]
 
-  - name: rifling_twist
+  - name: twist_of_rifling
     type: scalar
     qualifier: const
     description: Barrel rifling twist rate. [m/turn]
 
 projectile_compatibilities:
-  - id: PROJ-R
+  - id: PROJ

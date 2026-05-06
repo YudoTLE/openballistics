@@ -67,7 +67,6 @@ def integrator_bind(
 
 def environment_bind(
     *,
-    class_name: str,
     nb_class_name: str,
     properties: list[Property],
     base_indent: str = "",
@@ -87,7 +86,7 @@ def environment_bind(
     ]
     lines: list[str] = [
         f"{{",
-        f"{__}using Class = {class_name};",
+        f"{__}using Class = environment;",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
         *property_binds,
         f"}}",
@@ -97,7 +96,6 @@ def environment_bind(
 
 def projectile_bind(
     *,
-    class_name: str,
     nb_class_name: str,
     properties: list[Property],
     base_indent: str = "",
@@ -117,7 +115,7 @@ def projectile_bind(
     ]
     lines: list[str] = [
         f"{{",
-        f"{__}using Class = projectile::{class_name};",
+        f"{__}using Class = projectile;",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
         *property_binds,
         f"}}",

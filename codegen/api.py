@@ -2,7 +2,7 @@ from .spec import Parameter
 from typing import NamedTuple
 
 
-def api(
+def ballistics_api(
     *,
     weapon_parameters: list[Parameter],
     class_name: str,
@@ -11,7 +11,7 @@ def api(
 ) -> list[str]:
     lines = [
         f"template <typename Derived>",
-        f"struct ballistics<Derived, model::{class_name}<Derived>>",
+        f"struct ballistics<Derived, trajectory_model::{class_name}<Derived>>",
         f"{{",
         *_compute_final_position_api(weapon_parameters, prefix=indent, indent=indent),
         *_compute_trajectory_api(weapon_parameters, prefix=indent, indent=indent),

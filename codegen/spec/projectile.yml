@@ -1,0 +1,109 @@
+id: PROJ
+nb_class_name: Projectile
+description: 
+
+properties:
+  - name: mass
+    type: scalar
+    category: constant
+    description: Total mass of the projectile. [kg]
+
+  - name: diameter
+    type: scalar
+    category: constant
+    description: Reference diameter for aerodynamic non-dimensionalization. [m]
+
+  - name: axial_moment_of_inertia
+    type: scalar
+    category: constant
+    description: Moment of inertia about the spin axis. [kg·m²]
+
+  - name: form_factor
+    type: scalar
+    category: constant
+    default: 1.0
+    description: Ratio of projectile drag to that of the G-standard reference body at the same Mach number. [-]
+
+  - name: drag_factor
+    type: scalar
+    category: constant
+    default: 1.0
+    description: Empirical scaling factor for the zero-yaw drag coefficient curve. [-]
+
+  - name: lift_factor
+    type: scalar
+    category: constant
+    default: 1.0
+    description: Empirical scaling factor for the lift force coefficient curve. [-]
+
+  - name: yaw_drag_factor
+    type: scalar
+    category: constant
+    default: 1.0
+    description: Empirical scaling factor for the yaw-dependent drag coefficient terms. [-]
+
+  - name: magnus_force_factor
+    type: scalar
+    category: constant
+    default: 1.0
+    description: Empirical scaling factor for the Magnus force coefficient curve. [-]
+
+  - name: drag_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Zero-yaw drag force coefficient as a function of Mach number. [-]
+
+  - name: quadratic_yaw_drag_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Quadratic yaw-drag increment coefficient as a function of Mach number. [-]
+
+  - name: quartic_yaw_drag_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Quartic yaw-drag increment coefficient as a function of Mach number. [-]
+
+  - name: lift_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Linear lift force coefficient derivative as a function of Mach number. [-]
+
+  - name: cubic_lift_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Cubic nonlinear correction to the lift force coefficient. [-]
+
+  - name: quintic_lift_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Quintic nonlinear correction to the lift force coefficient. [-]
+
+  - name: magnus_force_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Magnus force coefficient derivative as a function of Mach number. [-]
+
+  - name: overturning_moment_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Linear overturning moment coefficient derivative as a function of Mach number. [-]
+
+  - name: cubic_overturning_moment_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Cubic nonlinear correction to the overturning moment coefficient. [-]
+
+  - name: spin_damping_moment_coefficient
+    type: scalar
+    category: curve
+    default: 0.0
+    description: Roll damping moment coefficient as a function of Mach number. [-]

@@ -8,14 +8,14 @@ from numpy.typing import ArrayLike, NDArray
 
 from .integrator import RK4, RKDP5
 from .environment import Environment
-from .projectile import RealisticProjectile
+from .projectile import Projectile
 
 from ._core import (  # type: ignore
     Angles,
-    PMRK4RealisticProjectile as _PMRK4RealisticProjectile,
-    PMRKDP5RealisticProjectile as _PMRKDP5RealisticProjectile,
-    MPMRK4RealisticProjectile as _MPMRK4RealisticProjectile,
-    MPMRKDP5RealisticProjectile as _MPMRKDP5RealisticProjectile,
+    PMRK4 as _PMRK4,
+    PMRKDP5 as _PMRKDP5,
+    MPMRK4 as _MPMRK4,
+    MPMRKDP5 as _MPMRKDP5,
 )
 
 _Vec3 = NDArray[np.float64]
@@ -27,7 +27,7 @@ class PointMassBallistics:
         *,
         integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
         environment: Environment | Literal["isa"] | None = None,
-        projectile: RealisticProjectile | Literal["realistic"] = "realistic",
+        projectile: Projectile | None = None,
     ) -> None:
         if integrator == "rk4":
             integrator = RK4()
@@ -37,20 +37,20 @@ class PointMassBallistics:
             environment = Environment()
         elif environment == "isa":
             environment = Environment.isa()
-        if projectile == "realistic":
-            projectile = RealisticProjectile()
+        if projectile == None:
+            projectile = Projectile()
 
         if isinstance(integrator, RK4):
-            self._core = _PMRK4RealisticProjectile()
+            self._core = _PMRK4()
         elif isinstance(integrator, RKDP5):  # type: ignore
-            self._core = _PMRKDP5RealisticProjectile()
+            self._core = _PMRKDP5()
         else:
             raise TypeError("Unsupported integrator")
         if isinstance(environment, Environment):  # type: ignore
             self._core.environment = environment  # type: ignore
         else:
             raise TypeError("Unsupported environment")
-        if isinstance(projectile, RealisticProjectile):  # type: ignore
+        if isinstance(projectile, Projectile):  # type: ignore
             self._core.projectile = projectile  # type: ignore
         else:
             raise TypeError("Unsupported projectile")
@@ -305,7 +305,7 @@ class ModifiedPointMassBallistics:
         *,
         integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
         environment: Environment | Literal["isa"] | None = None,
-        projectile: RealisticProjectile | Literal["realistic"] = "realistic",
+        projectile: Projectile | None = None,
     ) -> None:
         if integrator == "rk4":
             integrator = RK4()
@@ -315,20 +315,20 @@ class ModifiedPointMassBallistics:
             environment = Environment()
         elif environment == "isa":
             environment = Environment.isa()
-        if projectile == "realistic":
-            projectile = RealisticProjectile()
+        if projectile == None:
+            projectile = Projectile()
 
         if isinstance(integrator, RK4):
-            self._core = _MPMRK4RealisticProjectile()
+            self._core = _MPMRK4()
         elif isinstance(integrator, RKDP5):  # type: ignore
-            self._core = _MPMRKDP5RealisticProjectile()
+            self._core = _MPMRKDP5()
         else:
             raise TypeError("Unsupported integrator")
         if isinstance(environment, Environment):  # type: ignore
             self._core.environment = environment  # type: ignore
         else:
             raise TypeError("Unsupported environment")
-        if isinstance(projectile, RealisticProjectile):  # type: ignore
+        if isinstance(projectile, Projectile):  # type: ignore
             self._core.projectile = projectile  # type: ignore
         else:
             raise TypeError("Unsupported projectile")
@@ -340,7 +340,7 @@ class ModifiedPointMassBallistics:
         launch_direction: ArrayLike,
         platform_velocity: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
     ) -> _Vec3: ...
 
@@ -351,7 +351,7 @@ class ModifiedPointMassBallistics:
         launch_direction: Angles,
         platform_velocity: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
     ) -> _Vec3: ...
 
@@ -361,7 +361,7 @@ class ModifiedPointMassBallistics:
         launch_direction: ArrayLike | Angles,
         platform_velocity: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
     ) -> _Vec3:
         _launch_position = np.asarray(launch_position, dtype=np.float64)
@@ -372,7 +372,7 @@ class ModifiedPointMassBallistics:
                 launch_direction,
                 _platform_velocity,
                 float(muzzle_velocity),
-                float(rifling_twist),
+                float(twist_of_rifling),
                 float(time_of_flight),
             )
         else:
@@ -382,7 +382,7 @@ class ModifiedPointMassBallistics:
                 _launch_direction,
                 _platform_velocity,
                 float(muzzle_velocity),
-                float(rifling_twist),
+                float(twist_of_rifling),
                 float(time_of_flight),
             )
 
@@ -393,7 +393,7 @@ class ModifiedPointMassBallistics:
         launch_direction: ArrayLike,
         platform_velocity: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         start_time: float,
         end_time: float,
         *,
@@ -407,7 +407,7 @@ class ModifiedPointMassBallistics:
         launch_direction: Angles,
         platform_velocity: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         start_time: float,
         end_time: float,
         *,
@@ -420,7 +420,7 @@ class ModifiedPointMassBallistics:
         launch_direction: ArrayLike | Angles,
         platform_velocity: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         start_time: float,
         end_time: float,
         *,
@@ -434,7 +434,7 @@ class ModifiedPointMassBallistics:
                 launch_direction,
                 _platform_velocity,
                 float(muzzle_velocity),
-                float(rifling_twist),
+                float(twist_of_rifling),
                 float(start_time),
                 float(end_time),
                 float(sample_interval),
@@ -446,7 +446,7 @@ class ModifiedPointMassBallistics:
                 _launch_direction,
                 _platform_velocity,
                 float(muzzle_velocity),
-                float(rifling_twist),
+                float(twist_of_rifling),
                 float(start_time),
                 float(end_time),
                 float(sample_interval),
@@ -458,7 +458,7 @@ class ModifiedPointMassBallistics:
         platform_velocity: ArrayLike,
         target_position: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
         *,
         max_launch_direction_optimizer_iterations: int = 25,
@@ -468,7 +468,7 @@ class ModifiedPointMassBallistics:
             np.asarray(platform_velocity, dtype=np.float64),
             np.asarray(target_position, dtype=np.float64),
             float(muzzle_velocity),
-            float(rifling_twist),
+            float(twist_of_rifling),
             float(time_of_flight),
             int(max_launch_direction_optimizer_iterations),
         )
@@ -479,7 +479,7 @@ class ModifiedPointMassBallistics:
         platform_velocity: ArrayLike,
         target_position: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
         *,
         max_launch_direction_optimizer_iterations: int = 25,
@@ -489,7 +489,7 @@ class ModifiedPointMassBallistics:
             np.asarray(platform_velocity, dtype=np.float64),
             np.asarray(target_position, dtype=np.float64),
             float(muzzle_velocity),
-            float(rifling_twist),
+            float(twist_of_rifling),
             float(time_of_flight),
             int(max_launch_direction_optimizer_iterations),
         )
@@ -500,7 +500,7 @@ class ModifiedPointMassBallistics:
         platform_velocity: ArrayLike,
         target_position: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
         *,
         miss_distance_threshold: float = 1.0,
@@ -511,7 +511,7 @@ class ModifiedPointMassBallistics:
             np.asarray(platform_velocity, dtype=np.float64),
             np.asarray(target_position, dtype=np.float64),
             float(muzzle_velocity),
-            float(rifling_twist),
+            float(twist_of_rifling),
             float(time_of_flight),
             float(miss_distance_threshold),
             int(max_launch_direction_optimizer_iterations),
@@ -523,7 +523,7 @@ class ModifiedPointMassBallistics:
         platform_velocity: ArrayLike,
         target_position: ArrayLike,
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         time_of_flight: float,
         *,
         miss_distance_threshold: float = 1.0,
@@ -534,7 +534,7 @@ class ModifiedPointMassBallistics:
             np.asarray(platform_velocity, dtype=np.float64),
             np.asarray(target_position, dtype=np.float64),
             float(muzzle_velocity),
-            float(rifling_twist),
+            float(twist_of_rifling),
             float(time_of_flight),
             float(miss_distance_threshold),
             int(max_launch_direction_optimizer_iterations),
@@ -546,7 +546,7 @@ class ModifiedPointMassBallistics:
         platform_velocity: ArrayLike,
         target_motion: Callable[[float], _Vec3],
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         min_time_of_flight: float,
         max_time_of_flight: float,
         *,
@@ -560,7 +560,7 @@ class ModifiedPointMassBallistics:
             np.asarray(platform_velocity, dtype=np.float64),
             target_motion,
             float(muzzle_velocity),
-            float(rifling_twist),
+            float(twist_of_rifling),
             float(min_time_of_flight),
             float(max_time_of_flight),
             float(miss_distance_threshold),
@@ -575,7 +575,7 @@ class ModifiedPointMassBallistics:
         platform_velocity: ArrayLike,
         target_motion: Callable[[float], _Vec3],
         muzzle_velocity: float,
-        rifling_twist: float,
+        twist_of_rifling: float,
         min_time_of_flight: float,
         max_time_of_flight: float,
         *,
@@ -589,7 +589,7 @@ class ModifiedPointMassBallistics:
             np.asarray(platform_velocity, dtype=np.float64),
             target_motion,
             float(muzzle_velocity),
-            float(rifling_twist),
+            float(twist_of_rifling),
             float(min_time_of_flight),
             float(max_time_of_flight),
             float(miss_distance_threshold),

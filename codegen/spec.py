@@ -23,19 +23,19 @@ class Parameter:
 @dataclass(kw_only=True)
 class BaseSpec:
     id: str
-    class_name: str
     nb_class_name: str
     description: str | None = None
 
 
 @dataclass(kw_only=True)
-class ModelSpec(BaseSpec):
+class TrajectoryModelSpec(BaseSpec):
+    class_name: str
     weapon_parameters: list[Parameter]
-    compatible_projectile_ids: list[str]
 
 
 @dataclass(kw_only=True)
 class IntegratorSpec(BaseSpec):
+    class_name: str
     properties: list[Property]
 
 
@@ -49,24 +49,21 @@ class ProjectileSpec(BaseSpec):
     properties: list[Property]
 
 
-def load_model_specs(dir: Path) -> list[ModelSpec]:
-    specs: list[ModelSpec] = []
+def load_trajectory_model_specs(dir: Path) -> list[TrajectoryModelSpec]:
+    specs: list[TrajectoryModelSpec] = []
     if not dir.exists():
         return specs
     for yaml_file in dir.glob("*.yml"):
         with open(yaml_file, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
         specs.append(
-            ModelSpec(
+            TrajectoryModelSpec(
                 id=data["id"],
                 class_name=data["class_name"],
                 nb_class_name=data["nb_class_name"],
                 description=data.get("description"),
                 weapon_parameters=[
                     Parameter(**p) for p in data.get("weapon_parameters", [])
-                ],
-                compatible_projectile_ids=[
-                    p["id"] for p in data.get("projectile_compatibilities", [])
                 ],
             )
         )
@@ -97,27 +94,18 @@ def load_environment_spec(file: Path) -> EnvironmentSpec:
         data = yaml.safe_load(f)
     return EnvironmentSpec(
         id=data["id"],
-        class_name=data["class_name"],
         nb_class_name=data["nb_class_name"],
         description=data.get("description"),
         properties=[Property(**prop) for prop in data.get("properties", [])],
     )
 
 
-def load_projectile_specs(dir: Path) -> list[ProjectileSpec]:
-    specs: list[ProjectileSpec] = []
-    if not dir.exists():
-        return specs
-    for yaml_file in dir.glob("*.yml"):
-        with open(yaml_file, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-        specs.append(
-            ProjectileSpec(
-                id=data["id"],
-                class_name=data["class_name"],
-                nb_class_name=data["nb_class_name"],
-                description=data.get("description"),
-                properties=[Property(**prop) for prop in data.get("properties", [])],
-            )
-        )
-    return specs
+def load_projectile_spec(file: Path) -> ProjectileSpec:
+    with open(file, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+    return ProjectileSpec(
+        id=data["id"],
+        nb_class_name=data["nb_class_name"],
+        description=data.get("description"),
+        properties=[Property(**prop) for prop in data.get("properties", [])],
+    )

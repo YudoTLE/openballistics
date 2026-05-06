@@ -6,20 +6,11 @@
 #include <utility>
 #include <optional>
 
-namespace openballistics
-{
-    template <template <typename> class, typename, typename>
-    class ballistics;
-}
-
 namespace openballistics::integrator
 {
     class runge_kutta_4
     {
-        template <template <typename> class, typename, typename>
-        friend class openballistics::ballistics;
-
-    private:
+    public:
         template <typename System, typename State>
         void integrate_basic(
             System &&system,

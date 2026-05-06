@@ -1,4 +1,4 @@
-id: MODEL-PM
+id: TM-PM
 class_name: point_mass
 nb_class_name: PM
 description: Basic point mass trajectory model with aerodynamic drag.
@@ -10,4 +10,4 @@ weapon_parameters:
     description: Initial projectile velocity at the muzzle. [m/s]
 
 projectile_compatibilities:
-  - id: PROJ-R
+  - id: PROJ

@@ -11,7 +11,6 @@ namespace nb = nanobind;
 NB_MODULE(_core, m)
 {
     using namespace openballistics;
-
     {
         using Class = angles;
         nb::class_<Class>(m, "Angles")
@@ -24,8 +23,8 @@ NB_MODULE(_core, m)
 
 #pragma region "CODEGEN BIND" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	{
-		using Class = ballistics<model::modified_point_mass, integrator::runge_kutta_4, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "MPMRK4RealisticProjectile").def(nb::init<>());
+		using Class = ballistics<trajectory_model::modified_point_mass, integrator::runge_kutta_4>;
+		auto nb_class = nb::class_<Class>(m, "MPMRK4").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -43,8 +42,8 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
-		using Class = ballistics<model::modified_point_mass, integrator::runge_kutta_dormand_prince_5, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "MPMRKDP5RealisticProjectile").def(nb::init<>());
+		using Class = ballistics<trajectory_model::modified_point_mass, integrator::runge_kutta_dormand_prince_5>;
+		auto nb_class = nb::class_<Class>(m, "MPMRKDP5").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -62,8 +61,8 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
-		using Class = ballistics<model::point_mass, integrator::runge_kutta_4, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "PMRK4RealisticProjectile").def(nb::init<>());
+		using Class = ballistics<trajectory_model::point_mass, integrator::runge_kutta_4>;
+		auto nb_class = nb::class_<Class>(m, "PMRK4").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -81,8 +80,8 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, const scalar, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));
 	}
 	{
-		using Class = ballistics<model::point_mass, integrator::runge_kutta_dormand_prince_5, projectile::realistic>;
-		auto nb_class = nb::class_<Class>(m, "PMRKDP5RealisticProjectile").def(nb::init<>());
+		using Class = ballistics<trajectory_model::point_mass, integrator::runge_kutta_dormand_prince_5>;
+		auto nb_class = nb::class_<Class>(m, "PMRKDP5").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -161,8 +160,8 @@ NB_MODULE(_core, m)
 			.def("wind_velocity", &Class::wind_velocity);
 	}
 	{
-		using Class = projectile::realistic;
-		auto nb_class = nb::class_<Class>(m, "RealisticProjectile").def(nb::init<>());
+		using Class = projectile;
+		auto nb_class = nb::class_<Class>(m, "Projectile").def(nb::init<>());
 		nb_class
 			.def("set_mass", &Class::set_mass)
 			.def("mass", &Class::mass);
@@ -170,11 +169,23 @@ NB_MODULE(_core, m)
 			.def("set_diameter", &Class::set_diameter)
 			.def("diameter", &Class::diameter);
 		nb_class
-			.def("set_reference_area", &Class::set_reference_area)
-			.def("reference_area", &Class::reference_area);
-		nb_class
 			.def("set_axial_moment_of_inertia", &Class::set_axial_moment_of_inertia)
 			.def("axial_moment_of_inertia", &Class::axial_moment_of_inertia);
+		nb_class
+			.def("set_form_factor", &Class::set_form_factor)
+			.def("form_factor", &Class::form_factor);
+		nb_class
+			.def("set_drag_factor", &Class::set_drag_factor)
+			.def("drag_factor", &Class::drag_factor);
+		nb_class
+			.def("set_lift_factor", &Class::set_lift_factor)
+			.def("lift_factor", &Class::lift_factor);
+		nb_class
+			.def("set_yaw_drag_factor", &Class::set_yaw_drag_factor)
+			.def("yaw_drag_factor", &Class::yaw_drag_factor);
+		nb_class
+			.def("set_magnus_force_factor", &Class::set_magnus_force_factor)
+			.def("magnus_force_factor", &Class::magnus_force_factor);
 		nb_class
 			.def("set_drag_force_coefficient", nb::overload_cast<scalar>(&Class::set_drag_force_coefficient))
 			.def("set_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_drag_force_coefficient(std::move(curve)); })
@@ -182,11 +193,41 @@ NB_MODULE(_core, m)
 			.def("set_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_drag_force_coefficient(std::move(keys), std::move(values)); })
 			.def("drag_force_coefficient", &Class::drag_force_coefficient);
 		nb_class
+			.def("set_quadratic_yaw_drag_force_coefficient", nb::overload_cast<scalar>(&Class::set_quadratic_yaw_drag_force_coefficient))
+			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_quadratic_yaw_drag_force_coefficient(std::move(curve)); })
+			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_quadratic_yaw_drag_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_quadratic_yaw_drag_force_coefficient(std::move(keys), std::move(values)); })
+			.def("quadratic_yaw_drag_force_coefficient", &Class::quadratic_yaw_drag_force_coefficient);
+		nb_class
+			.def("set_quartic_yaw_drag_force_coefficient", nb::overload_cast<scalar>(&Class::set_quartic_yaw_drag_force_coefficient))
+			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_quartic_yaw_drag_force_coefficient(std::move(curve)); })
+			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_quartic_yaw_drag_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_quartic_yaw_drag_force_coefficient(std::move(keys), std::move(values)); })
+			.def("quartic_yaw_drag_force_coefficient", &Class::quartic_yaw_drag_force_coefficient);
+		nb_class
 			.def("set_lift_force_coefficient", nb::overload_cast<scalar>(&Class::set_lift_force_coefficient))
 			.def("set_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_lift_force_coefficient(std::move(curve)); })
 			.def("set_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_lift_force_coefficient(std::move(curve), interpolator_step); })
 			.def("set_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_lift_force_coefficient(std::move(keys), std::move(values)); })
 			.def("lift_force_coefficient", &Class::lift_force_coefficient);
+		nb_class
+			.def("set_cubic_lift_force_coefficient", nb::overload_cast<scalar>(&Class::set_cubic_lift_force_coefficient))
+			.def("set_cubic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_cubic_lift_force_coefficient(std::move(curve)); })
+			.def("set_cubic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_cubic_lift_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_cubic_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_cubic_lift_force_coefficient(std::move(keys), std::move(values)); })
+			.def("cubic_lift_force_coefficient", &Class::cubic_lift_force_coefficient);
+		nb_class
+			.def("set_quintic_lift_force_coefficient", nb::overload_cast<scalar>(&Class::set_quintic_lift_force_coefficient))
+			.def("set_quintic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_quintic_lift_force_coefficient(std::move(curve)); })
+			.def("set_quintic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_quintic_lift_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_quintic_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_quintic_lift_force_coefficient(std::move(keys), std::move(values)); })
+			.def("quintic_lift_force_coefficient", &Class::quintic_lift_force_coefficient);
+		nb_class
+			.def("set_magnus_force_coefficient", nb::overload_cast<scalar>(&Class::set_magnus_force_coefficient))
+			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_magnus_force_coefficient(std::move(curve)); })
+			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_magnus_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_magnus_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_magnus_force_coefficient(std::move(keys), std::move(values)); })
+			.def("magnus_force_coefficient", &Class::magnus_force_coefficient);
 		nb_class
 			.def("set_overturning_moment_coefficient", nb::overload_cast<scalar>(&Class::set_overturning_moment_coefficient))
 			.def("set_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_overturning_moment_coefficient(std::move(curve)); })
@@ -194,26 +235,22 @@ NB_MODULE(_core, m)
 			.def("set_overturning_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_overturning_moment_coefficient(std::move(keys), std::move(values)); })
 			.def("overturning_moment_coefficient", &Class::overturning_moment_coefficient);
 		nb_class
+			.def("set_cubic_overturning_moment_coefficient", nb::overload_cast<scalar>(&Class::set_cubic_overturning_moment_coefficient))
+			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_cubic_overturning_moment_coefficient(std::move(curve)); })
+			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_cubic_overturning_moment_coefficient(std::move(curve), interpolator_step); })
+			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_cubic_overturning_moment_coefficient(std::move(keys), std::move(values)); })
+			.def("cubic_overturning_moment_coefficient", &Class::cubic_overturning_moment_coefficient);
+		nb_class
 			.def("set_spin_damping_moment_coefficient", nb::overload_cast<scalar>(&Class::set_spin_damping_moment_coefficient))
 			.def("set_spin_damping_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_spin_damping_moment_coefficient(std::move(curve)); })
 			.def("set_spin_damping_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_spin_damping_moment_coefficient(std::move(curve), interpolator_step); })
 			.def("set_spin_damping_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_spin_damping_moment_coefficient(std::move(keys), std::move(values)); })
 			.def("spin_damping_moment_coefficient", &Class::spin_damping_moment_coefficient);
-		nb_class
-			.def("set_magnus_force_coefficient", nb::overload_cast<scalar>(&Class::set_magnus_force_coefficient))
-			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_magnus_force_coefficient(std::move(curve)); })
-			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_magnus_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_magnus_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_magnus_force_coefficient(std::move(keys), std::move(values)); })
-			.def("magnus_force_coefficient", &Class::magnus_force_coefficient);
 	}
 #pragma endregion "CODEGEN BIND"
 
 	{
 		using Class = environment;
 		nb::borrow<nb::class_<Class>>(nb::type<Class>()).def_static("isa", &Class::isa);
-	}
-	{
-		using Class = projectile::realistic;
-		nb::borrow<nb::class_<Class>>(nb::type<Class>()).def_static("m56a3", &Class::m56a3);
 	}
 }

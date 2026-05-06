@@ -2,16 +2,16 @@
 #define OPENBALLISTICS_API_BALLISTICS_HPP
 
 #include "../types.hpp"
-#include "../model.hpp"
+#include "../trajectory_model.hpp"
 
 namespace openballistics::api::detail
 {
     template <typename Derived, typename Model>
     struct ballistics;
 
-#pragma region "CODEGEN MODEL-PM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN TM-PM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	template <typename Derived>
-	struct ballistics<Derived, model::point_mass<Derived>>
+	struct ballistics<Derived, trajectory_model::point_mass<Derived>>
 	{
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
@@ -378,39 +378,39 @@ namespace openballistics::api::detail
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
 		}
 	};
-#pragma endregion "CODEGEN MODEL-PM-API"
+#pragma endregion "CODEGEN TM-PM-API"
 
-#pragma region "CODEGEN MODEL-MPM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN TM-MPM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	template <typename Derived>
-	struct ballistics<Derived, model::modified_point_mass<Derived>>
+	struct ballistics<Derived, trajectory_model::modified_point_mass<Derived>>
 	{
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
 				launch_direction.stableNormalized(),
 				platform_velocity,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight);
 		}
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
 				launch_direction.stableNormalized(),
 				vector3::Zero(),
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight);
 		}
 		[[nodiscard]] vector3 compute_final_position(
@@ -418,28 +418,28 @@ namespace openballistics::api::detail
 			const angles &launch_angles,
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
 				launch_angles.to_unit_direction(),
 				platform_velocity,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight);
 		}
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
 			const angles &launch_angles,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
 				launch_angles.to_unit_direction(),
 				vector3::Zero(),
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
@@ -447,7 +447,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar start_time,
 			const scalar end_time,
 			const scalar sample_interval = 0.2) const
@@ -456,7 +456,7 @@ namespace openballistics::api::detail
 				launch_position,
 				launch_direction.stableNormalized(),
 				platform_velocity,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				start_time,
 				end_time,
 				sample_interval);
@@ -465,7 +465,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar start_time,
 			const scalar end_time,
 			const scalar sample_interval = 0.2) const
@@ -474,7 +474,7 @@ namespace openballistics::api::detail
 				launch_position,
 				launch_direction.stableNormalized(),
 				vector3::Zero(),
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				start_time,
 				end_time,
 				sample_interval);
@@ -484,7 +484,7 @@ namespace openballistics::api::detail
 			const angles &launch_angles,
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar start_time,
 			const scalar end_time,
 			const scalar sample_interval = 0.2) const
@@ -493,7 +493,7 @@ namespace openballistics::api::detail
 				launch_position,
 				launch_angles.to_unit_direction(),
 				platform_velocity,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				start_time,
 				end_time,
 				sample_interval);
@@ -502,7 +502,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const angles &launch_angles,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar start_time,
 			const scalar end_time,
 			const scalar sample_interval = 0.2) const
@@ -511,7 +511,7 @@ namespace openballistics::api::detail
 				launch_position,
 				launch_angles.to_unit_direction(),
 				vector3::Zero(),
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				start_time,
 				end_time,
 				sample_interval);
@@ -521,7 +521,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
 		{
@@ -529,7 +529,7 @@ namespace openballistics::api::detail
 				launch_position,
 				platform_velocity,
 				target_position,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				max_launch_direction_optimizer_iterations);
 		}
@@ -537,7 +537,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
 		{
@@ -545,7 +545,7 @@ namespace openballistics::api::detail
 				launch_position,
 				vector3::Zero(),
 				target_position,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				max_launch_direction_optimizer_iterations);
 		}
@@ -554,7 +554,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
 		{
@@ -563,7 +563,7 @@ namespace openballistics::api::detail
 					launch_position,
 					platform_velocity,
 					target_position,
-					{muzzle_velocity, rifling_twist},
+					{muzzle_velocity, twist_of_rifling},
 					time_of_flight,
 					max_launch_direction_optimizer_iterations));
 		}
@@ -571,7 +571,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
 		{
@@ -580,7 +580,7 @@ namespace openballistics::api::detail
 					launch_position,
 					vector3::Zero(),
 					target_position,
-					{muzzle_velocity, rifling_twist},
+					{muzzle_velocity, twist_of_rifling},
 					time_of_flight,
 					max_launch_direction_optimizer_iterations));
 		}
@@ -589,7 +589,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
@@ -598,7 +598,7 @@ namespace openballistics::api::detail
 				launch_position,
 				platform_velocity,
 				target_position,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
 				max_launch_direction_optimizer_iterations);
@@ -607,7 +607,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
@@ -616,7 +616,7 @@ namespace openballistics::api::detail
 				launch_position,
 				vector3::Zero(),
 				target_position,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
 				max_launch_direction_optimizer_iterations);
@@ -626,7 +626,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
@@ -635,7 +635,7 @@ namespace openballistics::api::detail
 				launch_position,
 				platform_velocity,
 				target_position,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
 				max_launch_direction_optimizer_iterations);
@@ -647,7 +647,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
 			const uint32_t max_launch_direction_optimizer_iterations = 25) const
@@ -656,7 +656,7 @@ namespace openballistics::api::detail
 				launch_position,
 				vector3::Zero(),
 				target_position,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
 				max_launch_direction_optimizer_iterations);
@@ -669,7 +669,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const std::function<vector3(scalar)> &target_motion,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
@@ -681,7 +681,7 @@ namespace openballistics::api::detail
 				launch_position,
 				platform_velocity,
 				target_motion,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
@@ -693,7 +693,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const std::function<vector3(scalar)> &target_motion,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
@@ -705,7 +705,7 @@ namespace openballistics::api::detail
 				launch_position,
 				vector3::Zero(),
 				target_motion,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
@@ -718,7 +718,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const std::function<vector3(scalar)> &target_motion,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
@@ -730,7 +730,7 @@ namespace openballistics::api::detail
 				launch_position,
 				platform_velocity,
 				target_motion,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
@@ -745,7 +745,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const std::function<vector3(scalar)> &target_motion,
 			const scalar muzzle_velocity,
-			const scalar rifling_twist,
+			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
@@ -757,7 +757,7 @@ namespace openballistics::api::detail
 				launch_position,
 				vector3::Zero(),
 				target_motion,
-				{muzzle_velocity, rifling_twist},
+				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
@@ -769,7 +769,7 @@ namespace openballistics::api::detail
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
 		}
 	};
-#pragma endregion "CODEGEN MODEL-MPM-API"
+#pragma endregion "CODEGEN TM-MPM-API"
 }
 
 #endif // OPENBALLISTICS_API_BALLISTICS_HPP

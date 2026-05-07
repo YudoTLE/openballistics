@@ -10,14 +10,15 @@ class Integrator:
 class RK4(Integrator):
     def __init__(self, *, step: float = 1e-3) -> None:
         self._core = _RK4()
-        self._core.set_step(step)
+        self.step = step
 
-    def set_step(self, value: float, /) -> RK4:
-        self._core.set_step(value)
-        return self
-
+    @property
     def step(self) -> float:
         return self._core.step()
+
+    @step.setter
+    def step(self, value: float):
+        self._core.set_step(value)
 
 
 class RKDP5(Integrator):
@@ -30,23 +31,39 @@ class RKDP5(Integrator):
         first_step: float = 1e-3,
     ) -> None:
         self._core = _RKDP5()
-        self._core.set_absolute_tolerance(absolute_tolerance)
-        self._core.set_relative_tolerance(relative_tolerance)
-        self._core.set_max_step(max_step)
-        self._core.set_first_step(first_step)
+        self.absolute_tolerance = absolute_tolerance
+        self.relative_tolerance = relative_tolerance
+        self.max_step = max_step
+        self.first_step = first_step
 
-    def set_absolute_tolerance(self, value: float, /) -> RKDP5:
+    @property
+    def absolute_tolerance(self) -> float:
+        return self._core.absolute_tolerance()
+
+    @property
+    def relative_tolerance(self) -> float:
+        return self._core.relative_tolerance()
+
+    @property
+    def max_step(self) -> float:
+        return self._core.max_step()
+
+    @property
+    def first_step(self) -> float:
+        return self._core.first_step()
+
+    @absolute_tolerance.setter
+    def absolute_tolerance(self, value: float):
         self._core.set_absolute_tolerance(value)
-        return self
 
-    def set_relative_tolerance(self, value: float, /) -> RKDP5:
+    @relative_tolerance.setter
+    def relative_tolerance(self, value: float):
         self._core.set_relative_tolerance(value)
-        return self
 
-    def set_max_step(self, value: float, /) -> RKDP5:
+    @max_step.setter
+    def max_step(self, value: float):
         self._core.set_max_step(value)
-        return self
 
-    def set_first_step(self, value: float, /) -> RKDP5:
+    @first_step.setter
+    def first_step(self, value: float):
         self._core.set_first_step(value)
-        return self

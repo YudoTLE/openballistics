@@ -16,7 +16,7 @@ _Vec3Profile = Callable[[float], _Vec3]
 _Vec3Field = Callable[[_Vec3], _Vec3]
 
 
-class Environment():
+class Environment:
     def __init__(
         self,
         *,
@@ -31,31 +31,59 @@ class Environment():
     ) -> None:
         self._core = _Environment()
         if adiabatic_index is not None:
-            self.set_adiabatic_index(adiabatic_index)
+            self.adiabatic_index = adiabatic_index
         if specific_gas_constant is not None:
-            self.set_specific_gas_constant(specific_gas_constant)
+            self.specific_gas_constant = specific_gas_constant
         if temperature is not None:
-            self.set_temperature(temperature)
+            self.temperature = temperature
         if pressure is not None:
-            self.set_pressure(pressure)
+            self.pressure = pressure
         if gravity is not None:
-            self.set_gravity(gravity)
+            self.gravity = gravity
         if wind_velocity is not None:
-            self.set_wind_velocity(wind_velocity)
+            self.wind_velocity = wind_velocity
 
-    def set_adiabatic_index(self, value: float, /) -> Environment:
+    @staticmethod
+    def isa() -> Environment:
+        environment = Environment.__new__(Environment)
+        environment._core = _Environment.isa()
+        return environment
+
+    @property
+    def adiabatic_index(self) -> float:
+        return self._core.adiabatic_index()
+
+    @property
+    def specific_gas_constant(self) -> float:
+        return self._core.specific_gas_constant()
+
+    @property
+    def temperature(self):
+        return self._temperature
+
+    @property
+    def pressure(self):
+        return self._pressure
+
+    @property
+    def gravity(self):
+        return self._gravity
+
+    @property
+    def wind_velocity(self):
+        return self._wind_velocity
+
+    @adiabatic_index.setter
+    def adiabatic_index(self, value: float):
         self._core.set_adiabatic_index(value)
         return self
 
-    def set_specific_gas_constant(self, value: float, /) -> Environment:
+    @specific_gas_constant.setter
+    def specific_gas_constant(self, value: float):
         self._core.set_specific_gas_constant(value)
-        return self
 
-    def set_temperature(
-        self,
-        value: float | _ScalarProfile | _ScalarField | Interpolator,
-        /,
-    ) -> Environment:
+    @temperature.setter
+    def temperature(self, value: float | _ScalarProfile | _ScalarField | Interpolator):
         if isinstance(value, Interpolator):
             self._core.set_temperature(
                 cast(_ScalarProfile | _ScalarField, value.fn), value.step
@@ -64,13 +92,12 @@ class Environment():
             self._core.set_temperature(float(value))
         elif callable(value):
             self._core.set_temperature(value)
-        return self
 
-    def set_pressure(
+    @pressure.setter
+    def pressure(
         self,
         value: float | _ScalarProfile | _ScalarField | Interpolator,
-        /,
-    ) -> Environment:
+    ):
         if isinstance(value, Interpolator):
             self._core.set_pressure(
                 cast(_ScalarProfile | _ScalarField, value.fn), value.step
@@ -79,13 +106,12 @@ class Environment():
             self._core.set_pressure(float(value))
         elif callable(value):
             self._core.set_pressure(value)
-        return self
 
-    def set_gravity(
+    @gravity.setter
+    def gravity(
         self,
         value: ArrayLike | _Vec3Profile | _Vec3Field | Interpolator,
-        /,
-    ) -> Environment:
+    ):
         if isinstance(value, Interpolator):
             self._core.set_gravity(
                 cast(_Vec3Profile | _Vec3Field, value.fn), value.step
@@ -94,13 +120,12 @@ class Environment():
             self._core.set_gravity(value)
         else:
             self._core.set_gravity(np.asarray(value, dtype=np.float64))
-        return self
 
-    def set_wind_velocity(
+    @wind_velocity.setter
+    def wind_velocity(
         self,
         value: ArrayLike | _Vec3Profile | _Vec3Field | Interpolator,
-        /,
-    ) -> Environment:
+    ):
         if isinstance(value, Interpolator):
             self._core.set_wind_velocity(
                 cast(_Vec3Profile | _Vec3Field, value.fn), value.step
@@ -109,28 +134,15 @@ class Environment():
             self._core.set_wind_velocity(value)
         else:
             self._core.set_wind_velocity(np.asarray(value, dtype=np.float64))
-        return self
 
-    def adiabatic_index(self) -> float:
-        return self._core.adiabatic_index()
-
-    def specific_gas_constant(self) -> float:
-        return self._core.specific_gas_constant()
-
-    def temperature(self, position: ArrayLike, /) -> float:
+    def _temperature(self, position: ArrayLike) -> float:
         return self._core.temperature(np.asarray(position, dtype=np.float64))
 
-    def pressure(self, position: ArrayLike, /) -> float:
+    def _pressure(self, position: ArrayLike) -> float:
         return self._core.pressure(np.asarray(position, dtype=np.float64))
 
-    def gravity(self, position: ArrayLike, /) -> _Vec3:
+    def _gravity(self, position: ArrayLike) -> _Vec3:
         return self._core.gravity(np.asarray(position, dtype=np.float64))
 
-    def wind_velocity(self, position: ArrayLike, /) -> _Vec3:
+    def _wind_velocity(self, position: ArrayLike) -> _Vec3:
         return self._core.wind_velocity(np.asarray(position, dtype=np.float64))
-
-    @staticmethod
-    def isa() -> Environment:
-        environment = Environment.__new__(Environment)
-        environment._core = _Environment.isa()
-        return environment

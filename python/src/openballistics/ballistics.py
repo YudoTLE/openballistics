@@ -291,7 +291,7 @@ class PointMassBallistics:
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
-        target_motion: Callable[[float], _Vec3],
+        target_motion: Callable[[float], ArrayLike],
         muzzle_velocity: float,
         min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
@@ -300,10 +300,13 @@ class PointMassBallistics:
         max_time_of_flight_optimizer_iterations: int = 30,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> tuple[_Vec3, float] | None:
+        def _target_motion(t: float) -> np.ndarray:
+            return np.asarray(target_motion(t), dtype=np.float64)
+
         return self._core.solve_launch_direction_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
             np.asarray(platform_velocity, dtype=np.float64),
-            target_motion,
+            _target_motion,
             float(muzzle_velocity),
             float(min_time_of_flight),
             float(max_time_of_flight),
@@ -318,7 +321,7 @@ class PointMassBallistics:
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
-        target_motion: Callable[[float], _Vec3],
+        target_motion: Callable[[float], ArrayLike],
         muzzle_velocity: float,
         min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
@@ -327,10 +330,13 @@ class PointMassBallistics:
         max_time_of_flight_optimizer_iterations: int = 30,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> tuple[Angles, float] | None:
+        def _target_motion(t: float) -> np.ndarray:
+            return np.asarray(target_motion(t), dtype=np.float64)
+
         return self._core.solve_launch_angles_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
             np.asarray(platform_velocity, dtype=np.float64),
-            target_motion,
+            _target_motion,
             float(muzzle_velocity),
             float(min_time_of_flight),
             float(max_time_of_flight),
@@ -628,7 +634,7 @@ class ModifiedPointMassBallistics:
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
-        target_motion: Callable[[float], _Vec3],
+        target_motion: Callable[[float], ArrayLike],
         muzzle_velocity: float,
         twist_of_rifling: float,
         min_time_of_flight: float = 0.0,
@@ -638,10 +644,13 @@ class ModifiedPointMassBallistics:
         max_time_of_flight_optimizer_iterations: int = 30,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> tuple[_Vec3, float] | None:
+        def _target_motion(t: float) -> np.ndarray:
+            return np.asarray(target_motion(t), dtype=np.float64)
+
         return self._core.solve_launch_direction_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
             np.asarray(platform_velocity, dtype=np.float64),
-            target_motion,
+            _target_motion,
             float(muzzle_velocity),
             float(twist_of_rifling),
             float(min_time_of_flight),
@@ -657,7 +666,7 @@ class ModifiedPointMassBallistics:
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
-        target_motion: Callable[[float], _Vec3],
+        target_motion: Callable[[float], ArrayLike],
         muzzle_velocity: float,
         twist_of_rifling: float,
         min_time_of_flight: float = 0.0,
@@ -667,10 +676,13 @@ class ModifiedPointMassBallistics:
         max_time_of_flight_optimizer_iterations: int = 30,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> tuple[Angles, float] | None:
+        def _target_motion(t: float) -> np.ndarray:
+            return np.asarray(target_motion(t), dtype=np.float64)
+
         return self._core.solve_launch_angles_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
             np.asarray(platform_velocity, dtype=np.float64),
-            target_motion,
+            _target_motion,
             float(muzzle_velocity),
             float(twist_of_rifling),
             float(min_time_of_flight),

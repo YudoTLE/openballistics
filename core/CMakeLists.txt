@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 4.2)
 
 project(
     openballistics_core
-    VERSION 0.0.6
+    VERSION 0.0.7
     LANGUAGES CXX
 )
 

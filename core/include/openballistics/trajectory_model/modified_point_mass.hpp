@@ -42,7 +42,7 @@ namespace openballistics::trajectory_model
             constexpr scalar epsilon_v = 1e-6;
             constexpr scalar epsilon_C_M = 1e-6;
             constexpr scalar tol_a_e = 1e-12;
-            constexpr int max_iter_a_e = 15;
+            constexpr int max_iter_a_e = 5;
 
             const vector3 x_ = y.head<3>();
             const vector3 u_ = y.segment<3>(3);

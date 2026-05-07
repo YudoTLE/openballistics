@@ -63,35 +63,30 @@ namespace openballistics
 		projectile &set_form_factor(const scalar value)
 		{
 			m_form_factor_constant = value;
-			m_form_factor_source = 1;
 			return *this;
 		}
 
 		projectile &set_drag_factor(const scalar value)
 		{
 			m_drag_factor_constant = value;
-			m_drag_factor_source = 1;
 			return *this;
 		}
 
 		projectile &set_lift_factor(const scalar value)
 		{
 			m_lift_factor_constant = value;
-			m_lift_factor_source = 1;
 			return *this;
 		}
 
 		projectile &set_yaw_drag_factor(const scalar value)
 		{
 			m_yaw_drag_factor_constant = value;
-			m_yaw_drag_factor_source = 1;
 			return *this;
 		}
 
 		projectile &set_magnus_force_factor(const scalar value)
 		{
 			m_magnus_force_factor_constant = value;
-			m_magnus_force_factor_source = 1;
 			return *this;
 		}
 
@@ -447,32 +442,27 @@ namespace openballistics
 
 		[[nodiscard]] scalar form_factor() const
 		{
-			if (m_form_factor_source == 1) return m_form_factor_constant;
-			throw std::bad_optional_access{};
+			return m_form_factor_constant;
 		}
 
 		[[nodiscard]] scalar drag_factor() const
 		{
-			if (m_drag_factor_source == 1) return m_drag_factor_constant;
-			throw std::bad_optional_access{};
+			return m_drag_factor_constant;
 		}
 
 		[[nodiscard]] scalar lift_factor() const
 		{
-			if (m_lift_factor_source == 1) return m_lift_factor_constant;
-			throw std::bad_optional_access{};
+			return m_lift_factor_constant;
 		}
 
 		[[nodiscard]] scalar yaw_drag_factor() const
 		{
-			if (m_yaw_drag_factor_source == 1) return m_yaw_drag_factor_constant;
-			throw std::bad_optional_access{};
+			return m_yaw_drag_factor_constant;
 		}
 
 		[[nodiscard]] scalar magnus_force_factor() const
 		{
-			if (m_magnus_force_factor_source == 1) return m_magnus_force_factor_constant;
-			throw std::bad_optional_access{};
+			return m_magnus_force_factor_constant;
 		}
 
 		[[nodiscard]] scalar drag_force_coefficient(const scalar mach) const
@@ -617,19 +607,14 @@ namespace openballistics
 		bool m_axial_moment_of_inertia_source = 0;
 		scalar m_axial_moment_of_inertia_constant;
 
-		bool m_form_factor_source = 0;
 		scalar m_form_factor_constant;
 
-		bool m_drag_factor_source = 0;
 		scalar m_drag_factor_constant;
 
-		bool m_lift_factor_source = 0;
 		scalar m_lift_factor_constant;
 
-		bool m_yaw_drag_factor_source = 0;
 		scalar m_yaw_drag_factor_constant;
 
-		bool m_magnus_force_factor_source = 0;
 		scalar m_magnus_force_factor_constant;
 
 		uint8_t m_drag_force_coefficient_source = 0;

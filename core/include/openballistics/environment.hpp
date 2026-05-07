@@ -100,14 +100,12 @@ namespace openballistics
 		environment &set_adiabatic_index(const scalar value)
 		{
 			m_adiabatic_index_constant = value;
-			m_adiabatic_index_source = 1;
 			return *this;
 		}
 
 		environment &set_specific_gas_constant(const scalar value)
 		{
 			m_specific_gas_constant_constant = value;
-			m_specific_gas_constant_source = 1;
 			return *this;
 		}
 
@@ -287,14 +285,12 @@ namespace openballistics
 #pragma region "CODEGEN ENV-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar adiabatic_index() const
 		{
-			if (m_adiabatic_index_source == 1) return m_adiabatic_index_constant;
-			throw std::bad_optional_access{};
+			return m_adiabatic_index_constant;
 		}
 
 		[[nodiscard]] scalar specific_gas_constant() const
 		{
-			if (m_specific_gas_constant_source == 1) return m_specific_gas_constant_constant;
-			throw std::bad_optional_access{};
+			return m_specific_gas_constant_constant;
 		}
 
 		[[nodiscard]] scalar temperature(const vector3 &position) const
@@ -360,10 +356,8 @@ namespace openballistics
 
     private:
 #pragma region "CODEGEN ENV-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
-		bool m_adiabatic_index_source = 0;
 		scalar m_adiabatic_index_constant;
 
-		bool m_specific_gas_constant_source = 0;
 		scalar m_specific_gas_constant_constant;
 
 		uint8_t m_temperature_source = 0;

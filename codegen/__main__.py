@@ -120,6 +120,7 @@ def generate_integrator_core():
                         name=property.name,
                         type=property.type,
                         category=property.category,
+                        has_default=property.default is not None,
                         class_name=integrator_spec.class_name,
                         base_indent=BASE_INDENT,
                         indent=INDENT,
@@ -132,6 +133,7 @@ def generate_integrator_core():
                         name=property.name,
                         type=property.type,
                         category=property.category,
+                        has_default=property.default is not None,
                         base_indent=BASE_INDENT,
                         indent=INDENT,
                     )
@@ -143,6 +145,7 @@ def generate_integrator_core():
                         name=property.name,
                         type=property.type,
                         category=property.category,
+                        has_default=property.default is not None,
                         base_indent=BASE_INDENT,
                     )
                 )
@@ -183,7 +186,8 @@ def generate_environemnt_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
-                    class_name='environment',
+                    has_default=property.default is not None,
+                    class_name="environment",
                     base_indent=BASE_INDENT,
                     indent=INDENT,
                 )
@@ -195,6 +199,7 @@ def generate_environemnt_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
+                    has_default=property.default is not None,
                     base_indent=BASE_INDENT,
                     indent=INDENT,
                 )
@@ -206,6 +211,7 @@ def generate_environemnt_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
+                    has_default=property.default is not None,
                     base_indent=BASE_INDENT,
                 )
             )
@@ -246,7 +252,8 @@ def generate_projectile_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
-                    class_name='projectile',
+                    has_default=property.default is not None,
+                    class_name="projectile",
                     base_indent=BASE_INDENT,
                     indent=INDENT,
                 )
@@ -258,6 +265,7 @@ def generate_projectile_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
+                    has_default=property.default is not None,
                     base_indent=BASE_INDENT,
                     indent=INDENT,
                 )
@@ -269,6 +277,7 @@ def generate_projectile_core():
                     name=property.name,
                     type=property.type,
                     category=property.category,
+                    has_default=property.default is not None,
                     base_indent=BASE_INDENT,
                 )
             )

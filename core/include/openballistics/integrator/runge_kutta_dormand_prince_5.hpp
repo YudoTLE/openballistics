@@ -110,28 +110,24 @@ namespace openballistics::integrator
 		runge_kutta_dormand_prince_5 &set_absolute_tolerance(const scalar value)
 		{
 			m_absolute_tolerance_constant = value;
-			m_absolute_tolerance_source = 1;
 			return *this;
 		}
 
 		runge_kutta_dormand_prince_5 &set_relative_tolerance(const scalar value)
 		{
 			m_relative_tolerance_constant = value;
-			m_relative_tolerance_source = 1;
 			return *this;
 		}
 
 		runge_kutta_dormand_prince_5 &set_max_step(const scalar value)
 		{
 			m_max_step_constant = value;
-			m_max_step_source = 1;
 			return *this;
 		}
 
 		runge_kutta_dormand_prince_5 &set_first_step(const scalar value)
 		{
 			m_first_step_constant = value;
-			m_first_step_source = 1;
 			return *this;
 		}
 #pragma endregion "CODEGEN INT-RK45-SET"
@@ -139,41 +135,33 @@ namespace openballistics::integrator
 #pragma region "CODEGEN INT-RK45-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar absolute_tolerance() const
 		{
-			if (m_absolute_tolerance_source == 1) return m_absolute_tolerance_constant;
-			throw std::bad_optional_access{};
+			return m_absolute_tolerance_constant;
 		}
 
 		[[nodiscard]] scalar relative_tolerance() const
 		{
-			if (m_relative_tolerance_source == 1) return m_relative_tolerance_constant;
-			throw std::bad_optional_access{};
+			return m_relative_tolerance_constant;
 		}
 
 		[[nodiscard]] scalar max_step() const
 		{
-			if (m_max_step_source == 1) return m_max_step_constant;
-			throw std::bad_optional_access{};
+			return m_max_step_constant;
 		}
 
 		[[nodiscard]] scalar first_step() const
 		{
-			if (m_first_step_source == 1) return m_first_step_constant;
-			throw std::bad_optional_access{};
+			return m_first_step_constant;
 		}
 #pragma endregion "CODEGEN INT-RK45-GET"
 
     private:
 #pragma region "CODEGEN INT-RK45-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
-		bool m_absolute_tolerance_source = 0;
 		scalar m_absolute_tolerance_constant;
 
-		bool m_relative_tolerance_source = 0;
 		scalar m_relative_tolerance_constant;
 
-		bool m_max_step_source = 0;
 		scalar m_max_step_constant;
 
-		bool m_first_step_source = 0;
 		scalar m_first_step_constant;
 #pragma endregion "CODEGEN INT-RK45-MEM"
     };

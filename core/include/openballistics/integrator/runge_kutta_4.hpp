@@ -90,7 +90,6 @@ namespace openballistics::integrator
 		runge_kutta_4 &set_step(const scalar value)
 		{
 			m_step_constant = value;
-			m_step_source = 1;
 			return *this;
 		}
 #pragma endregion "CODEGEN INT-RK4-SET"
@@ -98,14 +97,12 @@ namespace openballistics::integrator
 #pragma region "CODEGEN INT-RK4-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar step() const
 		{
-			if (m_step_source == 1) return m_step_constant;
-			throw std::bad_optional_access{};
+			return m_step_constant;
 		}
 #pragma endregion "CODEGEN INT-RK4-GET"
 
     private:
 #pragma region "CODEGEN INT-RK4-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
-		bool m_step_source = 0;
 		scalar m_step_constant;
 #pragma endregion "CODEGEN INT-RK4-MEM"
     };

@@ -7,21 +7,36 @@ def property_setter(
     type: str,
     class_name: str,
     category: str,
+    has_default: bool,
     base_indent: str = "",
     indent: str = "\t",
 ) -> list[str]:
-    dispatch = {
-        "constant": _constant_property_setter,
-        "curve": _curve_property_setter,
-        "field": _field_property_setter,
-    }
-    return dispatch[category](
-        name=name,
-        type=type,
-        class_name=class_name,
-        base_indent=base_indent,
-        indent=indent,
-    )
+    if category == "constant":
+        return _constant_property_setter(
+            name=name,
+            type=type,
+            has_default=has_default,
+            class_name=class_name,
+            base_indent=base_indent,
+            indent=indent,
+        )
+    elif category == "curve":
+        return _curve_property_setter(
+            name=name,
+            type=type,
+            class_name=class_name,
+            base_indent=base_indent,
+            indent=indent,
+        )
+    elif category == "field":
+        return _field_property_setter(
+            name=name,
+            type=type,
+            class_name=class_name,
+            base_indent=base_indent,
+            indent=indent,
+        )
+    return []
 
 
 def property_getter(
@@ -29,17 +44,27 @@ def property_getter(
     name: str,
     type: str,
     category: str,
+    has_default: bool,
     base_indent: str = "",
     indent: str = "\t",
 ) -> list[str]:
-    dispatch = {
-        "constant": _constant_property_getter,
-        "curve": _curve_property_getter,
-        "field": _field_property_getter,
-    }
-    return dispatch[category](
-        name=name, type=type, base_indent=base_indent, indent=indent
-    )
+    if category == "constant":
+        return _constant_property_getter(
+            name=name,
+            type=type,
+            has_default=has_default,
+            base_indent=base_indent,
+            indent=indent,
+        )
+    elif category == "curve":
+        return _curve_property_getter(
+            name=name, type=type, base_indent=base_indent, indent=indent
+        )
+    elif category == "field":
+        return _field_property_getter(
+            name=name, type=type, base_indent=base_indent, indent=indent
+        )
+    return []
 
 
 def property_member(
@@ -47,14 +72,18 @@ def property_member(
     name: str,
     type: str,
     category: str,
+    has_default: bool,
     base_indent: str = "",
 ) -> list[str]:
-    dispatch = {
-        "constant": _constant_property_member,
-        "curve": _curve_property_member,
-        "field": _field_property_member,
-    }
-    return dispatch[category](name=name, type=type, base_indent=base_indent)
+    if category == "constant":
+        return _constant_property_member(
+            name=name, type=type, has_default=has_default, base_indent=base_indent
+        )
+    elif category == "curve":
+        return _curve_property_member(name=name, type=type, base_indent=base_indent)
+    elif category == "field":
+        return _field_property_member(name=name, type=type, base_indent=base_indent)
+    return []
 
 
 def property_default(
@@ -67,39 +96,69 @@ def property_default(
 
 
 def _constant_property_setter(
-    *, name: str, type: str, class_name: str, base_indent: str, indent: str
+    *,
+    name: str,
+    type: str,
+    has_default: bool,
+    class_name: str,
+    base_indent: str,
+    indent: str,
 ) -> list[str]:
     __ = indent
-    lines = [
-        f"{class_name} &set_{name}(const {type} value)",
-        f"{{",
-        f"{__}m_{name}_constant = value;",
-        f"{__}m_{name}_source = 1;",
-        f"{__}return *this;",
-        f"}}",
-    ]
+    if has_default:
+        lines = [
+            f"{class_name} &set_{name}(const {type} value)",
+            f"{{",
+            f"{__}m_{name}_constant = value;",
+            f"{__}return *this;",
+            f"}}",
+        ]
+    else:
+        lines = [
+            f"{class_name} &set_{name}(const {type} value)",
+            f"{{",
+            f"{__}m_{name}_constant = value;",
+            f"{__}m_{name}_source = 1;",
+            f"{__}return *this;",
+            f"}}",
+        ]
     return [base_indent + line for line in lines]
 
 
 def _constant_property_getter(
-    *, name: str, type: str, base_indent: str, indent: str
+    *, name: str, type: str, has_default: bool, base_indent: str, indent: str
 ) -> list[str]:
     __ = indent
-    lines = [
-        f"[[nodiscard]] {type} {name}() const",
-        f"{{",
-        f"{__}if (m_{name}_source == 1) return m_{name}_constant;",
-        f"{__}throw std::bad_optional_access{{}};",
-        f"}}",
-    ]
+    if has_default:
+        lines = [
+            f"[[nodiscard]] {type} {name}() const",
+            f"{{",
+            f"{__}return m_{name}_constant;",
+            f"}}",
+        ]
+    else:
+        lines = [
+            f"[[nodiscard]] {type} {name}() const",
+            f"{{",
+            f"{__}if (m_{name}_source == 1) return m_{name}_constant;",
+            f"{__}throw std::bad_optional_access{{}};",
+            f"}}",
+        ]
     return [base_indent + line for line in lines]
 
 
-def _constant_property_member(*, name: str, type: str, base_indent: str) -> list[str]:
-    lines = [
-        f"bool m_{name}_source = 0;",
-        f"{type} m_{name}_constant;",
-    ]
+def _constant_property_member(
+    *, name: str, type: str, has_default: bool, base_indent: str
+) -> list[str]:
+    if has_default:
+        lines = [
+            f"{type} m_{name}_constant;",
+        ]
+    else:
+        lines = [
+            f"bool m_{name}_source = 0;",
+            f"{type} m_{name}_constant;",
+        ]
     return [base_indent + line for line in lines]
 
 

@@ -9,7 +9,6 @@ from numpy.typing import ArrayLike, NDArray
 from .integrator import RK4, RKDP5
 from .environment import Environment
 from .projectile import Projectile
-
 from ._core import (  # type: ignore
     Angles,
     PMRK4 as _PMRK4,
@@ -44,23 +43,68 @@ class PointMassBallistics:
             self._core = _PMRK4()
         elif isinstance(integrator, RKDP5):  # type: ignore
             self._core = _PMRKDP5()
-        else:
-            raise TypeError("Unsupported integrator")
-        if isinstance(environment, Environment):  # type: ignore
-            self._core.environment = environment  # type: ignore
-        else:
-            raise TypeError("Unsupported environment")
-        if isinstance(projectile, Projectile):  # type: ignore
-            self._core.projectile = projectile  # type: ignore
-        else:
-            raise TypeError("Unsupported projectile")
+
+        self._core.integrator = integrator._core  # type: ignore
+        self._core.environment = environment._core  # type: ignore
+        self._core.projectile = projectile._core  # type: ignore
+
+        self._integrator = integrator
+        self._environment = environment
+        self._projectile = projectile
+
+        self._integrator._core = self._core.integrator  # type: ignore
+        self._environment._core = self._core.environment  # type: ignore
+        self._projectile._core = self._core.projectile  # type: ignore
+
+    @property
+    def integrator(self):
+        return self._integrator
+
+    @property
+    def environment(self):
+        return self._environment
+
+    @property
+    def projectile(self):
+        return self._projectile
+
+    @integrator.setter
+    def integrator(self, value: RK4 | RKDP5):
+        if isinstance(value, RK4):
+            new_core = _PMRK4()
+        elif isinstance(value, RKDP5):  # type: ignore
+            new_core = _PMRKDP5()
+
+        new_core.integrator = value._core  # type: ignore
+        new_core.environment = self._environment._core  # type: ignore
+        new_core.projectile = self._projectile._core  # type: ignore
+
+        self._core = new_core
+        self._integrator = value
+
+        self._integrator._core = self._core.integrator  # type: ignore
+        self._environment._core = self._core.environment  # type: ignore
+        self._projectile._core = self._core.projectile  # type: ignore
+
+    @environment.setter
+    def environment(self, value: Environment):
+        self._core.environment = value._core  # type: ignore
+        self._environment = value
+        self._environment._core = self._core.environment  # type: ignore
+
+    @projectile.setter
+    def projectile(self, value: Projectile):
+        self._core.projectile = value._core  # type: ignore
+        self._projectile = value
+        self._projectile._core = self._core.projectile  # type: ignore
 
     @overload
     def compute_final_position(
         self,
+        *,
         launch_position: ArrayLike,
         launch_direction: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
         time_of_flight: float,
     ) -> _Vec3: ...
@@ -68,110 +112,108 @@ class PointMassBallistics:
     @overload
     def compute_final_position(
         self,
+        *,
         launch_position: ArrayLike,
-        launch_direction: Angles,
-        platform_velocity: ArrayLike,
+        launch_angles: ArrayLike | Angles,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
         time_of_flight: float,
     ) -> _Vec3: ...
 
     def compute_final_position(
         self,
+        *,
         launch_position: ArrayLike,
-        launch_direction: ArrayLike | Angles,
-        platform_velocity: ArrayLike,
+        launch_direction: ArrayLike | None = None,
+        launch_angles: ArrayLike | Angles | None = None,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         muzzle_velocity: float,
         time_of_flight: float,
     ) -> _Vec3:
         _launch_position = np.asarray(launch_position, dtype=np.float64)
         _platform_velocity = np.asarray(platform_velocity, dtype=np.float64)
-        if isinstance(launch_direction, Angles):
-            return self._core.compute_final_position(
-                _launch_position,
-                launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(time_of_flight),
-            )
-        else:
-            _launch_direction = np.asarray(launch_direction, dtype=np.float64)
-            return self._core.compute_final_position(
-                _launch_position,
-                _launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(time_of_flight),
-            )
+        if launch_direction is not None:
+            _direction = np.asarray(launch_direction, dtype=np.float64)
+        if launch_angles is not None:
+            if isinstance(launch_angles, Angles):
+                _direction = launch_angles
+            else:
+                _launch_angles = np.asarray(launch_angles, dtype=np.float64)
+                _direction = Angles(*_launch_angles)
+
+        return self._core.compute_final_position(
+            _launch_position,
+            _direction,  # type: ignore
+            _platform_velocity,
+            float(muzzle_velocity),
+            float(time_of_flight),
+        )
 
     @overload
     def compute_trajectory(
         self,
+        *,
         launch_position: ArrayLike,
         launch_direction: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
-        start_time: float,
+        start_time: float = ...,
         end_time: float,
-        *,
-        sample_interval: float = 0.2,
+        sample_interval: float,
     ) -> list[_Vec3]: ...
-
     @overload
     def compute_trajectory(
         self,
-        launch_position: ArrayLike,
-        launch_direction: Angles,
-        platform_velocity: ArrayLike,
-        muzzle_velocity: float,
-        start_time: float,
-        end_time: float,
         *,
-        sample_interval: float = 0.2,
+        launch_position: ArrayLike,
+        launch_angles: ArrayLike | Angles,
+        platform_velocity: ArrayLike = ...,
+        muzzle_velocity: float,
+        start_time: float = ...,
+        end_time: float,
+        sample_interval: float,
     ) -> list[_Vec3]: ...
-
     def compute_trajectory(
         self,
-        launch_position: ArrayLike,
-        launch_direction: ArrayLike | Angles,
-        platform_velocity: ArrayLike,
-        muzzle_velocity: float,
-        start_time: float,
-        end_time: float,
         *,
+        launch_position: ArrayLike,
+        launch_direction: ArrayLike | None = None,
+        launch_angles: ArrayLike | Angles | None = None,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
+        muzzle_velocity: float,
+        start_time: float = 0.0,
+        end_time: float,
         sample_interval: float = 0.2,
     ) -> list[_Vec3]:
         _launch_position = np.asarray(launch_position, dtype=np.float64)
         _platform_velocity = np.asarray(platform_velocity, dtype=np.float64)
-        if isinstance(launch_direction, Angles):
-            return self._core.compute_trajectory(
-                _launch_position,
-                launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(start_time),
-                float(end_time),
-                float(sample_interval),
-            )
-        else:
-            _launch_direction = np.asarray(launch_direction, dtype=np.float64)
-            return self._core.compute_trajectory(
-                _launch_position,
-                _launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(start_time),
-                float(end_time),
-                float(sample_interval),
-            )
+        if launch_direction is not None:
+            _direction = np.asarray(launch_direction, dtype=np.float64)
+        if launch_angles is not None:
+            if isinstance(launch_angles, Angles):
+                _direction = launch_angles
+            else:
+                _launch_angles = np.asarray(launch_angles, dtype=np.float64)
+                _direction = Angles(*_launch_angles)
+
+        return self._core.compute_trajectory(
+            _launch_position,
+            _direction,  # type: ignore
+            _platform_velocity,
+            float(muzzle_velocity),
+            float(start_time),
+            float(end_time),
+            float(sample_interval),
+        )
 
     def optimize_launch_direction(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         time_of_flight: float,
-        *,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> _Vec3:
         return self._core.optimize_launch_direction(
@@ -185,12 +227,12 @@ class PointMassBallistics:
 
     def optimize_launch_angles(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         time_of_flight: float,
-        *,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> Angles:
         return self._core.optimize_launch_angles(
@@ -204,12 +246,12 @@ class PointMassBallistics:
 
     def solve_launch_direction(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> _Vec3 | None:
@@ -225,12 +267,12 @@ class PointMassBallistics:
 
     def solve_launch_angles(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> Angles | None:
@@ -246,13 +288,13 @@ class PointMassBallistics:
 
     def solve_launch_direction_and_time_of_flight(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_motion: Callable[[float], _Vec3],
         muzzle_velocity: float,
-        min_time_of_flight: float,
+        min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         segment_size: float = 0.5,
         max_time_of_flight_optimizer_iterations: int = 30,
@@ -273,13 +315,13 @@ class PointMassBallistics:
 
     def solve_launch_angles_and_time_of_flight(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_motion: Callable[[float], _Vec3],
         muzzle_velocity: float,
-        min_time_of_flight: float,
+        min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         segment_size: float = 0.5,
         max_time_of_flight_optimizer_iterations: int = 30,
@@ -322,23 +364,68 @@ class ModifiedPointMassBallistics:
             self._core = _MPMRK4()
         elif isinstance(integrator, RKDP5):  # type: ignore
             self._core = _MPMRKDP5()
-        else:
-            raise TypeError("Unsupported integrator")
-        if isinstance(environment, Environment):  # type: ignore
-            self._core.environment = environment  # type: ignore
-        else:
-            raise TypeError("Unsupported environment")
-        if isinstance(projectile, Projectile):  # type: ignore
-            self._core.projectile = projectile  # type: ignore
-        else:
-            raise TypeError("Unsupported projectile")
+
+        self._core.integrator = integrator._core  # type: ignore
+        self._core.environment = environment._core  # type: ignore
+        self._core.projectile = projectile._core  # type: ignore
+
+        self._integrator = integrator
+        self._environment = environment
+        self._projectile = projectile
+
+        self._integrator._core = self._core.integrator  # type: ignore
+        self._environment._core = self._core.environment  # type: ignore
+        self._projectile._core = self._core.projectile  # type: ignore
+
+    @property
+    def integrator(self):
+        return self._integrator
+
+    @property
+    def environment(self):
+        return self._environment
+
+    @property
+    def projectile(self):
+        return self._projectile
+
+    @integrator.setter
+    def integrator(self, value: RK4 | RKDP5):
+        if isinstance(value, RK4):
+            new_core = _MPMRK4()
+        elif isinstance(value, RKDP5):  # type: ignore
+            new_core = _MPMRKDP5()
+
+        new_core.integrator = value._core  # type: ignore
+        new_core.environment = self._environment._core  # type: ignore
+        new_core.projectile = self._projectile._core  # type: ignore
+
+        self._core = new_core
+        self._integrator = value
+
+        self._integrator._core = self._core.integrator  # type: ignore
+        self._environment._core = self._core.environment  # type: ignore
+        self._projectile._core = self._core.projectile  # type: ignore
+
+    @environment.setter
+    def environment(self, value: Environment):
+        self._core.environment = value._core  # type: ignore
+        self._environment = value
+        self._environment._core = self._core.environment  # type: ignore
+
+    @projectile.setter
+    def projectile(self, value: Projectile):
+        self._core.projectile = value._core  # type: ignore
+        self._projectile = value
+        self._projectile._core = self._core.projectile  # type: ignore
 
     @overload
     def compute_final_position(
         self,
+        *,
         launch_position: ArrayLike,
         launch_direction: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
@@ -347,9 +434,10 @@ class ModifiedPointMassBallistics:
     @overload
     def compute_final_position(
         self,
+        *,
         launch_position: ArrayLike,
-        launch_direction: Angles,
-        platform_velocity: ArrayLike,
+        launch_angles: ArrayLike | Angles,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
@@ -357,110 +445,105 @@ class ModifiedPointMassBallistics:
 
     def compute_final_position(
         self,
+        *,
         launch_position: ArrayLike,
-        launch_direction: ArrayLike | Angles,
-        platform_velocity: ArrayLike,
+        launch_direction: ArrayLike | None = None,
+        launch_angles: ArrayLike | Angles | None = None,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
     ) -> _Vec3:
         _launch_position = np.asarray(launch_position, dtype=np.float64)
         _platform_velocity = np.asarray(platform_velocity, dtype=np.float64)
-        if isinstance(launch_direction, Angles):
-            return self._core.compute_final_position(
-                _launch_position,
-                launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(twist_of_rifling),
-                float(time_of_flight),
-            )
-        else:
-            _launch_direction = np.asarray(launch_direction, dtype=np.float64)
-            return self._core.compute_final_position(
-                _launch_position,
-                _launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(twist_of_rifling),
-                float(time_of_flight),
-            )
+        if launch_direction is not None:
+            _direction = np.asarray(launch_direction, dtype=np.float64)
+        if launch_angles is not None:
+            if isinstance(launch_angles, Angles):
+                _direction = launch_angles
+            else:
+                _launch_angles = np.asarray(launch_angles, dtype=np.float64)
+                _direction = Angles(*_launch_angles)
+
+        return self._core.compute_final_position(
+            _launch_position,
+            _direction,  # type: ignore
+            _platform_velocity,
+            float(muzzle_velocity),
+            float(twist_of_rifling),
+            float(time_of_flight),
+        )
 
     @overload
     def compute_trajectory(
         self,
+        *,
         launch_position: ArrayLike,
         launch_direction: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
         twist_of_rifling: float,
-        start_time: float,
+        start_time: float = ...,
         end_time: float,
-        *,
-        sample_interval: float = 0.2,
+        sample_interval: float,
     ) -> list[_Vec3]: ...
-
     @overload
     def compute_trajectory(
         self,
+        *,
         launch_position: ArrayLike,
-        launch_direction: Angles,
-        platform_velocity: ArrayLike,
+        launch_angles: ArrayLike | Angles,
+        platform_velocity: ArrayLike = ...,
         muzzle_velocity: float,
         twist_of_rifling: float,
-        start_time: float,
+        start_time: float = ...,
         end_time: float,
-        *,
-        sample_interval: float = 0.2,
+        sample_interval: float,
     ) -> list[_Vec3]: ...
-
     def compute_trajectory(
         self,
+        *,
         launch_position: ArrayLike,
-        launch_direction: ArrayLike | Angles,
-        platform_velocity: ArrayLike,
+        launch_direction: ArrayLike | None = None,
+        launch_angles: ArrayLike | Angles | None = None,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         muzzle_velocity: float,
         twist_of_rifling: float,
-        start_time: float,
+        start_time: float = 0.0,
         end_time: float,
-        *,
         sample_interval: float = 0.2,
     ) -> list[_Vec3]:
         _launch_position = np.asarray(launch_position, dtype=np.float64)
         _platform_velocity = np.asarray(platform_velocity, dtype=np.float64)
-        if isinstance(launch_direction, Angles):
-            return self._core.compute_trajectory(
-                _launch_position,
-                launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(twist_of_rifling),
-                float(start_time),
-                float(end_time),
-                float(sample_interval),
-            )
-        else:
-            _launch_direction = np.asarray(launch_direction, dtype=np.float64)
-            return self._core.compute_trajectory(
-                _launch_position,
-                _launch_direction,
-                _platform_velocity,
-                float(muzzle_velocity),
-                float(twist_of_rifling),
-                float(start_time),
-                float(end_time),
-                float(sample_interval),
-            )
+        if launch_direction is not None:
+            _direction = np.asarray(launch_direction, dtype=np.float64)
+        if launch_angles is not None:
+            if isinstance(launch_angles, Angles):
+                _direction = launch_angles
+            else:
+                _launch_angles = np.asarray(launch_angles, dtype=np.float64)
+                _direction = Angles(*_launch_angles)
+
+        return self._core.compute_trajectory(
+            _launch_position,
+            _direction,  # type: ignore
+            _platform_velocity,
+            float(muzzle_velocity),
+            float(twist_of_rifling),
+            float(start_time),
+            float(end_time),
+            float(sample_interval),
+        )
 
     def optimize_launch_direction(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
-        *,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> _Vec3:
         return self._core.optimize_launch_direction(
@@ -475,13 +558,13 @@ class ModifiedPointMassBallistics:
 
     def optimize_launch_angles(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
-        *,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> Angles:
         return self._core.optimize_launch_angles(
@@ -496,13 +579,13 @@ class ModifiedPointMassBallistics:
 
     def solve_launch_direction(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> _Vec3 | None:
@@ -519,13 +602,13 @@ class ModifiedPointMassBallistics:
 
     def solve_launch_angles(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_position: ArrayLike,
         muzzle_velocity: float,
         twist_of_rifling: float,
         time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         max_launch_direction_optimizer_iterations: int = 25,
     ) -> Angles | None:
@@ -542,14 +625,14 @@ class ModifiedPointMassBallistics:
 
     def solve_launch_direction_and_time_of_flight(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_motion: Callable[[float], _Vec3],
         muzzle_velocity: float,
         twist_of_rifling: float,
-        min_time_of_flight: float,
+        min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         segment_size: float = 0.5,
         max_time_of_flight_optimizer_iterations: int = 30,
@@ -571,14 +654,14 @@ class ModifiedPointMassBallistics:
 
     def solve_launch_angles_and_time_of_flight(
         self,
+        *,
         launch_position: ArrayLike,
-        platform_velocity: ArrayLike,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         target_motion: Callable[[float], _Vec3],
         muzzle_velocity: float,
         twist_of_rifling: float,
-        min_time_of_flight: float,
+        min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
-        *,
         miss_distance_threshold: float = 1.0,
         segment_size: float = 0.5,
         max_time_of_flight_optimizer_iterations: int = 30,

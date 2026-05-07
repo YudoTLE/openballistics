@@ -10,16 +10,19 @@ namespace nb = nanobind;
 
 NB_MODULE(_core, m)
 {
-    using namespace openballistics;
-    {
-        using Class = angles;
-        nb::class_<Class>(m, "Angles")
-            .def(nb::init<scalar, scalar>())
-            .def_prop_ro("azimuth", &Class::azimuth)
-            .def_prop_ro("elevation", &Class::elevation)
-            .def("to_direction", &Class::to_unit_direction)
-            .def_static("from_direction", &Class::from_direction);
-    }
+	using namespace openballistics;
+
+	{
+		using Class = angles;
+		nb::class_<Class>(m, "Angles")
+			.def(nb::init<scalar, scalar>(),
+				 nb::arg("azimuth"),
+				 nb::arg("elevation"))
+			.def_prop_ro("azimuth", &Class::azimuth)
+			.def_prop_ro("elevation", &Class::elevation)
+			.def("to_direction", &Class::to_unit_direction)
+			.def_static("from_direction", &Class::from_direction);
+	}
 
 #pragma region "CODEGEN BIND" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	{

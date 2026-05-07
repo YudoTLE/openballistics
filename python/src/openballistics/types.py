@@ -6,6 +6,8 @@ from typing import Union
 import numpy as np
 from numpy.typing import NDArray
 
+from ._core import Angles  # type: ignore
+
 _Vec3 = NDArray[np.float64]
 _ScalarCurve = Callable[[float], float]
 _ScalarField = Callable[[_Vec3], float]

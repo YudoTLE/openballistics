@@ -40,8 +40,8 @@ namespace openballistics::trajectory_model
             const scalar t) const
         {
             constexpr scalar epsilon_v = 1e-6;
-            constexpr scalar epsilon_C_M_a = 1e-6;
-            constexpr scalar tol_a_e = 1e-6;
+            constexpr scalar epsilon_C_M = 1e-6;
+            constexpr scalar tol_a_e = 1e-12;
             constexpr int max_iter_a_e = 15;
 
             const vector3 x_ = y.head<3>();
@@ -61,7 +61,7 @@ namespace openballistics::trajectory_model
             const vector3 v_ = u_ - w_;
             const scalar v2 = v_.squaredNorm();
             const scalar v = std::sqrt(v2);
-            const scalar v4 = v4;
+            const scalar v4 = v2 * v2;
 
             const scalar rho = P / (R * T);
             const scalar M = v / std::sqrt(k * R * T);
@@ -74,19 +74,11 @@ namespace openballistics::trajectory_model
 
             const scalar i = projectile.form_factor();
             const scalar f_D = projectile.drag_factor();
-            const scalar f_L = projectile.lift_factor();
             const scalar Q_D = projectile.yaw_drag_factor();
-            const scalar Q_M = projectile.magnus_force_factor();
 
             const scalar C_D_0 = projectile.drag_force_coefficient(M);
             const scalar C_D_a2 = projectile.quadratic_yaw_drag_force_coefficient(M);
             const scalar C_D_a4 = projectile.quartic_yaw_drag_force_coefficient(M);
-            const scalar C_L_a = projectile.lift_force_coefficient(M);
-            const scalar C_L_a3 = projectile.cubic_lift_force_coefficient(M);
-            const scalar C_L_a5 = projectile.quintic_lift_force_coefficient(M);
-            const scalar C_magf = projectile.magnus_force_coefficient(M);
-            const scalar C_M_a = projectile.overturning_moment_coefficient(M);
-            const scalar C_M_a3 = projectile.cubic_overturning_moment_coefficient(M);
             const scalar C_spin = projectile.spin_damping_moment_coefficient(M);
 
             const vector3 GF_ = m * g_;
@@ -97,15 +89,29 @@ namespace openballistics::trajectory_model
 
             if (v >= epsilon_v)
             {
+                const scalar f_L = projectile.lift_factor();
+                const scalar Q_M = projectile.magnus_force_factor();
+
+                const scalar C_L_a = projectile.lift_force_coefficient(M);
+                const scalar C_L_a3 = projectile.cubic_lift_force_coefficient(M);
+                const scalar C_L_a5 = projectile.quintic_lift_force_coefficient(M);
+                const scalar C_magf = projectile.magnus_force_coefficient(M);
+                const scalar C_M_a = projectile.overturning_moment_coefficient(M);
+                const scalar C_M_a3 = projectile.cubic_overturning_moment_coefficient(M);
+
                 vector3 a_e_ = vector3::Zero();
                 scalar a_e = 0.0;
 
                 for (int iter = 0; iter < max_iter_a_e; ++iter)
                 {
                     a_e = a_e_.norm();
-
                     const scalar a2_e = a_e * a_e;
                     const scalar a4_e = a2_e * a2_e;
+
+                    scalar C_M_eff = C_M_a + C_M_a3 * a2_e;
+                    if (std::abs(C_M_eff) < epsilon_C_M)
+                        break;
+
                     const scalar Q_D_times_a_e = Q_D * a_e;
                     const scalar Q2_D_times_a2_e = Q_D_times_a_e * Q_D_times_a_e;
                     const scalar Q4_D_times_a4_e = Q2_D_times_a2_e * Q2_D_times_a2_e;
@@ -120,20 +126,13 @@ namespace openballistics::trajectory_model
 
                     dudt_ = (GF_ + DF_ + LF_ + MF_) / m;
 
-                    // Protect STANAG denominator from asymptote/zero cancellation
-                    scalar cm_term = C_M_a + C_M_a3 * a2_e;
-                    if (std::abs(cm_term) < epsilon_C_M_a)
+                    vector3 a_e_new_ = (-2.0 * I_x * p * v_.cross(dudt_)) / (rho * S * d * C_M_eff * v4);
+                    if ((a_e_new_ - a_e_).norm() < tol_a_e)
                     {
-                        cm_term = (cm_term < 0.0) ? -epsilon_C_M_a : epsilon_C_M_a;
-                    }
-
-                    vector3 a_e_new = (-2.0 * I_x * p * v_.cross(dudt_)) / (rho * S * d * cm_term * v4);
-                    if ((a_e_new - a_e_).norm() < tol_a_e)
-                    {
-                        a_e_ = a_e_new;
+                        a_e_ = a_e_new_;
                         break;
                     }
-                    a_e_ = a_e_new;
+                    a_e_ = a_e_new_;
                 }
             }
             else

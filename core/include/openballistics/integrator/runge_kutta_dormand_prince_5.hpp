@@ -19,7 +19,11 @@ namespace openballistics::integrator
             const scalar t0,
             const scalar t1) const
         {
-            auto stepper = boost::numeric::odeint::make_controlled<boost::numeric::odeint::runge_kutta_dopri5<State>>(absolute_tolerance(), relative_tolerance(), max_step());
+            auto stepper = boost::numeric::odeint::make_controlled(
+                absolute_tolerance(),
+                relative_tolerance(),
+                max_step(),
+                boost::numeric::odeint::runge_kutta_dopri5<State>());
 
             boost::numeric::odeint::integrate_adaptive(
                 stepper,
@@ -38,7 +42,11 @@ namespace openballistics::integrator
             const scalar t1,
             Callback &&callback) const
         {
-            auto stepper = boost::numeric::odeint::make_controlled<boost::numeric::odeint::runge_kutta_dopri5<State>>(absolute_tolerance(), relative_tolerance(), max_step());
+            auto stepper = boost::numeric::odeint::make_controlled(
+                absolute_tolerance(),
+                relative_tolerance(),
+                max_step(),
+                boost::numeric::odeint::runge_kutta_dopri5<State>());
 
             boost::numeric::odeint::integrate_adaptive(
                 stepper,
@@ -58,7 +66,11 @@ namespace openballistics::integrator
             const scalar t1,
             Callback &&callback) const
         {
-            auto stepper = boost::numeric::odeint::make_dense_output<boost::numeric::odeint::runge_kutta_dopri5<State>>(absolute_tolerance(), relative_tolerance(), max_step());
+            auto stepper = boost::numeric::odeint::make_dense_output(
+                absolute_tolerance(),
+                relative_tolerance(),
+                max_step(),
+                boost::numeric::odeint::runge_kutta_dopri5<State>());
 
             const auto observer = [&](const State &x_curr, const scalar t)
             {

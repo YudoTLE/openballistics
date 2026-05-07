@@ -46,7 +46,7 @@ NB_MODULE(_core, m)
 	}
 	{
 		using Class = ballistics<trajectory_model::modified_point_mass, integrator::runge_kutta_dormand_prince_5>;
-		auto nb_class = nb::class_<Class>(m, "MPMRKDP5").def(nb::init<>());
+		auto nb_class = nb::class_<Class>(m, "MPMRK45").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -84,7 +84,7 @@ NB_MODULE(_core, m)
 	}
 	{
 		using Class = ballistics<trajectory_model::point_mass, integrator::runge_kutta_dormand_prince_5>;
-		auto nb_class = nb::class_<Class>(m, "PMRKDP5").def(nb::init<>());
+		auto nb_class = nb::class_<Class>(m, "PMRK45").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
@@ -110,7 +110,7 @@ NB_MODULE(_core, m)
 	}
 	{
 		using Class = integrator::runge_kutta_dormand_prince_5;
-		auto nb_class = nb::class_<Class>(m, "RKDP5").def(nb::init<>());
+		auto nb_class = nb::class_<Class>(m, "RK45").def(nb::init<>());
 		nb_class
 			.def("set_absolute_tolerance", &Class::set_absolute_tolerance)
 			.def("absolute_tolerance", &Class::absolute_tolerance);

@@ -6,15 +6,15 @@ from typing import overload, Literal
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-from .integrator import RK4, RKDP5
+from .integrator import RK4, RK45
 from .environment import Environment
 from .projectile import Projectile
 from ._core import (  # type: ignore
     Angles,
     PMRK4 as _PMRK4,
-    PMRKDP5 as _PMRKDP5,
+    PMRK45 as _PMRK45,
     MPMRK4 as _MPMRK4,
-    MPMRKDP5 as _MPMRKDP5,
+    MPMRK45 as _MPMRK45,
 )
 
 _Vec3 = NDArray[np.float64]
@@ -24,14 +24,14 @@ class PointMassBallistics:
     def __init__(
         self,
         *,
-        integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
+        integrator: RK4 | RK45 | Literal["rk4", "rk45"] = "rk45",
         environment: Environment | Literal["isa"] | None = None,
         projectile: Projectile | None = None,
     ) -> None:
         if integrator == "rk4":
             integrator = RK4()
-        elif integrator == "rkdp5":
-            integrator = RKDP5()
+        elif integrator == "rk45":
+            integrator = RK45()
         if environment == None:
             environment = Environment()
         elif environment == "isa":
@@ -41,8 +41,8 @@ class PointMassBallistics:
 
         if isinstance(integrator, RK4):
             self._core = _PMRK4()
-        elif isinstance(integrator, RKDP5):  # type: ignore
-            self._core = _PMRKDP5()
+        elif isinstance(integrator, RK45):  # type: ignore
+            self._core = _PMRK45()
 
         self._core.integrator = integrator._core  # type: ignore
         self._core.environment = environment._core  # type: ignore
@@ -69,11 +69,11 @@ class PointMassBallistics:
         return self._projectile
 
     @integrator.setter
-    def integrator(self, value: RK4 | RKDP5):
+    def integrator(self, value: RK4 | RK45):
         if isinstance(value, RK4):
             new_core = _PMRK4()
-        elif isinstance(value, RKDP5):  # type: ignore
-            new_core = _PMRKDP5()
+        elif isinstance(value, RK45):  # type: ignore
+            new_core = _PMRK45()
 
         new_core.integrator = value._core  # type: ignore
         new_core.environment = self._environment._core  # type: ignore
@@ -351,14 +351,14 @@ class ModifiedPointMassBallistics:
     def __init__(
         self,
         *,
-        integrator: RK4 | RKDP5 | Literal["rk4", "rkdp5"] = "rkdp5",
+        integrator: RK4 | RK45 | Literal["rk4", "rk45"] = "rk45",
         environment: Environment | Literal["isa"] | None = None,
         projectile: Projectile | None = None,
     ) -> None:
         if integrator == "rk4":
             integrator = RK4()
-        elif integrator == "rkdp5":
-            integrator = RKDP5()
+        elif integrator == "rk45":
+            integrator = RK45()
         if environment == None:
             environment = Environment()
         elif environment == "isa":
@@ -368,8 +368,8 @@ class ModifiedPointMassBallistics:
 
         if isinstance(integrator, RK4):
             self._core = _MPMRK4()
-        elif isinstance(integrator, RKDP5):  # type: ignore
-            self._core = _MPMRKDP5()
+        elif isinstance(integrator, RK45):  # type: ignore
+            self._core = _MPMRK45()
 
         self._core.integrator = integrator._core  # type: ignore
         self._core.environment = environment._core  # type: ignore
@@ -396,11 +396,11 @@ class ModifiedPointMassBallistics:
         return self._projectile
 
     @integrator.setter
-    def integrator(self, value: RK4 | RKDP5):
+    def integrator(self, value: RK4 | RK45):
         if isinstance(value, RK4):
             new_core = _MPMRK4()
-        elif isinstance(value, RKDP5):  # type: ignore
-            new_core = _MPMRKDP5()
+        elif isinstance(value, RK45):  # type: ignore
+            new_core = _MPMRK45()
 
         new_core.integrator = value._core  # type: ignore
         new_core.environment = self._environment._core  # type: ignore

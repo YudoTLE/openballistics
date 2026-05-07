@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from ._core import RK4 as _RK4, RKDP5 as _RKDP5  # type: ignore
+from ._core import RK4 as _RK4, RK45 as _RK45  # type: ignore
 
 
 class Integrator:
@@ -21,7 +21,7 @@ class RK4(Integrator):
         self._core.set_step(value)
 
 
-class RKDP5(Integrator):
+class RK45(Integrator):
     def __init__(
         self,
         *,
@@ -30,7 +30,7 @@ class RKDP5(Integrator):
         max_step: float = float("inf"),
         first_step: float = 1e-3,
     ) -> None:
-        self._core = _RKDP5()
+        self._core = _RK45()
         self.absolute_tolerance = absolute_tolerance
         self.relative_tolerance = relative_tolerance
         self.max_step = max_step

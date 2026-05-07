@@ -97,16 +97,16 @@ namespace openballistics::integrator
     public:
         runge_kutta_dormand_prince_5()
         {
-#pragma region "CODEGEN INT-RKDP5-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INT-RK45-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			set_absolute_tolerance(1e-6);
 			set_relative_tolerance(1e-6);
 			set_max_step(std::numeric_limits<scalar>::infinity());
 			set_first_step(1e-3);
-#pragma endregion "CODEGEN INT-RKDP5-DEF"
+#pragma endregion "CODEGEN INT-RK45-DEF"
         }
 
     public:
-#pragma region "CODEGEN INT-RKDP5-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INT-RK45-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		runge_kutta_dormand_prince_5 &set_absolute_tolerance(const scalar value)
 		{
 			m_absolute_tolerance_constant = value;
@@ -134,9 +134,9 @@ namespace openballistics::integrator
 			m_first_step_source = 1;
 			return *this;
 		}
-#pragma endregion "CODEGEN INT-RKDP5-SET"
+#pragma endregion "CODEGEN INT-RK45-SET"
 
-#pragma region "CODEGEN INT-RKDP5-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INT-RK45-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar absolute_tolerance() const
 		{
 			if (m_absolute_tolerance_source == 1) return m_absolute_tolerance_constant;
@@ -160,10 +160,10 @@ namespace openballistics::integrator
 			if (m_first_step_source == 1) return m_first_step_constant;
 			throw std::bad_optional_access{};
 		}
-#pragma endregion "CODEGEN INT-RKDP5-GET"
+#pragma endregion "CODEGEN INT-RK45-GET"
 
     private:
-#pragma region "CODEGEN INT-RKDP5-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INT-RK45-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		bool m_absolute_tolerance_source = 0;
 		scalar m_absolute_tolerance_constant;
 
@@ -175,7 +175,7 @@ namespace openballistics::integrator
 
 		bool m_first_step_source = 0;
 		scalar m_first_step_constant;
-#pragma endregion "CODEGEN INT-RKDP5-MEM"
+#pragma endregion "CODEGEN INT-RK45-MEM"
     };
 }
 

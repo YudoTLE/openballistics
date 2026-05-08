@@ -289,19 +289,21 @@ namespace openballistics
                 return result;
             };
 
-            for (scalar segment_hi_time = min_time_of_flight + time_of_flight_segment_size;
-                 segment_hi_time < max_time_of_flight;
-                 segment_hi_time += time_of_flight_segment_size)
+            for (uint32_t i = 1;; ++i)
             {
+                const scalar segment_hi_time = min_time_of_flight + i * time_of_flight_segment_size;
+                if (segment_hi_time >= max_time_of_flight)
+                    break;
+
                 auto result = segment(segment_hi_time);
                 if (result.has_value())
-                    return result.value();
+                    return std::move(result).value();
             }
             if (segment_lo_time < max_time_of_flight)
             {
                 auto result = segment(max_time_of_flight);
                 if (result.has_value())
-                    return result.value();
+                    return std::move(result).value();
             }
 
             return std::nullopt;

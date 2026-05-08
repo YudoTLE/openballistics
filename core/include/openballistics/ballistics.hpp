@@ -236,17 +236,26 @@ namespace openballistics
                 return (target_position - launch_position).dot(target_position_to_final_position);
             };
 
-            auto solution = [&](const scalar a, const scalar b, const scalar fa, const scalar fb) -> std::optional<std::pair<vector3, scalar>>
-            {
-                boost::math::tools::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
-                std::uintmax_t max_iter = time_of_flight_max_iterations;
+            scalar segment_lo_time = min_time_of_flight;
+            scalar segment_lo_proxy = proxy(min_time_of_flight);
+            scalar segment_hi_time;
+            scalar segment_hi_proxy;
 
+            const boost::math::tools::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
+            auto solution = [&]() -> std::optional<std::pair<vector3, scalar>>
+            {
+                segment_hi_proxy = proxy(segment_hi_time);
+
+                if (boost::math::sign(segment_lo_proxy) * boost::math::sign(segment_hi_proxy) > 0)
+                    return std::nullopt;
+
+                std::uintmax_t max_iter = time_of_flight_max_iterations;
                 auto [lo, hi] = boost::math::tools::toms748_solve(
                     proxy,
-                    a,
-                    b,
-                    fa,
-                    fb,
+                    segment_lo_time,
+                    segment_hi_time,
+                    segment_lo_proxy,
+                    segment_hi_proxy,
                     tol,
                     max_iter);
 
@@ -272,36 +281,24 @@ namespace openballistics
                 return std::make_pair(launch_direction, time_of_flight);
             };
 
-            scalar segment_lo_time = min_time_of_flight;
-            scalar segment_lo_proxy = proxy(min_time_of_flight);
-
-            auto segment = [&](const scalar segment_hi_time) -> std::optional<std::pair<vector3, scalar>>
-            {
-                const scalar segment_hi_proxy = proxy(segment_hi_time);
-
-                std::optional<std::pair<vector3, scalar>> result = std::nullopt;
-                if (boost::math::sign(segment_lo_proxy) * boost::math::sign(segment_hi_proxy) <= 0)
-                    result = solution(segment_lo_time, segment_hi_time, segment_lo_proxy, segment_hi_proxy);
-
-                segment_lo_time = segment_hi_time;
-                segment_lo_proxy = segment_hi_proxy;
-
-                return result;
-            };
-
             for (uint32_t i = 1;; ++i)
             {
-                const scalar segment_hi_time = min_time_of_flight + i * time_of_flight_segment_size;
+                segment_hi_time = min_time_of_flight + i * time_of_flight_segment_size;
                 if (segment_hi_time >= max_time_of_flight)
                     break;
 
-                auto result = segment(segment_hi_time);
+                auto result = solution();
                 if (result.has_value())
                     return std::move(result).value();
+
+                segment_lo_time = segment_hi_time;
+                segment_lo_proxy = segment_hi_proxy;
             }
             if (segment_lo_time < max_time_of_flight)
             {
-                auto result = segment(max_time_of_flight);
+                segment_hi_time = max_time_of_flight;
+
+                auto result = solution();
                 if (result.has_value())
                     return std::move(result).value();
             }

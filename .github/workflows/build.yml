@@ -29,7 +29,7 @@ jobs:
           CIBW_BEFORE_ALL_WINDOWS: "curl -L -o boost.tar.gz https://github.com/boostorg/boost/releases/download/boost-1.91.0-1/boost-1.91.0-1-cmake.tar.gz && tar -xzf boost.tar.gz -C C:\\ && curl -L -o eigen.tar.gz https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz && tar -xzf eigen.tar.gz -C C:\\"
           CIBW_ENVIRONMENT_LINUX: "CMAKE_PREFIX_PATH=/tmp/boost"
           CIBW_ENVIRONMENT_MACOS: "CMAKE_PREFIX_PATH=/Users/runner/boost"
-          CIBW_ENVIRONMENT_WINDOWS: "BOOST_ROOT=C:/boost-1.91.0-1-cmake Eigen3_ROOT=C:/eigen-3.4.0 CMAKE_PREFIX_PATH=C:/boost-1.91.0-1-cmake;C:/eigen-3.4.0"
+          CIBW_ENVIRONMENT_WINDOWS: 'BOOST_ROOT="C:/boost-1.91.0-1-cmake" Eigen3_ROOT="C:/eigen-3.4.0" CMAKE_PREFIX_PATH="C:/boost-1.91.0-1-cmake;C:/eigen-3.4.0"'
 
       - uses: actions/upload-artifact@v4
         with:

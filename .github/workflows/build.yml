@@ -27,9 +27,9 @@ jobs:
           CIBW_BEFORE_ALL_MACOS: "brew install eigen && curl -L -o /tmp/boost.tar.gz https://github.com/boostorg/boost/releases/download/boost-1.91.0-1/boost-1.91.0-1-cmake.tar.gz && mkdir -p /Users/runner/boost && tar -xzf /tmp/boost.tar.gz -C /Users/runner/boost --strip-components=1"
 
           CIBW_BEFORE_ALL_WINDOWS: "curl -L -o boost.tar.gz https://github.com/boostorg/boost/releases/download/boost-1.91.0-1/boost-1.91.0-1-cmake.tar.gz && tar -xzf boost.tar.gz -C C:\\ && curl -L -o eigen.tar.gz https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz && tar -xzf eigen.tar.gz -C C:\\"
-          CIBW_ENVIRONMENT_LINUX: "CMAKE_PREFIX_PATH=/tmp/boost"
-          CIBW_ENVIRONMENT_MACOS: "CMAKE_PREFIX_PATH=/Users/runner/boost"
-          CIBW_ENVIRONMENT_WINDOWS: 'BOOST_ROOT="C:/boost-1.91.0-1-cmake" Eigen3_ROOT="C:/eigen-3.4.0" CMAKE_PREFIX_PATH="C:/boost-1.91.0-1-cmake;C:/eigen-3.4.0"'
+          CIBW_ENVIRONMENT_LINUX: "CMAKE_PREFIX_PATH=/tmp/boost Boost_DIR=/tmp/boost/lib/cmake/Boost-1.91.0"
+          CIBW_ENVIRONMENT_MACOS: "CMAKE_PREFIX_PATH=/Users/runner/boost;/opt/homebrew Boost_DIR=/Users/runner/boost/lib/cmake/Boost-1.91.0 Eigen3_DIR=/opt/homebrew/share/eigen3/cmake"
+          CIBW_ENVIRONMENT_WINDOWS: 'BOOST_ROOT="C:/boost-1.91.0-1-cmake" Eigen3_ROOT="C:/eigen-3.4.0" CMAKE_PREFIX_PATH="C:/boost-1.91.0-1-cmake;C:/eigen-3.4.0" Boost_DIR="C:/boost-1.91.0-1-cmake/lib/cmake/Boost-1.91.0"'
 
       - uses: actions/upload-artifact@v4
         with:

@@ -208,9 +208,9 @@ namespace openballistics
             const scalar min_time_of_flight,
             const scalar max_time_of_flight,
             const scalar miss_distance_threshold,
-            const scalar segment_size,
-            const uint32_t max_time_of_flight_optimizer_iterations,
-            const uint32_t max_launch_direction_optimizer_iterations) const
+            const scalar time_of_flight_segment_size,
+            const uint32_t time_of_flight_max_iterations,
+            const uint32_t launch_direction_max_iterations) const
         {
             const scalar sq_miss_distance_threshold = miss_distance_threshold * miss_distance_threshold;
 
@@ -223,7 +223,7 @@ namespace openballistics
                     target_position,
                     extra_parameters,
                     time_of_flight,
-                    max_launch_direction_optimizer_iterations);
+                    launch_direction_max_iterations);
                 const vector3 final_position = compute_final_position_impl(
                     launch_position,
                     launch_direction,
@@ -239,7 +239,7 @@ namespace openballistics
             auto solution = [&](const scalar a, const scalar b, const scalar fa, const scalar fb) -> std::optional<std::pair<vector3, scalar>>
             {
                 boost::math::tools::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
-                std::uintmax_t max_iter = max_time_of_flight_optimizer_iterations;
+                std::uintmax_t max_iter = time_of_flight_max_iterations;
 
                 auto [lo, hi] = boost::math::tools::toms748_solve(
                     proxy,
@@ -258,7 +258,7 @@ namespace openballistics
                     target_position,
                     extra_parameters,
                     time_of_flight,
-                    max_launch_direction_optimizer_iterations);
+                    launch_direction_max_iterations);
                 const vector3 final_position = compute_final_position_impl(
                     launch_position,
                     launch_direction,
@@ -289,9 +289,9 @@ namespace openballistics
                 return result;
             };
 
-            for (scalar segment_hi_time = min_time_of_flight + segment_size;
+            for (scalar segment_hi_time = min_time_of_flight + time_of_flight_segment_size;
                  segment_hi_time < max_time_of_flight;
-                 segment_hi_time += segment_size)
+                 segment_hi_time += time_of_flight_segment_size)
             {
                 auto result = segment(segment_hi_time);
                 if (result.has_value())

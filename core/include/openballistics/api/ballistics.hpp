@@ -143,7 +143,7 @@ namespace openballistics::api::detail
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -151,14 +151,14 @@ namespace openballistics::api::detail
 				target_position,
 				{muzzle_velocity},
 				time_of_flight,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(
 			const vector3 &launch_position,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -166,7 +166,7 @@ namespace openballistics::api::detail
 				target_position,
 				{muzzle_velocity},
 				time_of_flight,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] angles optimize_launch_angles(
 			const vector3 &launch_position,
@@ -174,7 +174,7 @@ namespace openballistics::api::detail
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return angles::from_unit_direction(
 				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
@@ -183,14 +183,14 @@ namespace openballistics::api::detail
 					target_position,
 					{muzzle_velocity},
 					time_of_flight,
-					max_launch_direction_optimizer_iterations));
+					launch_direction_max_iterations));
 		}
 		[[nodiscard]] angles optimize_launch_angles(
 			const vector3 &launch_position,
 			const vector3 &target_position,
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return angles::from_unit_direction(
 				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
@@ -199,7 +199,7 @@ namespace openballistics::api::detail
 					target_position,
 					{muzzle_velocity},
 					time_of_flight,
-					max_launch_direction_optimizer_iterations));
+					launch_direction_max_iterations));
 		}
 		[[nodiscard]] std::optional<vector3> solve_launch_direction(
 			const vector3 &launch_position,
@@ -208,7 +208,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -217,7 +217,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<vector3> solve_launch_direction(
 			const vector3 &launch_position,
@@ -225,7 +225,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -234,7 +234,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<angles> solve_launch_angles(
 			const vector3 &launch_position,
@@ -243,7 +243,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -252,7 +252,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 			if (!launch_direction.has_value())
 				return std::nullopt;
 			return angles::from_unit_direction(launch_direction.value());
@@ -263,7 +263,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -272,7 +272,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 			if (!launch_direction.has_value())
 				return std::nullopt;
 			return angles::from_unit_direction(launch_direction.value());
@@ -285,9 +285,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -297,9 +297,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
@@ -308,9 +308,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -320,9 +320,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
 			const vector3 &launch_position,
@@ -332,9 +332,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -344,9 +344,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 			if (!result.has_value())
 				return std::nullopt;
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
@@ -358,9 +358,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -370,9 +370,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 			if (!result.has_value())
 				return std::nullopt;
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
@@ -523,7 +523,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -531,7 +531,7 @@ namespace openballistics::api::detail
 				target_position,
 				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(
 			const vector3 &launch_position,
@@ -539,7 +539,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -547,7 +547,7 @@ namespace openballistics::api::detail
 				target_position,
 				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] angles optimize_launch_angles(
 			const vector3 &launch_position,
@@ -556,7 +556,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return angles::from_unit_direction(
 				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
@@ -565,7 +565,7 @@ namespace openballistics::api::detail
 					target_position,
 					{muzzle_velocity, twist_of_rifling},
 					time_of_flight,
-					max_launch_direction_optimizer_iterations));
+					launch_direction_max_iterations));
 		}
 		[[nodiscard]] angles optimize_launch_angles(
 			const vector3 &launch_position,
@@ -573,7 +573,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return angles::from_unit_direction(
 				static_cast<const Derived *>(this)->optimize_launch_direction_impl(
@@ -582,7 +582,7 @@ namespace openballistics::api::detail
 					target_position,
 					{muzzle_velocity, twist_of_rifling},
 					time_of_flight,
-					max_launch_direction_optimizer_iterations));
+					launch_direction_max_iterations));
 		}
 		[[nodiscard]] std::optional<vector3> solve_launch_direction(
 			const vector3 &launch_position,
@@ -592,7 +592,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -601,7 +601,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<vector3> solve_launch_direction(
 			const vector3 &launch_position,
@@ -610,7 +610,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -619,7 +619,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<angles> solve_launch_angles(
 			const vector3 &launch_position,
@@ -629,7 +629,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -638,7 +638,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 			if (!launch_direction.has_value())
 				return std::nullopt;
 			return angles::from_unit_direction(launch_direction.value());
@@ -650,7 +650,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -659,7 +659,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				time_of_flight,
 				miss_distance_threshold,
-				max_launch_direction_optimizer_iterations);
+				launch_direction_max_iterations);
 			if (!launch_direction.has_value())
 				return std::nullopt;
 			return angles::from_unit_direction(launch_direction.value());
@@ -673,9 +673,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -685,9 +685,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
@@ -697,9 +697,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -709,9 +709,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 		}
 		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
 			const vector3 &launch_position,
@@ -722,9 +722,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -734,9 +734,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 			if (!result.has_value())
 				return std::nullopt;
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
@@ -749,9 +749,9 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
-			const scalar segment_size = 0.5,
-			const uint32_t max_time_of_flight_optimizer_iterations = 30,
-			const uint32_t max_launch_direction_optimizer_iterations = 25) const
+			const scalar time_of_flight_segment_size = 0.5,
+			const uint32_t time_of_flight_max_iterations = 30,
+			const uint32_t launch_direction_max_iterations = 25) const
 		{
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -761,9 +761,9 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
-				segment_size,
-				max_time_of_flight_optimizer_iterations,
-				max_launch_direction_optimizer_iterations);
+				time_of_flight_segment_size,
+				time_of_flight_max_iterations,
+				launch_direction_max_iterations);
 			if (!result.has_value())
 				return std::nullopt;
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);

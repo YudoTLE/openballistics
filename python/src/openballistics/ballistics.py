@@ -214,7 +214,7 @@ class PointMassBallistics:
         target_position: ArrayLike,
         muzzle_velocity: float,
         time_of_flight: float,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> _Vec3:
         return self._core.optimize_launch_direction(
             np.asarray(launch_position, dtype=np.float64),
@@ -222,7 +222,7 @@ class PointMassBallistics:
             np.asarray(target_position, dtype=np.float64),
             float(muzzle_velocity),
             float(time_of_flight),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def optimize_launch_angles(
@@ -233,7 +233,7 @@ class PointMassBallistics:
         target_position: ArrayLike,
         muzzle_velocity: float,
         time_of_flight: float,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> Angles:
         return self._core.optimize_launch_angles(
             np.asarray(launch_position, dtype=np.float64),
@@ -241,7 +241,7 @@ class PointMassBallistics:
             np.asarray(target_position, dtype=np.float64),
             float(muzzle_velocity),
             float(time_of_flight),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_direction(
@@ -253,7 +253,7 @@ class PointMassBallistics:
         muzzle_velocity: float,
         time_of_flight: float,
         miss_distance_threshold: float = 1.0,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> _Vec3 | None:
         return self._core.solve_launch_direction(
             np.asarray(launch_position, dtype=np.float64),
@@ -262,7 +262,7 @@ class PointMassBallistics:
             float(muzzle_velocity),
             float(time_of_flight),
             float(miss_distance_threshold),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_angles(
@@ -274,7 +274,7 @@ class PointMassBallistics:
         muzzle_velocity: float,
         time_of_flight: float,
         miss_distance_threshold: float = 1.0,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> Angles | None:
         return self._core.solve_launch_angles(
             np.asarray(launch_position, dtype=np.float64),
@@ -283,7 +283,7 @@ class PointMassBallistics:
             float(muzzle_velocity),
             float(time_of_flight),
             float(miss_distance_threshold),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_direction_and_time_of_flight(
@@ -296,9 +296,9 @@ class PointMassBallistics:
         min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
         miss_distance_threshold: float = 1.0,
-        segment_size: float = 0.5,
-        max_time_of_flight_optimizer_iterations: int = 30,
-        max_launch_direction_optimizer_iterations: int = 25,
+        time_of_flight_segment_size: float = 0.5,
+        time_of_flight_max_iterations: int = 30,
+        launch_direction_max_iterations: int = 25,
     ) -> tuple[_Vec3, float] | None:
         return self._core.solve_launch_direction_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
@@ -308,9 +308,9 @@ class PointMassBallistics:
             float(min_time_of_flight),
             float(max_time_of_flight),
             float(miss_distance_threshold),
-            float(segment_size),
-            int(max_time_of_flight_optimizer_iterations),
-            int(max_launch_direction_optimizer_iterations),
+            float(time_of_flight_segment_size),
+            int(time_of_flight_max_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_angles_and_time_of_flight(
@@ -323,9 +323,9 @@ class PointMassBallistics:
         min_time_of_flight: float = 0.0,
         max_time_of_flight: float,
         miss_distance_threshold: float = 1.0,
-        segment_size: float = 0.5,
-        max_time_of_flight_optimizer_iterations: int = 30,
-        max_launch_direction_optimizer_iterations: int = 25,
+        time_of_flight_segment_size: float = 0.5,
+        time_of_flight_max_iterations: int = 30,
+        launch_direction_max_iterations: int = 25,
     ) -> tuple[Angles, float] | None:
         return self._core.solve_launch_angles_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
@@ -335,9 +335,9 @@ class PointMassBallistics:
             float(min_time_of_flight),
             float(max_time_of_flight),
             float(miss_distance_threshold),
-            float(segment_size),
-            int(max_time_of_flight_optimizer_iterations),
-            int(max_launch_direction_optimizer_iterations),
+            float(time_of_flight_segment_size),
+            int(time_of_flight_max_iterations),
+            int(launch_direction_max_iterations),
         )
 
 
@@ -507,7 +507,7 @@ class ModifiedPointMassBallistics:
         twist_of_rifling: float,
         time_of_flight: float,
         *,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> _Vec3:
         return self._core.optimize_launch_direction(
             np.asarray(launch_position, dtype=np.float64),
@@ -516,7 +516,7 @@ class ModifiedPointMassBallistics:
             float(muzzle_velocity),
             float(twist_of_rifling),
             float(time_of_flight),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def optimize_launch_angles(
@@ -528,7 +528,7 @@ class ModifiedPointMassBallistics:
         twist_of_rifling: float,
         time_of_flight: float,
         *,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> Angles:
         return self._core.optimize_launch_angles(
             np.asarray(launch_position, dtype=np.float64),
@@ -537,7 +537,7 @@ class ModifiedPointMassBallistics:
             float(muzzle_velocity),
             float(twist_of_rifling),
             float(time_of_flight),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_direction(
@@ -550,7 +550,7 @@ class ModifiedPointMassBallistics:
         time_of_flight: float,
         *,
         miss_distance_threshold: float = 1.0,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> _Vec3 | None:
         return self._core.solve_launch_direction(
             np.asarray(launch_position, dtype=np.float64),
@@ -560,7 +560,7 @@ class ModifiedPointMassBallistics:
             float(twist_of_rifling),
             float(time_of_flight),
             float(miss_distance_threshold),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_angles(
@@ -573,7 +573,7 @@ class ModifiedPointMassBallistics:
         time_of_flight: float,
         *,
         miss_distance_threshold: float = 1.0,
-        max_launch_direction_optimizer_iterations: int = 25,
+        launch_direction_max_iterations: int = 25,
     ) -> Angles | None:
         return self._core.solve_launch_angles(
             np.asarray(launch_position, dtype=np.float64),
@@ -583,7 +583,7 @@ class ModifiedPointMassBallistics:
             float(twist_of_rifling),
             float(time_of_flight),
             float(miss_distance_threshold),
-            int(max_launch_direction_optimizer_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_direction_and_time_of_flight(
@@ -597,9 +597,9 @@ class ModifiedPointMassBallistics:
         max_time_of_flight: float,
         *,
         miss_distance_threshold: float = 1.0,
-        segment_size: float = 0.5,
-        max_time_of_flight_optimizer_iterations: int = 30,
-        max_launch_direction_optimizer_iterations: int = 25,
+        time_of_flight_segment_size: float = 0.5,
+        time_of_flight_max_iterations: int = 30,
+        launch_direction_max_iterations: int = 25,
     ) -> tuple[_Vec3, float] | None:
         return self._core.solve_launch_direction_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
@@ -610,9 +610,9 @@ class ModifiedPointMassBallistics:
             float(min_time_of_flight),
             float(max_time_of_flight),
             float(miss_distance_threshold),
-            float(segment_size),
-            int(max_time_of_flight_optimizer_iterations),
-            int(max_launch_direction_optimizer_iterations),
+            float(time_of_flight_segment_size),
+            int(time_of_flight_max_iterations),
+            int(launch_direction_max_iterations),
         )
 
     def solve_launch_angles_and_time_of_flight(
@@ -626,9 +626,9 @@ class ModifiedPointMassBallistics:
         max_time_of_flight: float,
         *,
         miss_distance_threshold: float = 1.0,
-        segment_size: float = 0.5,
-        max_time_of_flight_optimizer_iterations: int = 30,
-        max_launch_direction_optimizer_iterations: int = 25,
+        time_of_flight_segment_size: float = 0.5,
+        time_of_flight_max_iterations: int = 30,
+        launch_direction_max_iterations: int = 25,
     ) -> tuple[Angles, float] | None:
         return self._core.solve_launch_angles_and_time_of_flight(
             np.asarray(launch_position, dtype=np.float64),
@@ -639,7 +639,7 @@ class ModifiedPointMassBallistics:
             float(min_time_of_flight),
             float(max_time_of_flight),
             float(miss_distance_threshold),
-            float(segment_size),
-            int(max_time_of_flight_optimizer_iterations),
-            int(max_launch_direction_optimizer_iterations),
+            float(time_of_flight_segment_size),
+            int(time_of_flight_max_iterations),
+            int(launch_direction_max_iterations),
         )

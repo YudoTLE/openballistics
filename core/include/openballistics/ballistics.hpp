@@ -3,12 +3,12 @@
 
 #include "./types.hpp"
 #include "./numbers.hpp"
+#include "./math/root.hpp"
 #include "./angles.hpp"
 #include "./environment.hpp"
 #include "./projectile.hpp"
 #include "./api/ballistics.hpp"
 #include <unsupported/Eigen/LevenbergMarquardt>
-#include <boost/math/tools/roots.hpp>
 #include <cmath>
 #include <cstdint>
 #include <functional>
@@ -241,7 +241,7 @@ namespace openballistics
             scalar segment_hi_time;
             scalar segment_hi_proxy;
 
-            const boost::math::tools::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
+            const math::root::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
             auto solution = [&]() -> std::optional<std::pair<vector3, scalar>>
             {
                 segment_hi_proxy = proxy(segment_hi_time);
@@ -250,7 +250,7 @@ namespace openballistics
                     return std::nullopt;
 
                 std::uintmax_t max_iter = time_of_flight_max_iterations;
-                auto [lo, hi] = boost::math::tools::toms748_solve(
+                auto [lo, hi] = math::root::toms748_solve(
                     proxy,
                     segment_lo_time,
                     segment_hi_time,

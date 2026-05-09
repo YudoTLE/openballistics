@@ -33,8 +33,8 @@ namespace openballistics
 
     public:
         Integrator integrator;
-        environment environment;
-        projectile projectile;
+        openballistics::environment environment;
+        openballistics::projectile projectile;
 
     private:
         [[nodiscard]] vector3 compute_final_position_impl(

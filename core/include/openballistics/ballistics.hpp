@@ -93,6 +93,7 @@ namespace openballistics
                         trajectory.emplace_back(x.template head<3>());
                         accumulator += sample_interval;
                     }
+                    return 0;
                 });
 
             return trajectory;

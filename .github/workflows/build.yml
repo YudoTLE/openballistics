@@ -25,9 +25,7 @@ jobs:
           CIBW_SKIP: "*-musllinux*"
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: >
-            Eigen3_ROOT="{project}/eigen3" 
-            EIGEN_DIR="{project}/eigen3" 
-            CPLUS_INCLUDE_PATH="{project}/eigen3"
+            SKBUILD_CMAKE_DEFINE="CMAKE_MODULE_PATH={project}/eigen3/cmake;EIGEN3_INCLUDE_DIR={project}/eigen3"
 
       - uses: actions/upload-artifact@v4
         with:

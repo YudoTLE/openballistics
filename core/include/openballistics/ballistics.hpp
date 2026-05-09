@@ -9,7 +9,6 @@
 #include "./api/ballistics.hpp"
 #include <unsupported/Eigen/LevenbergMarquardt>
 #include <boost/math/tools/roots.hpp>
-#include <boost/numeric/odeint.hpp>
 #include <cmath>
 #include <cstdint>
 #include <functional>

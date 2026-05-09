@@ -234,10 +234,11 @@ def _solve_launch_direction_and_time_of_flight_api(
     lines: list[str] = []
     for velocity_overload in _VELOCITY_OVERLOADS:
         lines += [
+            f"template <typename TargetPosition>",
             f"[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(",
             f"{__}const vector3 &launch_position,",
             *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
-            f"{__}const std::function<vector3(scalar)> &target_motion,",
+            f"{__}TargetPosition &&target_position,",
             *_model_parameter_decls(weapon_parameters, indent, ","),
             f"{__}const scalar min_time_of_flight,",
             f"{__}const scalar max_time_of_flight,",
@@ -249,7 +250,7 @@ def _solve_launch_direction_and_time_of_flight_api(
             f"{__}return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(",
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
-            f"{__}{__}target_motion,",
+            f"{__}{__}target_position,",
             f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
             f"{__}{__}min_time_of_flight,",
             f"{__}{__}max_time_of_flight,",
@@ -269,10 +270,11 @@ def _solve_launch_angles_and_time_of_flight_api(
     lines: list[str] = []
     for velocity_overload in _VELOCITY_OVERLOADS:
         lines += [
+            f"template <typename TargetPosition>",
             f"[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(",
             f"{__}const vector3 &launch_position,",
             *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
-            f"{__}const std::function<vector3(scalar)> &target_motion,",
+            f"{__}TargetPosition &&target_position,",
             *_model_parameter_decls(weapon_parameters, indent, ","),
             f"{__}const scalar min_time_of_flight,",
             f"{__}const scalar max_time_of_flight,",
@@ -284,7 +286,7 @@ def _solve_launch_angles_and_time_of_flight_api(
             f"{__}auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(",
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
-            f"{__}{__}target_motion,",
+            f"{__}{__}target_position,",
             f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
             f"{__}{__}min_time_of_flight,",
             f"{__}{__}max_time_of_flight,",

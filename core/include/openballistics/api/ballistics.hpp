@@ -277,10 +277,11 @@ namespace openballistics::api::detail
 				return std::nullopt;
 			return angles::from_unit_direction(launch_direction.value());
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
@@ -292,7 +293,7 @@ namespace openballistics::api::detail
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				platform_velocity,
-				target_motion,
+				target_position,
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -301,9 +302,10 @@ namespace openballistics::api::detail
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
@@ -315,7 +317,7 @@ namespace openballistics::api::detail
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				vector3::Zero(),
-				target_motion,
+				target_position,
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -324,10 +326,11 @@ namespace openballistics::api::detail
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
@@ -339,7 +342,7 @@ namespace openballistics::api::detail
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				platform_velocity,
-				target_motion,
+				target_position,
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -351,9 +354,10 @@ namespace openballistics::api::detail
 				return std::nullopt;
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
 			const vector3 &launch_position,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
@@ -365,7 +369,7 @@ namespace openballistics::api::detail
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				vector3::Zero(),
-				target_motion,
+				target_position,
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -664,10 +668,11 @@ namespace openballistics::api::detail
 				return std::nullopt;
 			return angles::from_unit_direction(launch_direction.value());
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
@@ -680,7 +685,7 @@ namespace openballistics::api::detail
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				platform_velocity,
-				target_motion,
+				target_position,
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -689,9 +694,10 @@ namespace openballistics::api::detail
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
@@ -704,7 +710,7 @@ namespace openballistics::api::detail
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				vector3::Zero(),
-				target_motion,
+				target_position,
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -713,10 +719,11 @@ namespace openballistics::api::detail
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
@@ -729,7 +736,7 @@ namespace openballistics::api::detail
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				platform_velocity,
-				target_motion,
+				target_position,
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
@@ -741,9 +748,10 @@ namespace openballistics::api::detail
 				return std::nullopt;
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
 		}
+		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(
 			const vector3 &launch_position,
-			const std::function<vector3(scalar)> &target_motion,
+			TargetPosition &&target_position,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
@@ -756,7 +764,7 @@ namespace openballistics::api::detail
 			auto result = static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
 				vector3::Zero(),
-				target_motion,
+				target_position,
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,

@@ -540,7 +540,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = ...,
-        target_motion: Callable[[float], ArrayLike],
+        target_position: ArrayLike | Callable[[float], ArrayLike],
         muzzle_velocity: SupportsFloat,
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
@@ -556,7 +556,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = ...,
-        target_motion: Callable[[float], ArrayLike],
+        target_position: ArrayLike | Callable[[float], ArrayLike],
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat,
         min_time_of_flight: SupportsFloat = ...,
@@ -572,7 +572,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
-        target_motion: Callable[[float], ArrayLike],
+        target_position: ArrayLike | Callable[[float], ArrayLike],
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat | None = None,
         min_time_of_flight: SupportsFloat = 0.0,
@@ -586,7 +586,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
             return self._core.solve_launch_direction_and_time_of_flight(
                 _validate_vector3(launch_position),
                 _validate_vector3(platform_velocity),
-                _validate_motion(target_motion),
+                _validate_target_position(target_position),
                 _validate_scalar(muzzle_velocity),
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
@@ -600,7 +600,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
             return self._core.solve_launch_direction_and_time_of_flight(
                 _validate_vector3(launch_position),
                 _validate_vector3(platform_velocity),
-                _validate_motion(target_motion),
+                _validate_target_position(target_position),
                 _validate_scalar(muzzle_velocity),
                 _validate_scalar(twist_of_rifling),
                 _validate_scalar(min_time_of_flight),
@@ -619,7 +619,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = ...,
-        target_motion: Callable[[float], ArrayLike],
+        target_position: ArrayLike | Callable[[float], ArrayLike],
         muzzle_velocity: SupportsFloat,
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
@@ -635,7 +635,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = ...,
-        target_motion: Callable[[float], ArrayLike],
+        target_position: ArrayLike | Callable[[float], ArrayLike],
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat,
         min_time_of_flight: SupportsFloat = ...,
@@ -651,7 +651,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         *,
         launch_position: ArrayLike,
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
-        target_motion: Callable[[float], ArrayLike],
+        target_position: ArrayLike | Callable[[float], ArrayLike],
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat | None = None,
         min_time_of_flight: SupportsFloat = 0.0,
@@ -665,7 +665,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
             return self._core.solve_launch_angles_and_time_of_flight(
                 _validate_vector3(launch_position),
                 _validate_vector3(platform_velocity),
-                _validate_motion(target_motion),
+                _validate_target_position(target_position),
                 _validate_scalar(muzzle_velocity),
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
@@ -679,7 +679,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
             return self._core.solve_launch_angles_and_time_of_flight(
                 _validate_vector3(launch_position),
                 _validate_vector3(platform_velocity),
-                _validate_motion(target_motion),
+                _validate_target_position(target_position),
                 _validate_scalar(muzzle_velocity),
                 _validate_scalar(twist_of_rifling),
                 _validate_scalar(min_time_of_flight),
@@ -714,16 +714,19 @@ def _validate_vector3(vector3: ArrayLike | None) -> _Vec3:
     return vector3
 
 
-def _validate_motion(
-    motion: Callable[[float], ArrayLike] | None,
-) -> Callable[[float], _Vec3]:
-    if motion is None:
+def _validate_target_position(
+    target_position: ArrayLike | Callable[[float], ArrayLike] | None,
+) -> _Vec3 | Callable[[float], _Vec3]:
+    if target_position is None:
         raise TypeError
 
-    def _motion(time: float) -> _Vec3:
-        return _validate_vector3(motion(time))
+    if not callable(target_position):
+        return _validate_vector3(target_position)
 
-    return _motion
+    def _target_position(time: float) -> _Vec3:
+        return _validate_vector3(target_position(time))
+
+    return _target_position
 
 
 def _validate_launch_direction(

@@ -11,6 +11,10 @@ def ballistics_bind(
 ) -> list[str]:
     __ = indent
     forward = ", ".join([f"{p.qualifier} {p.type}" for p in weapon_parameters])
+    forward_named = ", ".join(
+        [f"{p.qualifier} {p.type} {p.name}" for p in weapon_parameters]
+    )
+    forward_args = ", ".join([p.name for p in weapon_parameters])
     lines = [
         f"{{",
         f"{__}using Class = {class_name};",
@@ -28,8 +32,10 @@ def ballistics_bind(
         f'{__}{__}.def("optimize_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, uint32_t>(&Class::optimize_launch_angles, nb::const_))',
         f'{__}{__}.def("solve_launch_direction", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, scalar, uint32_t>(&Class::solve_launch_direction, nb::const_))',
         f'{__}{__}.def("solve_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, scalar, uint32_t>(&Class::solve_launch_angles, nb::const_))',
-        f'{__}{__}.def("solve_launch_direction_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, {forward}, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_direction_and_time_of_flight, nb::const_))',
-        f'{__}{__}.def("solve_launch_angles_and_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const std::function<vector3(scalar)> &, {forward}, scalar, scalar, scalar, scalar, uint32_t, uint32_t>(&Class::solve_launch_angles_and_time_of_flight, nb::const_));',
+        f'{__}{__}.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, {forward_named}, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) {{ return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, {forward_args}, min_time_of_flight, max_time_of_flight, miss_distance_threshold, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); }})',
+        f'{__}{__}.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, {forward_named}, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) {{ return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, {forward_args}, min_time_of_flight, max_time_of_flight, miss_distance_threshold, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); }})',
+        f'{__}{__}.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, {forward_named}, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) {{ return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, {forward_args}, min_time_of_flight, max_time_of_flight, miss_distance_threshold, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); }})',
+        f'{__}{__}.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, {forward_named}, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) {{ return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, {forward_args}, min_time_of_flight, max_time_of_flight, miss_distance_threshold, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); }});',
         f"}}",
     ]
     return [base_indent + line for line in lines]

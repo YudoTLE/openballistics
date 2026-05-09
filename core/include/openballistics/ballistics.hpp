@@ -16,6 +16,7 @@
 #include <optional>
 #include <utility>
 #include <vector>
+#include <type_traits>
 
 namespace openballistics
 {
@@ -200,10 +201,11 @@ namespace openballistics
             return launch_direction;
         }
 
+        template <typename TargetPosition>
         [[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight_impl(
             const vector3 &launch_position,
             const vector3 &platform_velocity,
-            const std::function<vector3(scalar)> &target_motion,
+            TargetPosition &&target_position,
             const weapon_parameters &extra_parameters,
             const scalar min_time_of_flight,
             const scalar max_time_of_flight,
@@ -214,13 +216,21 @@ namespace openballistics
         {
             const scalar sq_miss_distance_threshold = miss_distance_threshold * miss_distance_threshold;
 
+            auto get_target_position = [](auto&& target, const scalar t) -> vector3 {
+                if constexpr (std::is_convertible_v<decltype(target), vector3>) {
+                    return target;
+                } else {
+                    return target(t);
+                }
+            };
+
             auto proxy = [&](const scalar time_of_flight) -> scalar
             {
-                const vector3 target_position = target_motion(time_of_flight);
+                const vector3 target = get_target_position(target_position, time_of_flight);
                 const vector3 launch_direction = optimize_launch_direction_impl(
                     launch_position,
                     platform_velocity,
-                    target_position,
+                    target,
                     extra_parameters,
                     time_of_flight,
                     launch_direction_max_iterations);
@@ -231,9 +241,9 @@ namespace openballistics
                     extra_parameters,
                     time_of_flight);
 
-                const vector3 target_position_to_final_position = final_position - target_position;
+                const vector3 target_to_final_position = final_position - target;
 
-                return (target_position - launch_position).dot(target_position_to_final_position);
+                return (target - launch_position).dot(target_to_final_position);
             };
 
             scalar segment_lo_time = min_time_of_flight;
@@ -260,11 +270,11 @@ namespace openballistics
                     max_iter);
 
                 const scalar time_of_flight = lo;
-                const vector3 target_position = target_motion(lo);
+                const vector3 target = get_target_position(target_position, lo);
                 const vector3 launch_direction = optimize_launch_direction_impl(
                     launch_position,
                     platform_velocity,
-                    target_position,
+                    target,
                     extra_parameters,
                     time_of_flight,
                     launch_direction_max_iterations);
@@ -275,7 +285,7 @@ namespace openballistics
                     extra_parameters,
                     time_of_flight);
 
-                if ((target_position - final_position).squaredNorm() > sq_miss_distance_threshold)
+                if ((target - final_position).squaredNorm() > sq_miss_distance_threshold)
                     return std::nullopt;
 
                 return std::make_pair(launch_direction, time_of_flight);

@@ -60,8 +60,16 @@ class MPMRK4:
 
     def solve_launch_angles(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: int, /) -> Angles | None: ...
 
+    @overload
+    def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
+
+    @overload
     def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
 
+    @overload
+    def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Angles, float] | None: ...
+
+    @overload
     def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Angles, float] | None: ...
 
 class MPMRK45:
@@ -105,8 +113,16 @@ class MPMRK45:
 
     def solve_launch_angles(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: int, /) -> Angles | None: ...
 
+    @overload
+    def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
+
+    @overload
     def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
 
+    @overload
+    def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Angles, float] | None: ...
+
+    @overload
     def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: float, arg9: int, arg10: int, /) -> tuple[Angles, float] | None: ...
 
 class PMRK4:
@@ -150,8 +166,16 @@ class PMRK4:
 
     def solve_launch_angles(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: int, /) -> Angles | None: ...
 
+    @overload
+    def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
+
+    @overload
     def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
 
+    @overload
+    def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Angles, float] | None: ...
+
+    @overload
     def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Angles, float] | None: ...
 
 class PMRK45:
@@ -195,8 +219,16 @@ class PMRK45:
 
     def solve_launch_angles(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: int, /) -> Angles | None: ...
 
+    @overload
+    def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
+
+    @overload
     def solve_launch_direction_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], float] | None: ...
 
+    @overload
+    def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Angles, float] | None: ...
+
+    @overload
     def solve_launch_angles_and_time_of_flight(self, arg0: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg1: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], arg2: Callable[[float], Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]], arg3: float, arg4: float, arg5: float, arg6: float, arg7: float, arg8: int, arg9: int, /) -> tuple[Angles, float] | None: ...
 
 class RK4:

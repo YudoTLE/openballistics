@@ -2,6 +2,7 @@
 #define OPENBALLISTICS_TRAJECTORY_MODEL_POINT_MASS_HPP
 
 #include "../types.hpp"
+#include "../numbers.hpp"
 #include <Eigen/Dense>
 
 namespace openballistics::trajectory_model
@@ -63,10 +64,10 @@ namespace openballistics::trajectory_model
 
             const scalar C_D_eff = C_D_0 * i * f_D;
 
-            const scalar S = 0.25 * numbers::pi<double> * d * d;
+            const scalar S = 0.25 * numbers::pi<scalar> * d * d;
 
-            dydt.head<3>() = u_;
-            dydt.tail<3>() = g_ - 0.5 * rho * S * C_D_eff / m * v * v_;
+            dydt.template head<3>() = u_;
+            dydt.template tail<3>() = g_ - 0.5 * rho * S * C_D_eff / m * v * v_;
         }
     };
 }

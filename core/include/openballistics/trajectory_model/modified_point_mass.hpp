@@ -140,8 +140,8 @@ namespace openballistics::trajectory_model
                 dudt_ = GF_ / m;
             }
 
-            dydt.head<3>() = u_;
-            dydt.segment<3>(3) = dudt_;
+            dydt.template head<3>() = u_;
+            dydt.template segment<3>(3) = dudt_;
             dydt(6) = (0.5 * rho * v * S * d * d * p * C_spin) / I_x;
         }
     };

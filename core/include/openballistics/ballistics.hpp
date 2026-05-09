@@ -56,7 +56,7 @@ namespace openballistics
                 0.0,
                 time_of_flight);
 
-            return x.head<3>();
+            return x.template head<3>();
         }
 
         [[nodiscard]] std::vector<vector3> compute_trajectory_impl(
@@ -89,7 +89,7 @@ namespace openballistics
                     {
                         state x;
                         interpolate(x, accumulator);
-                        trajectory.emplace_back(x.head<3>());
+                        trajectory.emplace_back(x.template head<3>());
                         accumulator += sample_interval;
                     }
                 });

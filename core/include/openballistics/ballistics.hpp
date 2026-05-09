@@ -247,7 +247,7 @@ namespace openballistics
             {
                 segment_hi_proxy = proxy(segment_hi_time);
 
-                if (boost::math::sign(segment_lo_proxy) * boost::math::sign(segment_hi_proxy) > 0)
+                if (segment_lo_proxy * segment_hi_proxy > 0)
                     return std::nullopt;
 
                 std::uintmax_t max_iter = time_of_flight_max_iterations;

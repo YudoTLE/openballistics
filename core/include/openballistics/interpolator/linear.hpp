@@ -46,9 +46,9 @@ namespace openballistics::interpolator
     public:
         [[nodiscard]] inline value_type evaluate(const value_type key) const noexcept
         {
-            if (key <= m_keys.front()) [[unlikely]]
+            if (key <= m_keys.front())
                 return m_values.front();
-            if (key >= m_keys.back()) [[unlikely]]
+            if (key >= m_keys.back())
                 return m_values.back();
 
             auto it = std::upper_bound(m_keys.begin(), m_keys.end(), key);

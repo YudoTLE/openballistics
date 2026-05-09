@@ -36,7 +36,7 @@ namespace openballistics::integrator
 
     public:
         template <typename System, typename State>
-        void integrate_basic(
+        int integrate_basic(
             System &&system,
             State &x,
             const scalar t0,
@@ -52,38 +52,50 @@ namespace openballistics::integrator
                 do_step(system, x, t, x, current_dt, k1, k2, k3, k4, xtmp);
                 t += current_dt;
             }
+
+            return 0;
         }
 
         template <typename System, typename State, typename Callback>
-        void integrate_basic(
+        int integrate_basic(
             System &&system,
             State &x,
             const scalar t0,
             const scalar t1,
             Callback &&callback) const
         {
+            int status = 0;
+
             State k1 = x, k2 = x, k3 = x, k4 = x, xtmp = x;
             scalar t = t0;
             const scalar dt = step();
 
+            status = callback(x, t);
+            if (status)
+                return status;
             while (t < t1)
             {
                 const scalar current_dt = std::min(dt, t1 - t);
-                callback(x, t);
                 do_step(system, x, t, x, current_dt, k1, k2, k3, k4, xtmp);
                 t += current_dt;
+                status = callback(x, t);
+                if (status)
+                    return status;
             }
-            callback(x, t);
+
+            return status;
         }
 
         template <typename System, typename State, typename Callback>
-        void integrate_dense(
+        int integrate_dense(
             System &&system,
             State &x,
             const scalar t0,
             const scalar t1,
             Callback &&callback) const
         {
+            int status = 0;
+
             State k1 = x, k2 = x, k3 = x, k4 = x, xtmp = x;
             scalar t = t0;
             const scalar dt = step();
@@ -91,17 +103,22 @@ namespace openballistics::integrator
             while (t < t1)
             {
                 const scalar current_dt = std::min(dt, t1 - t);
-                callback(
-                    [this, system, xs = x, ts = t](State& out, const scalar ti) -> void
+                status = callback(
+                    [this, system, xs = x, ts = t](State &out, const scalar ti) -> void
                     {
                         State lk1 = xs, lk2 = xs, lk3 = xs, lk4 = xs, lxtmp = xs;
                         do_step(system, xs, ts, out, ti - ts, lk1, lk2, lk3, lk4, lxtmp);
                     },
                     t,
-                    t + dt);
+                    t + current_dt);
+
                 do_step(system, x, t, x, current_dt, k1, k2, k3, k4, xtmp);
+                if (status)
+                    return status;
                 t += current_dt;
             }
+
+            return status;
         }
 
     public:

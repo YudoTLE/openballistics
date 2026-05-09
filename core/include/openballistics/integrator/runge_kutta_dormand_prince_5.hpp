@@ -115,7 +115,7 @@ namespace openballistics::integrator
 
     public:
         template <typename System, typename State>
-        void integrate_basic(
+        int integrate_basic(
             System &&system,
             State &x,
             const scalar t0,
@@ -145,16 +145,20 @@ namespace openballistics::integrator
 
                 dt = next_dt(dt, err, dtmax);
             }
+
+            return 0;
         }
 
         template <typename System, typename State, typename Callback>
-        void integrate_basic(
+        int integrate_basic(
             System &&system,
             State &x,
             const scalar t0,
             const scalar t1,
             Callback &&callback) const
         {
+            int status = 0;
+
             State k1 = x, k2 = x, k3 = x, k4 = x, k5 = x, k6 = x, k7 = x, xtmp = x, xnew = x;
 
             const scalar atol = absolute_tolerance();
@@ -164,9 +168,11 @@ namespace openballistics::integrator
             scalar dt = std::min(first_step(), t1 - t0);
             bool k1_valid = false;
 
+            status = callback(x, t);
+            if (status)
+                return status;
             while (t < t1)
             {
-                callback(x, t);
                 dt = std::min(dt, t1 - t);
                 const scalar err = do_step(system, x, t, xnew, dt, k1, k2, k3, k4, k5, k6, k7, xtmp, atol, rtol, k1_valid);
 
@@ -174,23 +180,29 @@ namespace openballistics::integrator
                 {
                     t += dt;
                     std::swap(x, xnew);
-                    std::swap(k1, k7);
+                    status = callback(x, t);
+                    if (status)
+                        return status;
                     k1_valid = true;
+                    std::swap(k1, k7);
                 }
 
                 dt = next_dt(dt, err, dtmax);
             }
-            callback(x, t);
+
+            return status;
         }
 
         template <typename System, typename State, typename Callback>
-        void integrate_dense(
+        int integrate_dense(
             System &&system,
             State &x,
             const scalar t0,
             const scalar t1,
             Callback &&callback) const
         {
+            int status = 0;
+
             State k1 = x, k2 = x, k3 = x, k4 = x, k5 = x, k6 = x, k7 = x, xtmp = x, xnew = x;
 
             const scalar atol = absolute_tolerance();
@@ -220,9 +232,10 @@ namespace openballistics::integrator
                         r4[i] = dt * (d1 * k1[i] + d3 * k3[i] + d4 * k4[i] + d5 * k5[i] + d6 * k6[i] + d7 * k7[i]);
                     }
 
-                    callback(
+                    std::swap(x, xnew);
+                    status = callback(
                         [r0 = std::move(r0), r1 = std::move(r1), r2 = std::move(r2),
-                         r3 = std::move(r3), r4 = std::move(r4), ts = t, hs = dt](State& out, const scalar ti) -> void
+                         r3 = std::move(r3), r4 = std::move(r4), ts = t, hs = dt](State &out, const scalar ti) -> void
                         {
                             const scalar theta = (ti - ts) / hs;
                             const scalar theta1 = scalar{1} - theta;
@@ -231,15 +244,17 @@ namespace openballistics::integrator
                         },
                         t,
                         t + dt);
-
+                    if (status)
+                        return status;
                     t += dt;
-                    std::swap(x, xnew);
                     std::swap(k1, k7);
                     k1_valid = true;
                 }
 
                 dt = next_dt(dt, err, dtmax);
             }
+
+            return status;
         }
 
     public:

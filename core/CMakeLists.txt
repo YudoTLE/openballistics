@@ -6,7 +6,16 @@ project(
     LANGUAGES CXX
 )
 
-find_package(Eigen3 REQUIRED)
+include(FetchContent)
+FetchContent_Declare(
+    Eigen3
+    URL https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+)
+FetchContent_MakeAvailable(Eigen3)
+
+if(NOT TARGET Eigen3::Eigen)
+    add_library(Eigen3::Eigen ALIAS eigen)
+endif()
 
 add_library(openballistics_core INTERFACE)
 

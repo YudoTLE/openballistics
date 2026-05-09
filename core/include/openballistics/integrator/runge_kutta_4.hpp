@@ -2,14 +2,38 @@
 #define OPENBALLISTICS_INTEGRATOR_RUNGE_KUTTA_4_HPP
 
 #include "../types.hpp"
-#include <boost/numeric/odeint.hpp>
 #include <utility>
 #include <optional>
+#include <algorithm>
 
 namespace openballistics::integrator
 {
     class runge_kutta_4
     {
+    private:
+        template <typename System, typename State>
+        static void do_step(System &&sys, const State &in, const scalar t, State &out, scalar dt, State &k1, State &k2, State &k3, State &k4, State &xtmp)
+        {
+            sys(in, k1, t);
+
+            for (std::size_t i = 0; i < in.size(); ++i)
+                xtmp[i] = in[i] + (dt * 0.5) * k1[i];
+            sys(xtmp, k2, t + dt * 0.5);
+
+            for (std::size_t i = 0; i < in.size(); ++i)
+                xtmp[i] = in[i] + (dt * 0.5) * k2[i];
+            sys(xtmp, k3, t + dt * 0.5);
+
+            for (std::size_t i = 0; i < in.size(); ++i)
+                xtmp[i] = in[i] + dt * k3[i];
+            sys(xtmp, k4, t + dt);
+
+            const scalar dt6 = dt / 6.0;
+            const scalar dt3 = dt / 3.0;
+            for (std::size_t i = 0; i < in.size(); ++i)
+                out[i] = in[i] + dt6 * k1[i] + dt3 * k2[i] + dt3 * k3[i] + dt6 * k4[i];
+        }
+
     public:
         template <typename System, typename State>
         void integrate_basic(
@@ -18,12 +42,16 @@ namespace openballistics::integrator
             const scalar t0,
             const scalar t1) const
         {
-            const boost::numeric::odeint::runge_kutta4<State> stepper;
+            State k1 = x, k2 = x, k3 = x, k4 = x, xtmp = x;
+            scalar t = t0;
+            const scalar dt = step();
 
-            boost::numeric::odeint::integrate_const(
-                stepper,
-                std::forward<System>(system),
-                x, t0, t1, step());
+            while (t < t1)
+            {
+                const scalar current_dt = std::min(dt, t1 - t);
+                do_step(system, x, t, x, current_dt, k1, k2, k3, k4, xtmp);
+                t += current_dt;
+            }
         }
 
         template <typename System, typename State, typename Callback>
@@ -34,13 +62,18 @@ namespace openballistics::integrator
             const scalar t1,
             Callback &&callback) const
         {
-            const boost::numeric::odeint::runge_kutta4<State> stepper;
+            State k1 = x, k2 = x, k3 = x, k4 = x, xtmp = x;
+            scalar t = t0;
+            const scalar dt = step();
 
-            boost::numeric::odeint::integrate_const(
-                stepper,
-                std::forward<System>(system),
-                x, t0, t1, step(),
-                std::forward<Callback>(callback));
+            while (t < t1)
+            {
+                const scalar current_dt = std::min(dt, t1 - t);
+                callback(x, t);
+                do_step(system, x, t, x, current_dt, k1, k2, k3, k4, xtmp);
+                t += current_dt;
+            }
+            callback(x, t);
         }
 
         template <typename System, typename State, typename Callback>
@@ -51,30 +84,24 @@ namespace openballistics::integrator
             const scalar t1,
             Callback &&callback) const
         {
-            boost::numeric::odeint::runge_kutta4<State> stepper;
-            State x_prev = x;
-            scalar t_prev = t0;
+            State k1 = x, k2 = x, k3 = x, k4 = x, xtmp = x;
+            scalar t = t0;
+            const scalar dt = step();
 
-            const auto observer = [&](const State &x_curr, const scalar t) -> void
+            while (t < t1)
             {
-                const auto interpolate = [system, x_prev, t_prev](const scalar t_interp) -> State
-                {
-                    State out = x_prev;
-                    boost::numeric::odeint::runge_kutta4<State>().do_step(
-                        system, out, t_prev, t_interp - t_prev);
-                    return out;
-                };
-
-                callback(interpolate, t);
-                x_prev = x_curr;
-                t_prev = t;
-            };
-
-            boost::numeric::odeint::integrate_const(
-                stepper,
-                std::forward<System>(system),
-                x, t0, t1, step(),
-                observer);
+                const scalar current_dt = std::min(dt, t1 - t);
+                callback(
+                    [this, system, xs = x, ts = t](State& out, const scalar ti) -> void
+                    {
+                        State lk1 = xs, lk2 = xs, lk3 = xs, lk4 = xs, lxtmp = xs;
+                        do_step(system, xs, ts, out, ti - ts, lk1, lk2, lk3, lk4, lxtmp);
+                    },
+                    t,
+                    t + dt);
+                do_step(system, x, t, x, current_dt, k1, k2, k3, k4, xtmp);
+                t += current_dt;
+            }
         }
 
     public:

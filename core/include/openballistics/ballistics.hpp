@@ -84,11 +84,12 @@ namespace openballistics
                 x,
                 start_time,
                 end_time,
-                [&](auto interp, const scalar t)
+                [&](auto interpolate, const scalar t0, const scalar t1)
                 {
-                    while (accumulator <= t)
+                    while (accumulator <= t1)
                     {
-                        const state x = interp(accumulator);
+                        state x;
+                        interpolate(x, accumulator);
                         trajectory.emplace_back(x.head<3>());
                         accumulator += sample_interval;
                     }

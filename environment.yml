@@ -6,7 +6,6 @@ dependencies:
 - cmake=4.2
 - ninja=1.13
 - cxx-compiler=1.11
-- boost=1.84
 - eigen=3.4
 - nanobind=2.10
 - pip

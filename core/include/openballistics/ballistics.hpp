@@ -45,7 +45,7 @@ namespace openballistics
             const scalar time_of_flight) const
         {
             state x;
-            initialize(x, launch_position, launch_direction, platform_velocity, extra_parameters);
+            this->initialize(x, launch_position, launch_direction, platform_velocity, extra_parameters);
 
             integrator.integrate_basic(
                 [this](const state &x, state &dxdt, const scalar t) -> void
@@ -69,7 +69,7 @@ namespace openballistics
             const scalar sample_interval) const
         {
             state x;
-            initialize(x, launch_position, launch_direction, platform_velocity, extra_parameters);
+            this->initialize(x, launch_position, launch_direction, platform_velocity, extra_parameters);
 
             std::vector<vector3> trajectory;
 

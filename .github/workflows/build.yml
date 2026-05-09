@@ -15,17 +15,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Fetch Eigen headers
-        run: git clone --depth 1 --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
-
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.22.0
         env:
           CIBW_BUILD: "cp39-* cp310-* cp311-* cp312-* cp313-*"
           CIBW_SKIP: "*-musllinux*"
           CIBW_BUILD_VERBOSITY: 1
+          CIBW_BEFORE_ALL: "pip install cmake && git clone --depth 1 --branch 3.4.0 https://gitlab.com/libeigen/eigen.git {project}/.eigen_src && cmake -B {project}/.eigen_build -S {project}/.eigen_src -DCMAKE_INSTALL_PREFIX={project}/.eigen_install && cmake --install {project}/.eigen_build"
+          
           CIBW_ENVIRONMENT: >
-            SKBUILD_CMAKE_DEFINE="CMAKE_MODULE_PATH={project}/eigen3/cmake;EIGEN3_INCLUDE_DIR={project}/eigen3"
+            CMAKE_PREFIX_PATH="{project}/.eigen_install"
 
       - uses: actions/upload-artifact@v4
         with:

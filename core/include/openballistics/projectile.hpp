@@ -3,7 +3,7 @@
 
 #include "./types.hpp"
 #include "./interpolator/lazy_linear.hpp"
-#include <boost/math/interpolators/pchip.hpp>
+#include "./interpolator/linear.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>
@@ -116,9 +116,7 @@ namespace openballistics
 		}
 		projectile &set_drag_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_drag_force_coefficient_table_min = machs.front();
-			m_drag_force_coefficient_table_max = machs.back();
-			m_drag_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_drag_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_drag_force_coefficient_source = 5;
 			return *this;
 		}
@@ -149,9 +147,7 @@ namespace openballistics
 		}
 		projectile &set_quadratic_yaw_drag_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_quadratic_yaw_drag_force_coefficient_table_min = machs.front();
-			m_quadratic_yaw_drag_force_coefficient_table_max = machs.back();
-			m_quadratic_yaw_drag_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_quadratic_yaw_drag_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_quadratic_yaw_drag_force_coefficient_source = 5;
 			return *this;
 		}
@@ -182,9 +178,7 @@ namespace openballistics
 		}
 		projectile &set_quartic_yaw_drag_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_quartic_yaw_drag_force_coefficient_table_min = machs.front();
-			m_quartic_yaw_drag_force_coefficient_table_max = machs.back();
-			m_quartic_yaw_drag_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_quartic_yaw_drag_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_quartic_yaw_drag_force_coefficient_source = 5;
 			return *this;
 		}
@@ -215,9 +209,7 @@ namespace openballistics
 		}
 		projectile &set_lift_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_lift_force_coefficient_table_min = machs.front();
-			m_lift_force_coefficient_table_max = machs.back();
-			m_lift_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_lift_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_lift_force_coefficient_source = 5;
 			return *this;
 		}
@@ -248,9 +240,7 @@ namespace openballistics
 		}
 		projectile &set_cubic_lift_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_cubic_lift_force_coefficient_table_min = machs.front();
-			m_cubic_lift_force_coefficient_table_max = machs.back();
-			m_cubic_lift_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_cubic_lift_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_cubic_lift_force_coefficient_source = 5;
 			return *this;
 		}
@@ -281,9 +271,7 @@ namespace openballistics
 		}
 		projectile &set_quintic_lift_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_quintic_lift_force_coefficient_table_min = machs.front();
-			m_quintic_lift_force_coefficient_table_max = machs.back();
-			m_quintic_lift_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_quintic_lift_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_quintic_lift_force_coefficient_source = 5;
 			return *this;
 		}
@@ -314,9 +302,7 @@ namespace openballistics
 		}
 		projectile &set_magnus_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_magnus_force_coefficient_table_min = machs.front();
-			m_magnus_force_coefficient_table_max = machs.back();
-			m_magnus_force_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_magnus_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_magnus_force_coefficient_source = 5;
 			return *this;
 		}
@@ -347,9 +333,7 @@ namespace openballistics
 		}
 		projectile &set_overturning_moment_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_overturning_moment_coefficient_table_min = machs.front();
-			m_overturning_moment_coefficient_table_max = machs.back();
-			m_overturning_moment_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_overturning_moment_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_overturning_moment_coefficient_source = 5;
 			return *this;
 		}
@@ -380,9 +364,7 @@ namespace openballistics
 		}
 		projectile &set_cubic_overturning_moment_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_cubic_overturning_moment_coefficient_table_min = machs.front();
-			m_cubic_overturning_moment_coefficient_table_max = machs.back();
-			m_cubic_overturning_moment_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_cubic_overturning_moment_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_cubic_overturning_moment_coefficient_source = 5;
 			return *this;
 		}
@@ -413,9 +395,7 @@ namespace openballistics
 		}
 		projectile &set_spin_damping_moment_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_spin_damping_moment_coefficient_table_min = machs.front();
-			m_spin_damping_moment_coefficient_table_max = machs.back();
-			m_spin_damping_moment_coefficient_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));
+			m_spin_damping_moment_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
 			m_spin_damping_moment_coefficient_source = 5;
 			return *this;
 		}
@@ -473,7 +453,7 @@ namespace openballistics
 			case 2: return m_drag_force_coefficient_curve(mach);
 			case 3: return m_drag_force_coefficient_curve_virtual(mach);
 			case 4: return m_drag_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_drag_force_coefficient_table(std::clamp(mach, m_drag_force_coefficient_table_min, m_drag_force_coefficient_table_max));
+			case 5: return m_drag_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -486,7 +466,7 @@ namespace openballistics
 			case 2: return m_quadratic_yaw_drag_force_coefficient_curve(mach);
 			case 3: return m_quadratic_yaw_drag_force_coefficient_curve_virtual(mach);
 			case 4: return m_quadratic_yaw_drag_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_quadratic_yaw_drag_force_coefficient_table(std::clamp(mach, m_quadratic_yaw_drag_force_coefficient_table_min, m_quadratic_yaw_drag_force_coefficient_table_max));
+			case 5: return m_quadratic_yaw_drag_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -499,7 +479,7 @@ namespace openballistics
 			case 2: return m_quartic_yaw_drag_force_coefficient_curve(mach);
 			case 3: return m_quartic_yaw_drag_force_coefficient_curve_virtual(mach);
 			case 4: return m_quartic_yaw_drag_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_quartic_yaw_drag_force_coefficient_table(std::clamp(mach, m_quartic_yaw_drag_force_coefficient_table_min, m_quartic_yaw_drag_force_coefficient_table_max));
+			case 5: return m_quartic_yaw_drag_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -512,7 +492,7 @@ namespace openballistics
 			case 2: return m_lift_force_coefficient_curve(mach);
 			case 3: return m_lift_force_coefficient_curve_virtual(mach);
 			case 4: return m_lift_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_lift_force_coefficient_table(std::clamp(mach, m_lift_force_coefficient_table_min, m_lift_force_coefficient_table_max));
+			case 5: return m_lift_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -525,7 +505,7 @@ namespace openballistics
 			case 2: return m_cubic_lift_force_coefficient_curve(mach);
 			case 3: return m_cubic_lift_force_coefficient_curve_virtual(mach);
 			case 4: return m_cubic_lift_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_cubic_lift_force_coefficient_table(std::clamp(mach, m_cubic_lift_force_coefficient_table_min, m_cubic_lift_force_coefficient_table_max));
+			case 5: return m_cubic_lift_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -538,7 +518,7 @@ namespace openballistics
 			case 2: return m_quintic_lift_force_coefficient_curve(mach);
 			case 3: return m_quintic_lift_force_coefficient_curve_virtual(mach);
 			case 4: return m_quintic_lift_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_quintic_lift_force_coefficient_table(std::clamp(mach, m_quintic_lift_force_coefficient_table_min, m_quintic_lift_force_coefficient_table_max));
+			case 5: return m_quintic_lift_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -551,7 +531,7 @@ namespace openballistics
 			case 2: return m_magnus_force_coefficient_curve(mach);
 			case 3: return m_magnus_force_coefficient_curve_virtual(mach);
 			case 4: return m_magnus_force_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_magnus_force_coefficient_table(std::clamp(mach, m_magnus_force_coefficient_table_min, m_magnus_force_coefficient_table_max));
+			case 5: return m_magnus_force_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -564,7 +544,7 @@ namespace openballistics
 			case 2: return m_overturning_moment_coefficient_curve(mach);
 			case 3: return m_overturning_moment_coefficient_curve_virtual(mach);
 			case 4: return m_overturning_moment_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_overturning_moment_coefficient_table(std::clamp(mach, m_overturning_moment_coefficient_table_min, m_overturning_moment_coefficient_table_max));
+			case 5: return m_overturning_moment_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -577,7 +557,7 @@ namespace openballistics
 			case 2: return m_cubic_overturning_moment_coefficient_curve(mach);
 			case 3: return m_cubic_overturning_moment_coefficient_curve_virtual(mach);
 			case 4: return m_cubic_overturning_moment_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_cubic_overturning_moment_coefficient_table(std::clamp(mach, m_cubic_overturning_moment_coefficient_table_min, m_cubic_overturning_moment_coefficient_table_max));
+			case 5: return m_cubic_overturning_moment_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -590,7 +570,7 @@ namespace openballistics
 			case 2: return m_spin_damping_moment_coefficient_curve(mach);
 			case 3: return m_spin_damping_moment_coefficient_curve_virtual(mach);
 			case 4: return m_spin_damping_moment_coefficient_curve_interpolator.evaluate(mach);
-			case 5: return m_spin_damping_moment_coefficient_table(std::clamp(mach, m_spin_damping_moment_coefficient_table_min, m_spin_damping_moment_coefficient_table_max));
+			case 5: return m_spin_damping_moment_coefficient_table.evaluate(mach);
 			default: throw std::bad_optional_access{};
 			}
 		}
@@ -622,90 +602,70 @@ namespace openballistics
 		scalar (*m_drag_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_drag_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_drag_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_drag_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_drag_force_coefficient_table_min;
-		scalar m_drag_force_coefficient_table_max;
+		interpolator::linear<scalar> m_drag_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_quadratic_yaw_drag_force_coefficient_source = 0;
 		scalar m_quadratic_yaw_drag_force_coefficient_constant;
 		scalar (*m_quadratic_yaw_drag_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_quadratic_yaw_drag_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_quadratic_yaw_drag_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_quadratic_yaw_drag_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_quadratic_yaw_drag_force_coefficient_table_min;
-		scalar m_quadratic_yaw_drag_force_coefficient_table_max;
+		interpolator::linear<scalar> m_quadratic_yaw_drag_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_quartic_yaw_drag_force_coefficient_source = 0;
 		scalar m_quartic_yaw_drag_force_coefficient_constant;
 		scalar (*m_quartic_yaw_drag_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_quartic_yaw_drag_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_quartic_yaw_drag_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_quartic_yaw_drag_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_quartic_yaw_drag_force_coefficient_table_min;
-		scalar m_quartic_yaw_drag_force_coefficient_table_max;
+		interpolator::linear<scalar> m_quartic_yaw_drag_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_lift_force_coefficient_source = 0;
 		scalar m_lift_force_coefficient_constant;
 		scalar (*m_lift_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_lift_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_lift_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_lift_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_lift_force_coefficient_table_min;
-		scalar m_lift_force_coefficient_table_max;
+		interpolator::linear<scalar> m_lift_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_cubic_lift_force_coefficient_source = 0;
 		scalar m_cubic_lift_force_coefficient_constant;
 		scalar (*m_cubic_lift_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_cubic_lift_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_cubic_lift_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_cubic_lift_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_cubic_lift_force_coefficient_table_min;
-		scalar m_cubic_lift_force_coefficient_table_max;
+		interpolator::linear<scalar> m_cubic_lift_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_quintic_lift_force_coefficient_source = 0;
 		scalar m_quintic_lift_force_coefficient_constant;
 		scalar (*m_quintic_lift_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_quintic_lift_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_quintic_lift_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_quintic_lift_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_quintic_lift_force_coefficient_table_min;
-		scalar m_quintic_lift_force_coefficient_table_max;
+		interpolator::linear<scalar> m_quintic_lift_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_magnus_force_coefficient_source = 0;
 		scalar m_magnus_force_coefficient_constant;
 		scalar (*m_magnus_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_magnus_force_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_magnus_force_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_magnus_force_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_magnus_force_coefficient_table_min;
-		scalar m_magnus_force_coefficient_table_max;
+		interpolator::linear<scalar> m_magnus_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_overturning_moment_coefficient_source = 0;
 		scalar m_overturning_moment_coefficient_constant;
 		scalar (*m_overturning_moment_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_overturning_moment_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_overturning_moment_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_overturning_moment_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_overturning_moment_coefficient_table_min;
-		scalar m_overturning_moment_coefficient_table_max;
+		interpolator::linear<scalar> m_overturning_moment_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_cubic_overturning_moment_coefficient_source = 0;
 		scalar m_cubic_overturning_moment_coefficient_constant;
 		scalar (*m_cubic_overturning_moment_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_cubic_overturning_moment_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_cubic_overturning_moment_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_cubic_overturning_moment_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_cubic_overturning_moment_coefficient_table_min;
-		scalar m_cubic_overturning_moment_coefficient_table_max;
+		interpolator::linear<scalar> m_cubic_overturning_moment_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_spin_damping_moment_coefficient_source = 0;
 		scalar m_spin_damping_moment_coefficient_constant;
 		scalar (*m_spin_damping_moment_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_spin_damping_moment_coefficient_curve_virtual;
 		interpolator::lazy_linear<scalar> m_spin_damping_moment_coefficient_curve_interpolator;
-		boost::math::interpolators::pchip<std::vector<scalar>> m_spin_damping_moment_coefficient_table{{1.0, 2.0, 3.0, 4.0}, {0.0, 0.0, 0.0, 0.0}};
-		scalar m_spin_damping_moment_coefficient_table_min;
-		scalar m_spin_damping_moment_coefficient_table_max;
+		interpolator::linear<scalar> m_spin_damping_moment_coefficient_table{{0.0}, {0.0}};
 #pragma endregion "CODEGEN PROJ-MEM"
 	};
 }

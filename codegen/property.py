@@ -193,9 +193,7 @@ def _curve_property_setter(
         f"}}",
         f"{class_name} &set_{name}(std::vector<scalar> machs, std::vector<{type}> values)",
         f"{{",
-        f"{__}m_{name}_table_min = machs.front();",
-        f"{__}m_{name}_table_max = machs.back();",
-        f"{__}m_{name}_table = boost::math::interpolators::pchip<std::vector<scalar>>(std::move(machs), std::move(values));",
+        f"{__}m_{name}_table = interpolator::linear<{type}>(std::move(machs), std::move(values));",
         f"{__}m_{name}_source = 5;",
         f"{__}return *this;",
         f"}}",
@@ -216,7 +214,7 @@ def _curve_property_getter(
         f"{__}case 2: return m_{name}_curve(mach);",
         f"{__}case 3: return m_{name}_curve_virtual(mach);",
         f"{__}case 4: return m_{name}_curve_interpolator.evaluate(mach);",
-        f"{__}case 5: return m_{name}_table(std::clamp(mach, m_{name}_table_min, m_{name}_table_max));",
+        f"{__}case 5: return m_{name}_table.evaluate(mach);",
         f"{__}default: throw std::bad_optional_access{{}};",
         f"{__}}}",
         f"}}",
@@ -231,9 +229,7 @@ def _curve_property_member(*, name: str, type: str, base_indent: str) -> list[st
         f"{type} (*m_{name}_curve)(scalar);",
         f"std::function<{type}(scalar)> m_{name}_curve_virtual;",
         f"interpolator::lazy_linear<{type}> m_{name}_curve_interpolator;",
-        f"boost::math::interpolators::pchip<std::vector<scalar>> m_{name}_table{{{{1.0, 2.0, 3.0, 4.0}}, {{0.0, 0.0, 0.0, 0.0}}}};",
-        f"scalar m_{name}_table_min;",
-        f"scalar m_{name}_table_max;",
+        f"interpolator::linear<{type}> m_{name}_table{{{{0.0}}, {{0.0}}}};",
     ]
     return [base_indent + line for line in lines]
 

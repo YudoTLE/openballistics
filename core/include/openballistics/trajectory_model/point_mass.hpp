@@ -35,8 +35,8 @@ namespace openballistics::trajectory_model
             state &dydt,
             const scalar t) const
         {
-            const vector3 x_ = y.head<3>();
-            const vector3 u_ = y.tail<3>();
+            const vector3 x_ = y.template head<3>();
+            const vector3 u_ = y.template tail<3>();
 
             const auto &environment = static_cast<const Derived *>(this)->environment;
             const auto &projectile = static_cast<const Derived *>(this)->projectile;

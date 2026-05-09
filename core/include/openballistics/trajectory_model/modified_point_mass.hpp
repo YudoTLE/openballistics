@@ -44,8 +44,8 @@ namespace openballistics::trajectory_model
             constexpr scalar tol_a_e = 1e-12;
             constexpr int max_iter_a_e = 5;
 
-            const vector3 x_ = y.head<3>();
-            const vector3 u_ = y.segment<3>(3);
+            const vector3 x_ = y.template head<3>();
+            const vector3 u_ = y.template segment<3>(3);
             const scalar p = y(6);
 
             const auto &environment = static_cast<const Derived *>(this)->environment;

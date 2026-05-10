@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "openballistics"
-version = "0.0.9"
+version = "0.1.0"
 requires-python = ">=3.9"
 dependencies = ["numpy"]
 description = "High-performance Python library for computing ballistic trajectories and firing solutions"

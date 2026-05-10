@@ -6,6 +6,7 @@ from typing import Generic, overload, Literal, TypeVar, SupportsFloat, SupportsI
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
+from .enums import Priority
 from .integrator import RK4, RK45
 from .environment import Environment
 from .projectile import Projectile
@@ -731,6 +732,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         time_of_flight_segment_size: SupportsFloat = ...,
         time_of_flight_max_iterations: SupportsInt = ...,
         launch_direction_max_iterations: SupportsInt = ...,
@@ -748,6 +750,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         time_of_flight_segment_size: SupportsFloat = ...,
         time_of_flight_max_iterations: SupportsInt = ...,
         launch_direction_max_iterations: SupportsInt = ...,
@@ -764,6 +767,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = 0.0,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = 1.0,
+        solution_priority: Literal["earliest", "latest"] | Priority = Priority.earliest,
         time_of_flight_segment_size: SupportsFloat = 0.5,
         time_of_flight_max_iterations: SupportsInt = 30,
         launch_direction_max_iterations: SupportsInt = 25,
@@ -777,6 +781,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
                 _validate_scalar(miss_distance_threshold),
+                _validate_priority(solution_priority),
                 _validate_scalar(time_of_flight_segment_size),
                 _validate_integer(time_of_flight_max_iterations),
                 _validate_integer(launch_direction_max_iterations),
@@ -792,6 +797,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
                 _validate_scalar(miss_distance_threshold),
+                _validate_priority(solution_priority),
                 _validate_scalar(time_of_flight_segment_size),
                 _validate_integer(time_of_flight_max_iterations),
                 _validate_integer(launch_direction_max_iterations),
@@ -810,6 +816,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         time_of_flight_segment_size: SupportsFloat = ...,
         time_of_flight_max_iterations: SupportsInt = ...,
         launch_direction_max_iterations: SupportsInt = ...,
@@ -827,6 +834,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         time_of_flight_segment_size: SupportsFloat = ...,
         time_of_flight_max_iterations: SupportsInt = ...,
         launch_direction_max_iterations: SupportsInt = ...,
@@ -843,6 +851,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = 0.0,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = 1.0,
+        solution_priority: Literal["earliest", "latest"] | Priority = Priority.earliest,
         time_of_flight_segment_size: SupportsFloat = 0.5,
         time_of_flight_max_iterations: SupportsInt = 30,
         launch_direction_max_iterations: SupportsInt = 25,
@@ -856,6 +865,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
                 _validate_scalar(miss_distance_threshold),
+                _validate_priority(solution_priority),
                 _validate_scalar(time_of_flight_segment_size),
                 _validate_integer(time_of_flight_max_iterations),
                 _validate_integer(launch_direction_max_iterations),
@@ -871,6 +881,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
                 _validate_scalar(miss_distance_threshold),
+                _validate_priority(solution_priority),
                 _validate_scalar(time_of_flight_segment_size),
                 _validate_integer(time_of_flight_max_iterations),
                 _validate_integer(launch_direction_max_iterations),
@@ -925,3 +936,18 @@ def _validate_launch_direction(
             return launch_angles.to_direction()
         return Angles(*np.asarray(launch_angles, dtype=np.float64)).to_direction()
     raise TypeError
+
+
+def _validate_priority(
+    priority_value: Literal["earliest", "latest"] | Priority | None,
+) -> Priority:
+    if priority_value is None:
+        raise TypeError
+    if isinstance(priority_value, Priority):
+        return priority_value
+    try:
+        return Priority[priority_value]
+    except KeyError:
+        raise ValueError(
+            f"invalid priority {priority_value!r}, expected 'earliest' or 'latest'"
+        )

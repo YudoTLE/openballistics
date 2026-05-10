@@ -2,6 +2,7 @@
 #define OPENBALLISTICS_API_BALLISTICS_HPP
 
 #include "../types.hpp"
+#include "../enums.hpp"
 #include "../trajectory_model.hpp"
 
 namespace openballistics::api::detail
@@ -442,6 +443,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -454,6 +456,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -466,6 +469,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -478,6 +482,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -491,6 +496,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -503,6 +509,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -518,6 +525,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -530,6 +538,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -998,6 +1007,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -1010,6 +1020,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -1023,6 +1034,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -1035,6 +1047,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -1049,6 +1062,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -1061,6 +1075,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);
@@ -1077,6 +1092,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const scalar time_of_flight_segment_size = 0.5,
 			const uint32_t time_of_flight_max_iterations = 30,
 			const uint32_t launch_direction_max_iterations = 25) const
@@ -1089,6 +1105,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				time_of_flight_segment_size,
 				time_of_flight_max_iterations,
 				launch_direction_max_iterations);

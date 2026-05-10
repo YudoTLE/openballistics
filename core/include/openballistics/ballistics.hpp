@@ -2,6 +2,7 @@
 #define OPENBALLISTICS_BALLISTICS_HPP
 
 #include "./types.hpp"
+#include "./enums.hpp"
 #include "./numbers.hpp"
 #include "./math/root.hpp"
 #include "./math/minimizer.hpp"
@@ -445,11 +446,13 @@ namespace openballistics
             const scalar min_time_of_flight,
             const scalar max_time_of_flight,
             const scalar miss_distance_threshold,
+            const priority solution_priority,
             const scalar time_of_flight_segment_size,
             const uint32_t time_of_flight_max_iterations,
             const uint32_t launch_direction_max_iterations) const
         {
             const scalar sq_miss_distance_threshold = miss_distance_threshold * miss_distance_threshold;
+            const math::root::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
 
             auto get_target_position = [](auto &&target, const scalar t) -> vector3
             {
@@ -481,16 +484,11 @@ namespace openballistics
                 return (target - launch_position).dot(target_to_final_position);
             };
 
-            scalar segment_lo_time = min_time_of_flight;
-            scalar segment_lo_proxy = proxy(min_time_of_flight);
-            scalar segment_hi_time;
-            scalar segment_hi_proxy;
+            scalar segment_lo_time, segment_lo_proxy;
+            scalar segment_hi_time, segment_hi_proxy;
 
-            const math::root::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
             auto solution = [&]() -> std::optional<std::pair<vector3, scalar>>
             {
-                segment_hi_proxy = proxy(segment_hi_time);
-
                 if (segment_lo_proxy * segment_hi_proxy > 0)
                     return std::nullopt;
 
@@ -504,7 +502,7 @@ namespace openballistics
                     tol,
                     max_iter);
 
-                const scalar time_of_flight = lo;
+                const scalar time_of_flight = (lo + hi) * 0.5;
                 const vector3 target = get_target_position(target_position, lo);
                 const vector3 launch_direction = optimize_launch_direction_impl(
                     launch_position,
@@ -526,26 +524,65 @@ namespace openballistics
                 return std::make_pair(launch_direction, time_of_flight);
             };
 
-            for (uint32_t i = 1;; ++i)
+            if (solution_priority == priority::earliest)
             {
-                segment_hi_time = min_time_of_flight + i * time_of_flight_segment_size;
-                if (segment_hi_time >= max_time_of_flight)
-                    break;
+                segment_lo_time = min_time_of_flight;
+                segment_lo_proxy = proxy(min_time_of_flight);
 
-                auto result = solution();
-                if (result.has_value())
-                    return std::move(result).value();
+                for (uint32_t i = 1;; ++i)
+                {
+                    segment_hi_time = min_time_of_flight + i * time_of_flight_segment_size;
+                    if (segment_hi_time >= max_time_of_flight)
+                        break;
 
-                segment_lo_time = segment_hi_time;
-                segment_lo_proxy = segment_hi_proxy;
+                    segment_hi_proxy = proxy(segment_hi_time);
+
+                    auto result = solution();
+                    if (result.has_value())
+                        return std::move(result).value();
+
+                    segment_lo_time = segment_hi_time;
+                    segment_lo_proxy = segment_hi_proxy;
+                }
+                if (segment_lo_time < max_time_of_flight)
+                {
+                    segment_hi_time = max_time_of_flight;
+                    segment_hi_proxy = proxy(segment_hi_time);
+
+                    auto result = solution();
+                    if (result.has_value())
+                        return std::move(result).value();
+                }
             }
-            if (segment_lo_time < max_time_of_flight)
+            else
             {
                 segment_hi_time = max_time_of_flight;
+                segment_hi_proxy = proxy(max_time_of_flight);
 
-                auto result = solution();
-                if (result.has_value())
-                    return std::move(result).value();
+                for (uint32_t i = 1;; ++i)
+                {
+                    segment_lo_time = max_time_of_flight - i * time_of_flight_segment_size;
+                    if (segment_lo_time <= min_time_of_flight)
+                        break;
+
+                    segment_lo_proxy = proxy(segment_lo_time);
+
+                    auto result = solution();
+                    if (result.has_value())
+                        return std::move(result).value();
+
+                    segment_hi_time = segment_lo_time;
+                    segment_hi_proxy = segment_lo_proxy;
+                }
+                if (segment_hi_time > min_time_of_flight)
+                {
+                    segment_lo_time = min_time_of_flight;
+                    segment_lo_proxy = proxy(segment_lo_time);
+
+                    auto result = solution();
+                    if (result.has_value())
+                        return std::move(result).value();
+                }
             }
 
             return std::nullopt;

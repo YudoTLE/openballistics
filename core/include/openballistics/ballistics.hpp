@@ -65,8 +65,7 @@ namespace openballistics
             const vector3 &launch_direction,
             const vector3 &platform_velocity,
             const weapon_parameters &extra_parameters,
-            const scalar start_time,
-            const scalar end_time,
+            const scalar time_of_flight,
             const scalar sample_interval) const
         {
             state x;
@@ -74,7 +73,7 @@ namespace openballistics
 
             std::vector<vector3> trajectory;
 
-            scalar accumulator = start_time;
+            scalar accumulator = 0.0;
 
             integrator.integrate_dense(
                 [this](const state &x, state &dxdt, const scalar t) -> void
@@ -82,8 +81,8 @@ namespace openballistics
                     this->derivative(x, dxdt, t);
                 },
                 x,
-                start_time,
-                end_time,
+                0.0,
+                time_of_flight,
                 [&](auto interpolate, const scalar t0, const scalar t1)
                 {
                     while (accumulator <= t1)

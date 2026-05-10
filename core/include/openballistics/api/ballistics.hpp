@@ -72,8 +72,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -81,16 +80,14 @@ namespace openballistics::api::detail
 				launch_direction.stableNormalized(),
 				platform_velocity,
 				{muzzle_velocity},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const scalar muzzle_velocity,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -98,8 +95,7 @@ namespace openballistics::api::detail
 				launch_direction.stableNormalized(),
 				vector3::Zero(),
 				{muzzle_velocity},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
@@ -107,8 +103,7 @@ namespace openballistics::api::detail
 			const angles &launch_angles,
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -116,16 +111,14 @@ namespace openballistics::api::detail
 				launch_angles.to_unit_direction(),
 				platform_velocity,
 				{muzzle_velocity},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
 			const vector3 &launch_position,
 			const angles &launch_angles,
 			const scalar muzzle_velocity,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -133,8 +126,7 @@ namespace openballistics::api::detail
 				launch_angles.to_unit_direction(),
 				vector3::Zero(),
 				{muzzle_velocity},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(
@@ -452,8 +444,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -461,8 +452,7 @@ namespace openballistics::api::detail
 				launch_direction.stableNormalized(),
 				platform_velocity,
 				{muzzle_velocity, twist_of_rifling},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
@@ -470,8 +460,7 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -479,8 +468,7 @@ namespace openballistics::api::detail
 				launch_direction.stableNormalized(),
 				vector3::Zero(),
 				{muzzle_velocity, twist_of_rifling},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
@@ -489,8 +477,7 @@ namespace openballistics::api::detail
 			const vector3 &platform_velocity,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -498,8 +485,7 @@ namespace openballistics::api::detail
 				launch_angles.to_unit_direction(),
 				platform_velocity,
 				{muzzle_velocity, twist_of_rifling},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
@@ -507,8 +493,7 @@ namespace openballistics::api::detail
 			const angles &launch_angles,
 			const scalar muzzle_velocity,
 			const scalar twist_of_rifling,
-			const scalar start_time,
-			const scalar end_time,
+			const scalar time_of_flight,
 			const scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
@@ -516,8 +501,7 @@ namespace openballistics::api::detail
 				launch_angles.to_unit_direction(),
 				vector3::Zero(),
 				{muzzle_velocity, twist_of_rifling},
-				start_time,
-				end_time,
+				time_of_flight,
 				sample_interval);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(

@@ -220,8 +220,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         launch_direction: ArrayLike,
         platform_velocity: ArrayLike = ...,
         muzzle_velocity: SupportsFloat,
-        start_time: SupportsFloat = ...,
-        end_time: SupportsFloat,
+        time_of_flight: SupportsFloat,
         sample_interval: SupportsFloat = ...,
     ) -> list[_Vec3]: ...
     @overload
@@ -232,8 +231,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         launch_angles: ArrayLike | Angles,
         platform_velocity: ArrayLike = ...,
         muzzle_velocity: SupportsFloat,
-        start_time: SupportsFloat = ...,
-        end_time: SupportsFloat,
+        time_of_flight: SupportsFloat,
         sample_interval: SupportsFloat = ...,
     ) -> list[_Vec3]: ...
     @overload
@@ -245,8 +243,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         platform_velocity: ArrayLike = ...,
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat,
-        start_time: SupportsFloat = ...,
-        end_time: SupportsFloat,
+        time_of_flight: SupportsFloat,
         sample_interval: SupportsFloat = ...,
     ) -> list[_Vec3]: ...
     @overload
@@ -258,8 +255,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         platform_velocity: ArrayLike = ...,
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat,
-        start_time: SupportsFloat = ...,
-        end_time: SupportsFloat,
+        time_of_flight: SupportsFloat,
         sample_interval: SupportsFloat = ...,
     ) -> list[_Vec3]: ...
     def compute_trajectory(
@@ -271,8 +267,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
         muzzle_velocity: SupportsFloat,
         twist_of_rifling: SupportsFloat | None = None,
-        start_time: SupportsFloat = 0.0,
-        end_time: SupportsFloat,
+        time_of_flight: SupportsFloat,
         sample_interval: SupportsFloat = 0.2,
     ) -> list[_Vec3]:
         if isinstance(self._core, _PMRK4 | _PMRK45):
@@ -281,8 +276,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_launch_direction(launch_direction, launch_angles),
                 _validate_vector3(platform_velocity),
                 _validate_scalar(muzzle_velocity),
-                _validate_scalar(start_time),
-                _validate_scalar(end_time),
+                _validate_scalar(time_of_flight),
                 _validate_scalar(sample_interval),
             )
         if isinstance(self._core, _MPMRK4 | _MPMRK45):  # type: ignore
@@ -292,8 +286,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_vector3(platform_velocity),
                 _validate_scalar(muzzle_velocity),
                 _validate_scalar(twist_of_rifling),
-                _validate_scalar(start_time),
-                _validate_scalar(end_time),
+                _validate_scalar(time_of_flight),
                 _validate_scalar(sample_interval),
             )
         raise TypeError

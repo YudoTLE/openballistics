@@ -157,7 +157,7 @@ def _optimize_launch_direction_api(
             f"{__}const vector3 &target_position,",
             *_model_parameter_decls(weapon_parameters, indent, ","),
             f"{__}const scalar time_of_flight,",
-            f"{__}const uint32_t launch_direction_max_iterations = 25) const",
+            f"{__}const uint32_t max_iterations = 25) const",
             f"{{",
             f"{__}return static_cast<const Derived *>(this)->optimize_launch_direction_impl(",
             f"{__}{__}launch_position,",
@@ -165,7 +165,7 @@ def _optimize_launch_direction_api(
             f"{__}{__}target_position,",
             f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
             f"{__}{__}time_of_flight,",
-            f"{__}{__}launch_direction_max_iterations);",
+            f"{__}{__}max_iterations);",
             f"}}",
         ]
     return [prefix + line for line in lines]
@@ -184,7 +184,7 @@ def _optimize_launch_angles_api(
             f"{__}const vector3 &target_position,",
             *_model_parameter_decls(weapon_parameters, indent, ","),
             f"{__}const scalar time_of_flight,",
-            f"{__}const uint32_t launch_direction_max_iterations = 25) const",
+            f"{__}const uint32_t max_iterations = 25) const",
             f"{{",
             f"{__}return angles::from_unit_direction(",
             f"{__}{__}static_cast<const Derived *>(this)->optimize_launch_direction_impl(",
@@ -193,7 +193,7 @@ def _optimize_launch_angles_api(
             f"{__}{__}{__}target_position,",
             f"{__}{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
             f"{__}{__}{__}time_of_flight,",
-            f"{__}{__}{__}launch_direction_max_iterations));",
+            f"{__}{__}{__}max_iterations));",
             f"}}",
         ]
     return [prefix + line for line in lines]
@@ -213,7 +213,7 @@ def _solve_launch_direction_api(
             *_model_parameter_decls(weapon_parameters, indent, ","),
             f"{__}const scalar time_of_flight,",
             f"{__}const scalar miss_distance_threshold = 1.0,",
-            f"{__}const uint32_t launch_direction_max_iterations = 25) const",
+            f"{__}const uint32_t max_iterations = 25) const",
             f"{{",
             f"{__}return static_cast<const Derived *>(this)->solve_launch_direction_impl(",
             f"{__}{__}launch_position,",
@@ -222,7 +222,7 @@ def _solve_launch_direction_api(
             f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
             f"{__}{__}time_of_flight,",
             f"{__}{__}miss_distance_threshold,",
-            f"{__}{__}launch_direction_max_iterations);",
+            f"{__}{__}max_iterations);",
             f"}}",
         ]
     return [prefix + line for line in lines]
@@ -242,7 +242,7 @@ def _solve_launch_angles_api(
             *_model_parameter_decls(weapon_parameters, indent, ","),
             f"{__}const scalar time_of_flight,",
             f"{__}const scalar miss_distance_threshold = 1.0,",
-            f"{__}const uint32_t launch_direction_max_iterations = 25) const",
+            f"{__}const uint32_t max_iterations = 25) const",
             f"{{",
             f"{__}std::optional<vector3> launch_direction = static_cast<const Derived *>(this)->solve_launch_direction_impl(",
             f"{__}{__}launch_position,",
@@ -251,7 +251,7 @@ def _solve_launch_angles_api(
             f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
             f"{__}{__}time_of_flight,",
             f"{__}{__}miss_distance_threshold,",
-            f"{__}{__}launch_direction_max_iterations);",
+            f"{__}{__}max_iterations);",
             f"{__}if (!launch_direction.has_value())",
             f"{__}{__}return std::nullopt;",
             f"{__}return angles::from_unit_direction(launch_direction.value());",

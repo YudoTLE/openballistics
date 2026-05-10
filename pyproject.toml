@@ -7,7 +7,7 @@ name = "openballistics"
 version = "0.0.9"
 requires-python = ">=3.9"
 dependencies = ["numpy"]
-description = ""
+description = "High-performance C++ library with Python bindings for computing ballistic trajectories and firing solutions"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Ariyudo Pertama", email = "yudojago@gmail.com" }]
@@ -15,7 +15,28 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
 ]
-keywords = ["ballistics", "point mass", "modified point mass"]
+keywords = [
+    "aerodynamics",
+    "atmosphere",
+    "ballistics",
+    "drag",
+    "firing-solution",
+    "isa",
+    "modified-point-mass",
+    "muzzle-velocity",
+    "numerical-methods",
+    "physics",
+    "point-mass",
+    "projectile",
+    "rk4",
+    "rk45",
+    "simulation",
+    "trajectory",
+    "wind",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourname/openballistics"
 
 [tool.scikit-build]
 cmake.build-type = "Release"

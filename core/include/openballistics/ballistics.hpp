@@ -183,7 +183,7 @@ namespace openballistics
                                                       [&](scalar t) -> scalar
                                                       {
                                                         state z;
-                                                        if (t <= t0) {
+                                                        if (t < t0) {
                                                             prev_interpolate(z, t);
                                                         } else {
                                                             interpolate(z, t);
@@ -264,7 +264,7 @@ namespace openballistics
                                    [&](scalar t) -> scalar
                                    {
                                         state z;
-                                        if (t <= ts[i + 1]) {
+                                        if (t < ts[i + 1]) {
                                             interpolates[i](z, t);
                                         } else {
                                             interpolates[i + 1](z, t);

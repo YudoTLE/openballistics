@@ -225,6 +225,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -236,6 +237,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -246,6 +248,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -257,6 +260,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -268,6 +272,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -279,6 +284,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -289,6 +295,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -300,6 +307,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(
@@ -785,6 +793,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -796,6 +805,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -807,6 +817,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -818,6 +829,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -830,6 +842,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -841,6 +854,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -852,6 +866,7 @@ namespace openballistics::api::detail
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
 			const scalar miss_distance_threshold = 1.0,
+			const priority solution_priority = priority::earliest,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
@@ -863,6 +878,7 @@ namespace openballistics::api::detail
 				min_time_of_flight,
 				max_time_of_flight,
 				miss_distance_threshold,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(

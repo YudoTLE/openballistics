@@ -164,6 +164,7 @@ def _solve_time_of_flight_api(
                 f"{__}const scalar min_time_of_flight,",
                 f"{__}const scalar max_time_of_flight,",
                 f"{__}const scalar miss_distance_threshold = 1.0,",
+                f"{__}const priority solution_priority = priority::earliest,",
                 f"{__}const uint32_t max_iterations = 30) const",
                 f"{{",
                 f"{__}return static_cast<const Derived *>(this)->solve_time_of_flight_impl(",
@@ -175,6 +176,7 @@ def _solve_time_of_flight_api(
                 f"{__}{__}min_time_of_flight,",
                 f"{__}{__}max_time_of_flight,",
                 f"{__}{__}miss_distance_threshold,",
+                f"{__}{__}solution_priority,",
                 f"{__}{__}max_iterations);",
                 f"}}",
             ]

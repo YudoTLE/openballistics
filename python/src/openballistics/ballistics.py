@@ -404,6 +404,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         max_iterations: SupportsInt = ...,
     ) -> float | None: ...
     @overload
@@ -418,6 +419,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         max_iterations: SupportsInt = ...,
     ) -> float | None: ...
     @overload
@@ -433,6 +435,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         max_iterations: SupportsInt = ...,
     ) -> float | None: ...
     @overload
@@ -448,6 +451,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = ...,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = ...,
+        solution_priority: Literal["earliest", "latest"] | Priority = ...,
         max_iterations: SupportsInt = ...,
     ) -> float | None: ...
     def solve_time_of_flight(
@@ -463,6 +467,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         min_time_of_flight: SupportsFloat = 0.0,
         max_time_of_flight: SupportsFloat,
         miss_distance_threshold: SupportsFloat = 1.0,
+        solution_priority: Literal["earliest", "latest"] | Priority = Priority.earliest,
         max_iterations: SupportsInt = 30,
     ) -> float | None:
         if isinstance(self._core, _PMRK4 | _PMRK45):
@@ -475,6 +480,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
                 _validate_scalar(miss_distance_threshold),
+                _validate_priority(solution_priority),
                 _validate_integer(max_iterations),
             )
         if isinstance(self._core, _MPMRK4 | _MPMRK45):  # type: ignore
@@ -488,6 +494,7 @@ class Ballistics(Generic[T_Model, T_Integrator]):
                 _validate_scalar(min_time_of_flight),
                 _validate_scalar(max_time_of_flight),
                 _validate_scalar(miss_distance_threshold),
+                _validate_priority(solution_priority),
                 _validate_integer(max_iterations),
             )
         raise TypeError

@@ -36,7 +36,7 @@ keywords = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourname/openballistics"
+Homepage = "https://github.com/YudoTLE/openballistics"
 
 [tool.scikit-build]
 cmake.build-type = "Release"

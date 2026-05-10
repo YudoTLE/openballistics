@@ -6,7 +6,6 @@ project(
     LANGUAGES CXX
 )
 
-find_package(Boost REQUIRED)
 find_package(Eigen3 3.4 QUIET)
 
 if(NOT Eigen3_FOUND)
@@ -31,7 +30,6 @@ target_sources(openballistics_core INTERFACE
 )
 
 target_link_libraries(openballistics_core INTERFACE
-    Boost::boost
     Eigen3::Eigen
 )
 

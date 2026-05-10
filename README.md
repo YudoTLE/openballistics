@@ -1,6 +1,6 @@
 <div align="center">
    <picture>
-      <img width="85%" alt="OpenBallistics" src="https://raw.githubusercontent.com/YudoTLE/openballistics/main/docs/assets/openballistics-logo-text.svg" />
+      <img width="85%" alt="OpenBallistics" src="https://raw.githubusercontent.com/YudoTLE/openballistics/main/docs/assets/openballistics-logo-text.png" />
    </picture>
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)

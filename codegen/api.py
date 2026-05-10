@@ -129,7 +129,7 @@ def _optimize_time_of_flight_api(
                 *_model_parameter_decls(weapon_parameters, indent, ","),
                 f"{__}const scalar min_time_of_flight,",
                 f"{__}const scalar max_time_of_flight,",
-                f"{__}const priority solution_priority,",
+                f"{__}const priority solution_priority = priority::earliest,",
                 f"{__}const uint32_t max_iterations = 30) const",
                 f"{{",
                 f"{__}return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(",

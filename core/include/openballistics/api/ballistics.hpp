@@ -207,6 +207,92 @@ namespace openballistics::api::detail
 				max_time_of_flight,
 				max_iterations);
 		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				platform_velocity,
+				target_position,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				platform_velocity,
+				target_position,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
 		[[nodiscard]] vector3 optimize_launch_direction(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
@@ -662,6 +748,96 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar twist_of_rifling,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				platform_velocity,
+				target_position,
+				{muzzle_velocity, twist_of_rifling},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const vector3 &launch_direction,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar twist_of_rifling,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_direction.stableNormalized(),
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity, twist_of_rifling},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &platform_velocity,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar twist_of_rifling,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				platform_velocity,
+				target_position,
+				{muzzle_velocity, twist_of_rifling},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
+				max_iterations);
+		}
+		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
+			const vector3 &launch_position,
+			const angles &launch_angles,
+			const vector3 &target_position,
+			const scalar muzzle_velocity,
+			const scalar twist_of_rifling,
+			const scalar min_time_of_flight,
+			const scalar max_time_of_flight,
+			const scalar miss_distance_threshold = 1.0,
+			const uint32_t max_iterations = 30) const
+		{
+			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
+				launch_position,
+				launch_angles.to_unit_direction(),
+				vector3::Zero(),
+				target_position,
+				{muzzle_velocity, twist_of_rifling},
+				min_time_of_flight,
+				max_time_of_flight,
+				miss_distance_threshold,
 				max_iterations);
 		}
 		[[nodiscard]] vector3 optimize_launch_direction(

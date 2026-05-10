@@ -205,6 +205,134 @@ namespace openballistics
             return best_time_of_flight;
         }
 
+        [[nodiscard]] std::optional<scalar> solve_time_of_flight_impl(
+            const vector3 &launch_position,
+            const vector3 &launch_direction,
+            const vector3 &platform_velocity,
+            const vector3 &target_position,
+            const weapon_parameters &extra_parameters,
+            const scalar min_time_of_flight,
+            const scalar max_time_of_flight,
+            const scalar miss_distance_threshold,
+            const uint32_t max_iterations) const
+        {
+            const scalar sq_miss_distance_threshold = miss_distance_threshold * miss_distance_threshold;
+
+            state x;
+            this->initialize(x, launch_position, launch_direction, platform_velocity, extra_parameters);
+
+            integrator.integrate_basic(
+                [this](const state &x, state &dxdt, const scalar t) -> void
+                {
+                    this->derivative(x, dxdt, t);
+                },
+                x,
+                0.0,
+                min_time_of_flight);
+
+            std::function<void(state &, const scalar)> prev_interpolate;
+            scalar prev_t0 = min_time_of_flight;
+
+            scalar best_sq_miss_distance = (target_position - x.template head<3>()).squaredNorm();
+            std::optional<scalar> best_time_of_flight;
+
+            integrator.integrate_dense(
+                [this](const state &x, state &dxdt, const scalar t) -> void
+                {
+                    this->derivative(x, dxdt, t);
+                },
+                x,
+                min_time_of_flight,
+                max_time_of_flight,
+                [&](auto interpolate, const scalar t0, const scalar t1)
+                {
+                    state y;
+                    interpolate(y, t1);
+                    scalar sq_miss_distance = (target_position - y.template head<3>()).squaredNorm();
+
+                    if (sq_miss_distance == best_sq_miss_distance)
+                    {
+                        if (max_iterations == 0)
+                        {
+                            if (t0 <= sq_miss_distance_threshold)
+                            {
+                                best_time_of_flight = t0;
+
+                                return 1;
+                            }
+                        }
+                        else
+                        {
+                            std::uintmax_t max_iter = max_iterations;
+                            const auto [found_time_of_flight, found_sq_miss_distance] = math::minimizer::brent_find_minima(
+                                [&](scalar t) -> scalar
+                                {
+                                    state z; 
+                                    interpolate(z, t);
+                                    return (target_position - z.template head<3>()).squaredNorm(); },
+                                t0,
+                                t1,
+                                std::numeric_limits<scalar>::digits,
+                                max_iter);
+                            if (found_sq_miss_distance <= sq_miss_distance_threshold)
+                            {
+                                best_time_of_flight = found_sq_miss_distance;
+
+                                return 1;
+                            }
+                        }
+                    }
+                    if (sq_miss_distance > best_sq_miss_distance)
+                    {
+                        if (max_iterations == 0)
+                        {
+                            if (t0 <= sq_miss_distance_threshold)
+                            {
+                                best_time_of_flight = t0;
+
+                                return 1;
+                            }
+                        }
+                        else
+                        {
+
+                            std::uintmax_t max_iter = max_iterations;
+                            const auto [found_time_of_flight, found_sq_miss_distance] = math::minimizer::brent_find_minima(
+                                [&](scalar t) -> scalar
+                                {
+                                    state z;
+                                    if (t <= t0) {
+                                        prev_interpolate(z, t);
+                                    } else {
+                                        interpolate(z, t);
+                                    }
+                                    return (target_position - z.template head<3>()).squaredNorm(); },
+                                prev_t0,
+                                t1,
+                                std::numeric_limits<scalar>::digits,
+                                max_iter);
+                            if (found_sq_miss_distance <= sq_miss_distance_threshold)
+                            {
+                                best_time_of_flight = found_sq_miss_distance;
+
+                                return 1;
+                            }
+
+                            return 1;
+                        }
+                    }
+
+                    best_sq_miss_distance = sq_miss_distance;
+
+                    prev_interpolate = interpolate;
+                    prev_t0 = t0;
+
+                    return 0;
+                });
+
+            return best_time_of_flight;
+        }
+
         [[nodiscard]] vector3 optimize_launch_direction_impl(
             const vector3 &launch_position,
             const vector3 &platform_velocity,

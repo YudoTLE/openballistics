@@ -7,7 +7,7 @@ name = "openballistics"
 version = "0.0.9"
 requires-python = ">=3.9"
 dependencies = ["numpy"]
-description = "High-performance C++ library with Python bindings for computing ballistic trajectories and firing solutions"
+description = "High-performance Python library for computing ballistic trajectories and firing solutions"
 readme = "README.md"
 license = { file = "LICENSE" }
 authors = [{ name = "Ariyudo Pertama", email = "yudojago@gmail.com" }]

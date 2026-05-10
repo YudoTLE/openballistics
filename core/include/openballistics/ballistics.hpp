@@ -217,12 +217,12 @@ namespace openballistics
         {
             const scalar sq_miss_distance_threshold = miss_distance_threshold * miss_distance_threshold;
 
-            auto get_target_position = [](auto&& target, const scalar t) -> vector3 {
-                if constexpr (std::is_convertible_v<decltype(target), vector3>) {
+            auto get_target_position = [](auto &&target, const scalar t) -> vector3
+            {
+                if constexpr (std::is_convertible_v<decltype(target), vector3>)
                     return target;
-                } else {
+                else
                     return target(t);
-                }
             };
 
             auto proxy = [&](const scalar time_of_flight) -> scalar

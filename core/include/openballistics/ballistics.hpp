@@ -331,7 +331,7 @@ namespace openballistics
                     {
                         if (max_iterations == 0)
                         {
-                            if (t0 <= sq_miss_distance_threshold)
+                            if (best_sq_miss_distance <= sq_miss_distance_threshold)
                             {
                                 best_time_of_flight = t0;
 
@@ -353,7 +353,7 @@ namespace openballistics
                                 max_iter);
                             if (found_sq_miss_distance <= sq_miss_distance_threshold)
                             {
-                                best_time_of_flight = found_sq_miss_distance;
+                                best_time_of_flight = found_time_of_flight;
 
                                 return 1;
                             }
@@ -363,7 +363,7 @@ namespace openballistics
                     {
                         if (max_iterations == 0)
                         {
-                            if (t0 <= sq_miss_distance_threshold)
+                            if (best_sq_miss_distance <= sq_miss_distance_threshold)
                             {
                                 best_time_of_flight = t0;
 
@@ -372,13 +372,12 @@ namespace openballistics
                         }
                         else
                         {
-
                             std::uintmax_t max_iter = max_iterations;
                             const auto [found_time_of_flight, found_sq_miss_distance] = math::minimizer::brent_find_minima(
                                 [&](scalar t) -> scalar
                                 {
                                     state z;
-                                    if (t <= t0) {
+                                    if (t < t0) {
                                         prev_interpolate(z, t);
                                     } else {
                                         interpolate(z, t);
@@ -390,7 +389,7 @@ namespace openballistics
                                 max_iter);
                             if (found_sq_miss_distance <= sq_miss_distance_threshold)
                             {
-                                best_time_of_flight = found_sq_miss_distance;
+                                best_time_of_flight = found_time_of_flight;
 
                                 return 1;
                             }

@@ -292,6 +292,100 @@ class Ballistics(Generic[T_Model, T_Integrator]):
         raise TypeError
 
     @overload
+    def optimize_time_of_flight(
+        self: Ballistics[Literal["pm"], T_Integrator],
+        *,
+        launch_position: ArrayLike,
+        launch_direction: ArrayLike,
+        platform_velocity: ArrayLike = ...,
+        target_position: ArrayLike,
+        muzzle_velocity: SupportsFloat,
+        min_time_of_flight: SupportsFloat = ...,
+        max_time_of_flight: SupportsFloat,
+        max_iterations: SupportsInt = ...,
+    ) -> float: ...
+    @overload
+    def optimize_time_of_flight(
+        self: Ballistics[Literal["pm"], T_Integrator],
+        *,
+        launch_position: ArrayLike,
+        launch_angles: ArrayLike | Angles,
+        platform_velocity: ArrayLike = ...,
+        target_position: ArrayLike,
+        muzzle_velocity: SupportsFloat,
+        min_time_of_flight: SupportsFloat = ...,
+        max_time_of_flight: SupportsFloat,
+        max_iterations: SupportsInt = ...,
+    ) -> float: ...
+    @overload
+    def optimize_time_of_flight(
+        self: Ballistics[Literal["mpm"], T_Integrator],
+        *,
+        launch_position: ArrayLike,
+        launch_direction: ArrayLike,
+        platform_velocity: ArrayLike = ...,
+        target_position: ArrayLike,
+        muzzle_velocity: SupportsFloat,
+        twist_of_rifling: SupportsFloat,
+        min_time_of_flight: SupportsFloat = ...,
+        max_time_of_flight: SupportsFloat,
+        max_iterations: SupportsInt = ...,
+    ) -> float: ...
+    @overload
+    def optimize_time_of_flight(
+        self: Ballistics[Literal["mpm"], T_Integrator],
+        *,
+        launch_position: ArrayLike,
+        launch_angles: ArrayLike | Angles,
+        platform_velocity: ArrayLike = ...,
+        target_position: ArrayLike,
+        muzzle_velocity: SupportsFloat,
+        twist_of_rifling: SupportsFloat,
+        min_time_of_flight: SupportsFloat = ...,
+        max_time_of_flight: SupportsFloat,
+        max_iterations: SupportsInt = ...,
+    ) -> float: ...
+    def optimize_time_of_flight(
+        self,
+        *,
+        launch_position: ArrayLike,
+        launch_direction: ArrayLike | None = None,
+        launch_angles: ArrayLike | Angles | None = None,
+        platform_velocity: ArrayLike = np.array([0.0, 0.0, 0.0]),
+        target_position: ArrayLike,
+        muzzle_velocity: SupportsFloat,
+        twist_of_rifling: SupportsFloat | None = None,
+        min_time_of_flight: SupportsFloat = 0.0,
+        max_time_of_flight: SupportsFloat,
+        max_iterations: SupportsInt = 30,
+    ) -> float:
+        if isinstance(self._core, _PMRK4 | _PMRK45):
+            return self._core.optimize_time_of_flight(
+                _validate_vector3(launch_position),
+                _validate_launch_direction(launch_direction, launch_angles),
+                _validate_vector3(platform_velocity),
+                _validate_vector3(target_position),
+                _validate_scalar(muzzle_velocity),
+                _validate_scalar(min_time_of_flight),
+                _validate_scalar(max_time_of_flight),
+                _validate_integer(max_iterations),
+            )
+        if isinstance(self._core, _MPMRK4 | _MPMRK45):  # type: ignore
+            return self._core.optimize_time_of_flight(
+                _validate_vector3(launch_position),
+                _validate_launch_direction(launch_direction, launch_angles),
+                _validate_vector3(platform_velocity),
+                _validate_vector3(target_position),
+                _validate_scalar(muzzle_velocity),
+                _validate_scalar(twist_of_rifling),
+                _validate_scalar(min_time_of_flight),
+                _validate_scalar(max_time_of_flight),
+                _validate_integer(max_iterations),
+            )
+        raise TypeError
+
+
+    @overload
     def optimize_launch_direction(
         self: Ballistics[Literal["pm"], T_Integrator],
         *,

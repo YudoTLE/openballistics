@@ -4,6 +4,7 @@
 #include "./types.hpp"
 #include "./numbers.hpp"
 #include "./math/root.hpp"
+#include "./math/minimizer.hpp"
 #include "./angles.hpp"
 #include "./environment.hpp"
 #include "./projectile.hpp"
@@ -96,6 +97,112 @@ namespace openballistics
                 });
 
             return trajectory;
+        }
+
+        [[nodiscard]] scalar optimize_time_of_flight_impl(
+            const vector3 &launch_position,
+            const vector3 &launch_direction,
+            const vector3 &platform_velocity,
+            const vector3 &target_position,
+            const weapon_parameters &extra_parameters,
+            const scalar min_time_of_flight,
+            const scalar max_time_of_flight,
+            const uint32_t max_iterations) const
+        {
+            state x;
+            this->initialize(x, launch_position, launch_direction, platform_velocity, extra_parameters);
+
+            integrator.integrate_basic(
+                [this](const state &x, state &dxdt, const scalar t) -> void
+                {
+                    this->derivative(x, dxdt, t);
+                },
+                x,
+                0.0,
+                min_time_of_flight);
+
+            std::function<void(state &, const scalar)> prev_interpolate;
+            scalar prev_t0 = min_time_of_flight;
+
+            scalar best_sq_miss_distance = (target_position - x.template head<3>()).squaredNorm();
+            scalar best_time_of_flight = min_time_of_flight;
+
+            integrator.integrate_dense(
+                [this](const state &x, state &dxdt, const scalar t) -> void
+                {
+                    this->derivative(x, dxdt, t);
+                },
+                x,
+                min_time_of_flight,
+                max_time_of_flight,
+                [&](auto interpolate, const scalar t0, const scalar t1)
+                {
+                    state y;
+                    interpolate(y, t1);
+                    scalar sq_miss_distance = (target_position - y.template head<3>()).squaredNorm();
+
+                    if (sq_miss_distance == best_sq_miss_distance)
+                    {
+                        if (max_iterations == 0)
+                        {
+                            best_time_of_flight = t0;
+
+                            return 1;
+                        }
+
+                        std::uintmax_t max_iter = max_iterations;
+                        best_time_of_flight = math::minimizer::brent_find_minima(
+                                                  [&](scalar t) -> scalar
+                                                  {
+                                                    state z; 
+                                                    interpolate(z, t);
+                                                    return (target_position - z.template head<3>()).squaredNorm(); },
+                                                  t0,
+                                                  t1,
+                                                  std::numeric_limits<scalar>::digits,
+                                                  max_iter)
+                                                  .first;
+
+                        return 1;
+                    }
+                    if (sq_miss_distance > best_sq_miss_distance)
+                    {
+                        if (max_iterations == 0)
+                        {
+                            best_time_of_flight = t0;
+
+                            return 1;
+                        }
+
+                        std::uintmax_t max_iter = max_iterations;
+                        best_time_of_flight = math::minimizer::brent_find_minima(
+                                                  [&](scalar t) -> scalar
+                                                  {
+                                                    state z;
+                                                    if (t <= t0) {
+                                                        prev_interpolate(z, t);
+                                                    } else {
+                                                        interpolate(z, t);
+                                                    }
+                                                    return (target_position - z.template head<3>()).squaredNorm(); },
+                                                  prev_t0,
+                                                  t1,
+                                                  std::numeric_limits<scalar>::digits,
+                                                  max_iter)
+                                                  .first;
+
+                        return 1;
+                    }
+
+                    best_sq_miss_distance = sq_miss_distance;
+
+                    prev_interpolate = interpolate;
+                    prev_t0 = t0;
+
+                    return 0;
+                });
+
+            return best_time_of_flight;
         }
 
         [[nodiscard]] vector3 optimize_launch_direction_impl(

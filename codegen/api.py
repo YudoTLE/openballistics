@@ -15,7 +15,10 @@ def ballistics_api(
         f"{{",
         *_compute_final_position_api(weapon_parameters, prefix=indent, indent=indent),
         *_compute_trajectory_api(weapon_parameters, prefix=indent, indent=indent),
-        *_optimize_launch_direction_api(weapon_parameters, prefix=indent, indent=indent),
+        *_optimize_time_of_flight_api(weapon_parameters, prefix=indent, indent=indent),
+        *_optimize_launch_direction_api(
+            weapon_parameters, prefix=indent, indent=indent
+        ),
         *_optimize_launch_angles_api(weapon_parameters, prefix=indent, indent=indent),
         *_solve_launch_direction_api(weapon_parameters, prefix=indent, indent=indent),
         *_solve_launch_angles_api(weapon_parameters, prefix=indent, indent=indent),
@@ -104,6 +107,38 @@ def _compute_trajectory_api(
                 f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
                 f"{__}{__}time_of_flight,",
                 f"{__}{__}sample_interval);",
+                f"}}",
+            ]
+    return [prefix + line for line in lines]
+
+
+def _optimize_time_of_flight_api(
+    weapon_parameters: list[Parameter], prefix: str, indent: str
+) -> list[str]:
+    __ = indent
+    lines: list[str] = []
+    for direction_overload in _DIRECTION_OVERLOADS:
+        for velocity_overload in _VELOCITY_OVERLOADS:
+            lines += [
+                f"[[nodiscard]] scalar optimize_time_of_flight(",
+                f"{__}const vector3 &launch_position,",
+                f"{__}{direction_overload.parameter},",
+                *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+                f"{__}const vector3 &target_position,",
+                *_model_parameter_decls(weapon_parameters, indent, ","),
+                f"{__}const scalar min_time_of_flight,",
+                f"{__}const scalar max_time_of_flight,",
+                f"{__}const uint32_t max_iterations = 30) const",
+                f"{{",
+                f"{__}return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(",
+                f"{__}{__}launch_position,",
+                f"{__}{__}{direction_overload.forwarded},",
+                f"{__}{__}{velocity_overload.forwarded},",
+                f"{__}{__}target_position,",
+                f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+                f"{__}{__}min_time_of_flight,",
+                f"{__}{__}max_time_of_flight,",
+                f"{__}{__}max_iterations);",
                 f"}}",
             ]
     return [prefix + line for line in lines]

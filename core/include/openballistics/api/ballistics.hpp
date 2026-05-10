@@ -138,6 +138,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -148,6 +149,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] scalar optimize_time_of_flight(
@@ -157,6 +159,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -167,6 +170,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] scalar optimize_time_of_flight(
@@ -177,6 +181,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -187,6 +192,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] scalar optimize_time_of_flight(
@@ -196,6 +202,7 @@ namespace openballistics::api::detail
 			const scalar muzzle_velocity,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -206,6 +213,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(
@@ -686,6 +694,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -696,6 +705,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] scalar optimize_time_of_flight(
@@ -706,6 +716,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -716,6 +727,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] scalar optimize_time_of_flight(
@@ -727,6 +739,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -737,6 +750,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] scalar optimize_time_of_flight(
@@ -747,6 +761,7 @@ namespace openballistics::api::detail
 			const scalar twist_of_rifling,
 			const scalar min_time_of_flight,
 			const scalar max_time_of_flight,
+			const priority solution_priority,
 			const uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
@@ -757,6 +772,7 @@ namespace openballistics::api::detail
 				{muzzle_velocity, twist_of_rifling},
 				min_time_of_flight,
 				max_time_of_flight,
+				solution_priority,
 				max_iterations);
 		}
 		[[nodiscard]] std::optional<scalar> solve_time_of_flight(

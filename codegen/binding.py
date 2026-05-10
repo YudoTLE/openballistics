@@ -27,7 +27,7 @@ def ballistics_bind(
         f'{__}{__}.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar>(&Class::compute_final_position, nb::const_))',
         f'{__}{__}.def("compute_final_position", nb::overload_cast<const vector3 &, const angles &, const vector3 &, {forward}, scalar>(&Class::compute_final_position, nb::const_))',
         f'{__}{__}.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, scalar>(&Class::compute_trajectory, nb::const_))',
-        f'{__}{__}.def("optimize_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, scalar, uint32_t>(&Class::optimize_time_of_flight, nb::const_))',
+        f'{__}{__}.def("optimize_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, scalar, const priority, uint32_t>(&Class::optimize_time_of_flight, nb::const_))',
         f'{__}{__}.def("solve_time_of_flight", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, scalar, scalar, uint32_t>(&Class::solve_time_of_flight, nb::const_))',
         f'{__}{__}.def("optimize_launch_direction", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, uint32_t>(&Class::optimize_launch_direction, nb::const_))',
         f'{__}{__}.def("optimize_launch_angles", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, {forward}, scalar, uint32_t>(&Class::optimize_launch_angles, nb::const_))',

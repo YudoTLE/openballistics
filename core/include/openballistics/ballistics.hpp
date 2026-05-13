@@ -620,7 +620,7 @@ namespace openballistics
         [[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight_impl(
             const vector3 &launch_position,
             const vector3 &platform_velocity,
-            TargetPosition &&target_position,
+            const TargetPosition &target_position,
             const weapon_parameters &extra_parameters,
             const scalar min_time_of_flight,
             const scalar max_time_of_flight,
@@ -633,17 +633,9 @@ namespace openballistics
             const scalar sq_miss_distance_threshold = miss_distance_threshold * miss_distance_threshold;
             const math::root::eps_tolerance<scalar> tol(std::numeric_limits<scalar>::digits);
 
-            auto get_target_position = [](auto &&target, const scalar t) -> vector3
-            {
-                if constexpr (std::is_convertible_v<decltype(target), vector3>)
-                    return target;
-                else
-                    return target(t);
-            };
-
             auto proxy = [&](const scalar time_of_flight) -> scalar
             {
-                const vector3 target = get_target_position(target_position, time_of_flight);
+                const vector3 &target = detail::resolve_position(target_position, time_of_flight);
                 const vector3 launch_direction = optimize_launch_direction_impl(
                     launch_position,
                     platform_velocity,
@@ -682,7 +674,7 @@ namespace openballistics
                     max_iter);
 
                 const scalar time_of_flight = (lo + hi) * 0.5;
-                const vector3 target = get_target_position(target_position, lo);
+                const vector3 &target = detail::resolve_position(target_position, lo);
                 const vector3 launch_direction = optimize_launch_direction_impl(
                     launch_position,
                     platform_velocity,

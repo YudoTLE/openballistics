@@ -22,6 +22,19 @@
 
 namespace openballistics
 {
+    namespace detail
+    {
+        const vector3 &resolve_position(const vector3 &position, const scalar t)
+        {
+            return position;
+        }
+        template <typename T>
+        vector3 resolve_position(const T &position, const scalar t)
+        {
+            return position(t);
+        }
+    }
+
     template <template <typename> class Model, typename Integrator>
     class ballistics : public Model<ballistics<Model, Integrator>>,
                        public api::detail::ballistics<ballistics<Model, Integrator>, Model<ballistics<Model, Integrator>>>
@@ -100,11 +113,12 @@ namespace openballistics
             return trajectory;
         }
 
+        template <typename TargetPosition>
         [[nodiscard]] scalar optimize_time_of_flight_impl(
             const vector3 &launch_position,
             const vector3 &launch_direction,
             const vector3 &platform_velocity,
-            const vector3 &target_position,
+            const TargetPosition &target_position,
             const weapon_parameters &extra_parameters,
             const scalar min_time_of_flight,
             const scalar max_time_of_flight,
@@ -128,7 +142,7 @@ namespace openballistics
                 std::function<void(state &, const scalar)> prev_interpolate;
                 scalar prev_t0 = min_time_of_flight;
 
-                scalar best_sq_miss_distance = (target_position - x.template head<3>()).squaredNorm();
+                scalar best_sq_miss_distance = (detail::resolve_position(target_position, min_time_of_flight) - x.template head<3>()).squaredNorm();
                 scalar best_time_of_flight = min_time_of_flight;
 
                 integrator.integrate_dense(
@@ -143,7 +157,7 @@ namespace openballistics
                     {
                         state y;
                         interpolate(y, t1);
-                        scalar sq_miss_distance = (target_position - y.template head<3>()).squaredNorm();
+                        scalar sq_miss_distance = (detail::resolve_position(target_position, t1) - y.template head<3>()).squaredNorm();
 
                         if (sq_miss_distance == best_sq_miss_distance)
                         {
@@ -160,7 +174,7 @@ namespace openballistics
                                                       {
                                                         state z; 
                                                         interpolate(z, t);
-                                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                                       t0,
                                                       t1,
                                                       std::numeric_limits<scalar>::digits,
@@ -188,7 +202,7 @@ namespace openballistics
                                                         } else {
                                                             interpolate(z, t);
                                                         }
-                                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                                       prev_t0,
                                                       t1,
                                                       std::numeric_limits<scalar>::digits,
@@ -212,7 +226,7 @@ namespace openballistics
             {
                 std::vector<std::function<void(state &, const scalar)>> interpolates;
                 std::vector<scalar> ts{min_time_of_flight};
-                std::vector<scalar> sq_miss_distances{(target_position - x.template head<3>()).squaredNorm()};
+                std::vector<scalar> sq_miss_distances{(detail::resolve_position(target_position, min_time_of_flight) - x.template head<3>()).squaredNorm()};
 
                 integrator.integrate_dense(
                     [this](const state &x, state &dxdt, const scalar t) -> void
@@ -229,7 +243,7 @@ namespace openballistics
 
                         interpolates.emplace_back(interpolate);
                         ts.emplace_back(t1);
-                        sq_miss_distances.emplace_back((target_position - y.template head<3>()).squaredNorm());
+                        sq_miss_distances.emplace_back((detail::resolve_position(target_position, t1) - y.template head<3>()).squaredNorm());
 
                         return 0;
                     });
@@ -244,14 +258,13 @@ namespace openballistics
 
                         if (sq_miss_distances[i] == sq_miss_distances[i + 1] || i == n - 1)
                         {
-
                             std::uintmax_t max_iter = max_iterations;
                             return math::minimizer::brent_find_minima(
                                        [&](scalar t) -> scalar
                                        {
                                             state z; 
                                             interpolates[i](z, t);
-                                            return (target_position - z.template head<3>()).squaredNorm(); },
+                                            return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                        ts[i],
                                        ts[i + 1],
                                        std::numeric_limits<scalar>::digits,
@@ -269,7 +282,7 @@ namespace openballistics
                                         } else {
                                             interpolates[i + 1](z, t);
                                         }
-                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                    ts[i],
                                    ts[i + 2],
                                    std::numeric_limits<scalar>::digits,
@@ -282,11 +295,12 @@ namespace openballistics
             }
         }
 
+        template <typename TargetPosition>
         [[nodiscard]] std::optional<scalar> solve_time_of_flight_impl(
             const vector3 &launch_position,
             const vector3 &launch_direction,
             const vector3 &platform_velocity,
-            const vector3 &target_position,
+            const TargetPosition &target_position,
             const weapon_parameters &extra_parameters,
             const scalar min_time_of_flight,
             const scalar max_time_of_flight,
@@ -313,7 +327,7 @@ namespace openballistics
                 std::function<void(state &, const scalar)> prev_interpolate;
                 scalar prev_t0 = min_time_of_flight;
 
-                scalar best_sq_miss_distance = (target_position - x.template head<3>()).squaredNorm();
+                scalar best_sq_miss_distance = (detail::resolve_position(target_position, min_time_of_flight) - x.template head<3>()).squaredNorm();
                 std::optional<scalar> best_time_of_flight;
 
                 integrator.integrate_dense(
@@ -328,7 +342,7 @@ namespace openballistics
                     {
                         state y;
                         interpolate(y, t1);
-                        scalar sq_miss_distance = (target_position - y.template head<3>()).squaredNorm();
+                        scalar sq_miss_distance = (detail::resolve_position(target_position, t1) - y.template head<3>()).squaredNorm();
 
                         if (sq_miss_distance == best_sq_miss_distance)
                         {
@@ -349,7 +363,7 @@ namespace openballistics
                                     {
                                         state z; 
                                         interpolate(z, t);
-                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                     t0,
                                     t1,
                                     std::numeric_limits<scalar>::digits,
@@ -385,7 +399,7 @@ namespace openballistics
                                         } else {
                                             interpolate(z, t);
                                         }
-                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                     prev_t0,
                                     t1,
                                     std::numeric_limits<scalar>::digits,
@@ -413,7 +427,7 @@ namespace openballistics
             {
                 std::vector<std::function<void(state &, const scalar)>> interpolates;
                 std::vector<scalar> ts{min_time_of_flight};
-                std::vector<scalar> sq_miss_distances{(target_position - x.template head<3>()).squaredNorm()};
+                std::vector<scalar> sq_miss_distances{(detail::resolve_position(target_position, min_time_of_flight) - x.template head<3>()).squaredNorm()};
 
                 integrator.integrate_dense(
                     [this](const state &x, state &dxdt, const scalar t) -> void
@@ -430,7 +444,7 @@ namespace openballistics
 
                         interpolates.emplace_back(interpolate);
                         ts.emplace_back(t1);
-                        sq_miss_distances.emplace_back((target_position - y.template head<3>()).squaredNorm());
+                        sq_miss_distances.emplace_back((detail::resolve_position(target_position, t1) - y.template head<3>()).squaredNorm());
 
                         return 0;
                     });
@@ -455,7 +469,7 @@ namespace openballistics
                                     {
                                         state z; 
                                         interpolates[i](z, t);
-                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                     ts[i],
                                     ts[i + 1],
                                     std::numeric_limits<scalar>::digits,
@@ -476,7 +490,7 @@ namespace openballistics
                                         } else {
                                             interpolates[i + 1](z, t);
                                         }
-                                        return (target_position - z.template head<3>()).squaredNorm(); },
+                                        return (detail::resolve_position(target_position, t) - z.template head<3>()).squaredNorm(); },
                                     ts[i],
                                     ts[i + 2],
                                     std::numeric_limits<scalar>::digits,
@@ -493,14 +507,17 @@ namespace openballistics
             }
         }
 
+        template <typename TargetPosition>
         [[nodiscard]] vector3 optimize_launch_direction_impl(
             const vector3 &launch_position,
             const vector3 &platform_velocity,
-            const vector3 &target_position,
+            const TargetPosition &target_position,
             const weapon_parameters &extra_parameters,
             const scalar time_of_flight,
             const uint32_t max_iterations) const
         {
+            const vector3 &target = detail::resolve_position(target_position, time_of_flight);
+
             struct Functor : public Eigen::DenseFunctor<scalar>
             {
                 const ballistics *self;
@@ -544,7 +561,7 @@ namespace openballistics
             };
 
             const vector3 vacuum_displacement =
-                target_position -
+                target -
                 launch_position -
                 platform_velocity * time_of_flight -
                 0.5 * environment.gravity(launch_position) * time_of_flight * time_of_flight;
@@ -554,7 +571,7 @@ namespace openballistics
             vectorx x(2);
             x << initial_guess.azimuth(), initial_guess.elevation();
 
-            Functor functor(this, launch_position, platform_velocity, target_position, extra_parameters, time_of_flight);
+            Functor functor(this, launch_position, platform_velocity, target, extra_parameters, time_of_flight);
 
             Eigen::NumericalDiff<Functor> diffFunctor(functor, 1e-7);
             Eigen::LevenbergMarquardt<Eigen::NumericalDiff<Functor>> lm(diffFunctor);
@@ -567,19 +584,22 @@ namespace openballistics
             return angles(x[0], x[1]).to_unit_direction();
         }
 
+        template <typename TargetPosition>
         [[nodiscard]] std::optional<vector3> solve_launch_direction_impl(
             const vector3 &launch_position,
             const vector3 &platform_velocity,
-            const vector3 &target_position,
+            const TargetPosition &target_position,
             const weapon_parameters &extra_parameters,
             const scalar time_of_flight,
             const scalar miss_distance_threshold,
             const uint32_t max_iterations) const
         {
+            const vector3 &target = detail::resolve_position(target_position, time_of_flight);
+
             const vector3 launch_direction = optimize_launch_direction_impl(
                 launch_position,
                 platform_velocity,
-                target_position,
+                target,
                 extra_parameters,
                 time_of_flight,
                 max_iterations);
@@ -590,7 +610,7 @@ namespace openballistics
                 extra_parameters,
                 time_of_flight);
 
-            if ((target_position - final_position).squaredNorm() > miss_distance_threshold * miss_distance_threshold)
+            if ((target - final_position).squaredNorm() > miss_distance_threshold * miss_distance_threshold)
                 return std::nullopt;
 
             return launch_direction;

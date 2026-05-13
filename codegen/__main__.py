@@ -1,10 +1,14 @@
+from pathlib import Path
+from itertools import product
+
+from .constants import INDENT
+from .utils import format_lines
 from .property import *
 from .spec import *
 from .patcher import *
 from .api import *
 from .definition import *
 from .binding import *
-from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 SPEC = ROOT / "codegen" / "spec"
@@ -25,47 +29,56 @@ def generate_binding():
 
     bind_patch: list[str] = []
 
-    for trajectory_model_spec in trajectory_model_specs:
-        for integrator_spec in integrator_specs:
-            bind_patch.append(
-                "\n".join(
+    for trajectory_model_spec, integrator_spec in product(
+        trajectory_model_specs, integrator_specs
+    ):
+        bind_patch.append(
+            "\n".join(
+                format_lines(
                     ballistics_bind(
                         class_name=f"ballistics<trajectory_model::{trajectory_model_spec.class_name}, integrator::{integrator_spec.class_name}>",
                         nb_class_name=f"{trajectory_model_spec.nb_class_name}{integrator_spec.nb_class_name}",
                         weapon_parameters=trajectory_model_spec.weapon_parameters,
-                        base_indent=BASE_INDENT,
-                    )
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
+        )
 
     for integrator_spec in integrator_specs:
         bind_patch.append(
             "\n".join(
-                integrator_bind(
-                    class_name=integrator_spec.class_name,
-                    nb_class_name=integrator_spec.nb_class_name,
-                    properties=integrator_spec.properties,
-                    base_indent=BASE_INDENT,
+                format_lines(
+                    integrator_bind(
+                        class_name=integrator_spec.class_name,
+                        nb_class_name=integrator_spec.nb_class_name,
+                        properties=integrator_spec.properties,
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
 
     bind_patch.append(
         "\n".join(
-            environment_bind(
-                nb_class_name=environment_spec.nb_class_name,
-                properties=environment_spec.properties,
-                base_indent=BASE_INDENT,
+            format_lines(
+                environment_bind(
+                    nb_class_name=environment_spec.nb_class_name,
+                    properties=environment_spec.properties,
+                ),
+                prefix=BASE_INDENT,
             )
         )
     )
 
     bind_patch.append(
         "\n".join(
-            projectile_bind(
-                nb_class_name=projectile_spec.nb_class_name,
-                properties=projectile_spec.properties,
-                base_indent=BASE_INDENT,
+            format_lines(
+                projectile_bind(
+                    nb_class_name=projectile_spec.nb_class_name,
+                    properties=projectile_spec.properties,
+                ),
+                prefix=BASE_INDENT,
             )
         )
     )
@@ -83,9 +96,11 @@ def generate_trajectory_model_core():
         DEFINITION_CODE = trajectory_model_spec.id + "-DEF"
 
         definition_patch = "\n".join(
-            model_weapon_definition(
-                weapon_parameters=trajectory_model_spec.weapon_parameters,
-                base_indent=BASE_INDENT,
+            format_lines(
+                model_weapon_definition(
+                    weapon_parameters=trajectory_model_spec.weapon_parameters,
+                ),
+                prefix=BASE_INDENT,
             )
         )
 
@@ -96,7 +111,6 @@ def generate_integrator_core():
     global patches
 
     BASE_INDENT = "\t\t"
-    INDENT = "\t"
 
     for integrator_spec in integrator_specs:
         DEFAULT_CODE = integrator_spec.id + "-DEF"
@@ -109,44 +123,49 @@ def generate_integrator_core():
         member_patch: list[str] = []
 
         default_patch = "\n".join(
-            property_default(
-                properties=integrator_spec.properties, base_indent=BASE_INDENT + INDENT
+            format_lines(
+                property_default(properties=integrator_spec.properties),
+                prefix=BASE_INDENT + INDENT,
             )
         )
         for property in integrator_spec.properties:
             setter_patch.append(
                 "\n".join(
-                    property_setter(
-                        name=property.name,
-                        type=property.type,
-                        category=property.category,
-                        has_default=property.default is not None,
-                        class_name=integrator_spec.class_name,
-                        base_indent=BASE_INDENT,
-                        indent=INDENT,
+                    format_lines(
+                        property_setter(
+                            name=property.name,
+                            type=property.type,
+                            category=property.category,
+                            has_default=property.default is not None,
+                            class_name=integrator_spec.class_name,
+                        ),
+                        prefix=BASE_INDENT,
                     )
                 )
             )
             getter_patch.append(
                 "\n".join(
-                    property_getter(
-                        name=property.name,
-                        type=property.type,
-                        category=property.category,
-                        has_default=property.default is not None,
-                        base_indent=BASE_INDENT,
-                        indent=INDENT,
+                    format_lines(
+                        property_getter(
+                            name=property.name,
+                            type=property.type,
+                            category=property.category,
+                            has_default=property.default is not None,
+                        ),
+                        prefix=BASE_INDENT,
                     )
                 )
             )
             member_patch.append(
                 "\n".join(
-                    property_member(
-                        name=property.name,
-                        type=property.type,
-                        category=property.category,
-                        has_default=property.default is not None,
-                        base_indent=BASE_INDENT,
+                    format_lines(
+                        property_member(
+                            name=property.name,
+                            type=property.type,
+                            category=property.category,
+                            has_default=property.default is not None,
+                        ),
+                        prefix=BASE_INDENT,
                     )
                 )
             )
@@ -163,7 +182,6 @@ def generate_environemnt_core():
     global patches
 
     BASE_INDENT = "\t\t"
-    INDENT = "\t"
 
     DEFAULT_CODE = environment_spec.id + "-DEF"
     SETTER_CODE = environment_spec.id + "-SET"
@@ -175,44 +193,49 @@ def generate_environemnt_core():
     member_patch: list[str] = []
 
     default_patch = "\n".join(
-        property_default(
-            properties=environment_spec.properties, base_indent=BASE_INDENT + INDENT
+        format_lines(
+            property_default(properties=environment_spec.properties),
+            prefix=BASE_INDENT + INDENT,
         )
     )
     for property in environment_spec.properties:
         setter_patch.append(
             "\n".join(
-                property_setter(
-                    name=property.name,
-                    type=property.type,
-                    category=property.category,
-                    has_default=property.default is not None,
-                    class_name="environment",
-                    base_indent=BASE_INDENT,
-                    indent=INDENT,
+                format_lines(
+                    property_setter(
+                        name=property.name,
+                        type=property.type,
+                        category=property.category,
+                        has_default=property.default is not None,
+                        class_name="environment",
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
         getter_patch.append(
             "\n".join(
-                property_getter(
-                    name=property.name,
-                    type=property.type,
-                    category=property.category,
-                    has_default=property.default is not None,
-                    base_indent=BASE_INDENT,
-                    indent=INDENT,
+                format_lines(
+                    property_getter(
+                        name=property.name,
+                        type=property.type,
+                        category=property.category,
+                        has_default=property.default is not None,
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
         member_patch.append(
             "\n".join(
-                property_member(
-                    name=property.name,
-                    type=property.type,
-                    category=property.category,
-                    has_default=property.default is not None,
-                    base_indent=BASE_INDENT,
+                format_lines(
+                    property_member(
+                        name=property.name,
+                        type=property.type,
+                        category=property.category,
+                        has_default=property.default is not None,
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
@@ -229,7 +252,6 @@ def generate_projectile_core():
     global patches
 
     BASE_INDENT = "\t\t"
-    INDENT = "\t"
 
     DEFAULT_CODE = projectile_spec.id + "-DEF"
     SETTER_CODE = projectile_spec.id + "-SET"
@@ -241,44 +263,49 @@ def generate_projectile_core():
     member_patch: list[str] = []
 
     default_patch = "\n".join(
-        property_default(
-            properties=projectile_spec.properties, base_indent=BASE_INDENT + INDENT
+        format_lines(
+            property_default(properties=projectile_spec.properties),
+            prefix=BASE_INDENT + INDENT,
         )
     )
     for property in projectile_spec.properties:
         setter_patch.append(
             "\n".join(
-                property_setter(
-                    name=property.name,
-                    type=property.type,
-                    category=property.category,
-                    has_default=property.default is not None,
-                    class_name="projectile",
-                    base_indent=BASE_INDENT,
-                    indent=INDENT,
+                format_lines(
+                    property_setter(
+                        name=property.name,
+                        type=property.type,
+                        category=property.category,
+                        has_default=property.default is not None,
+                        class_name="projectile",
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
         getter_patch.append(
             "\n".join(
-                property_getter(
-                    name=property.name,
-                    type=property.type,
-                    category=property.category,
-                    has_default=property.default is not None,
-                    base_indent=BASE_INDENT,
-                    indent=INDENT,
+                format_lines(
+                    property_getter(
+                        name=property.name,
+                        type=property.type,
+                        category=property.category,
+                        has_default=property.default is not None,
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
         member_patch.append(
             "\n".join(
-                property_member(
-                    name=property.name,
-                    type=property.type,
-                    category=property.category,
-                    has_default=property.default is not None,
-                    base_indent=BASE_INDENT,
+                format_lines(
+                    property_member(
+                        name=property.name,
+                        type=property.type,
+                        category=property.category,
+                        has_default=property.default is not None,
+                    ),
+                    prefix=BASE_INDENT,
                 )
             )
         )
@@ -300,10 +327,12 @@ def generate_api_core():
         api_code = trajectory_model_spec.id + "-API"
 
         api_patch = "\n".join(
-            ballistics_api(
-                weapon_parameters=trajectory_model_spec.weapon_parameters,
-                class_name=trajectory_model_spec.class_name,
-                base_indent=BASE_INDENT,
+            format_lines(
+                ballistics_api(
+                    weapon_parameters=trajectory_model_spec.weapon_parameters,
+                    class_name=trajectory_model_spec.class_name,
+                ),
+                prefix=BASE_INDENT,
             )
         )
 

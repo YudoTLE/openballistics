@@ -1,3 +1,5 @@
+from .constants import INDENT
+from .utils import format_lines
 from .spec import Property, Parameter
 
 
@@ -6,10 +8,8 @@ def ballistics_bind(
     class_name: str,
     nb_class_name: str,
     weapon_parameters: list[Parameter],
-    base_indent: str = "",
-    indent: str = "\t",
 ) -> list[str]:
-    __ = indent
+    __ = INDENT
     forward = ", ".join([f"{p.qualifier} {p.type}" for p in weapon_parameters])
     forward_named = ", ".join(
         [f"{p.qualifier} {p.type} {p.name}" for p in weapon_parameters]
@@ -45,7 +45,7 @@ def ballistics_bind(
         f'{__}{__}.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, {forward_named}, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const priority solution_priority, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) {{ return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, {forward_args}, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); }});',
         f"}}",
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
 def integrator_bind(
@@ -53,10 +53,8 @@ def integrator_bind(
     class_name: str,
     nb_class_name: str,
     properties: list[Property],
-    base_indent: str = "",
-    indent: str = "\t",
 ) -> list[str]:
-    __ = indent
+    __ = INDENT
     property_binds = [
         line
         for property in properties
@@ -64,28 +62,24 @@ def integrator_bind(
             name=property.name,
             type=property.type,
             category=property.category,
-            base_indent=indent,
-            indent=indent,
         )
     ]
     lines: list[str] = [
         f"{{",
         f"{__}using Class = integrator::{class_name};",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
-        *property_binds,
+        *format_lines(property_binds, prefix=INDENT),
         f"}}",
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
 def environment_bind(
     *,
     nb_class_name: str,
     properties: list[Property],
-    base_indent: str = "",
-    indent: str = "\t",
 ) -> list[str]:
-    __ = indent
+    __ = INDENT
     property_binds = [
         line
         for property in properties
@@ -93,28 +87,24 @@ def environment_bind(
             name=property.name,
             type=property.type,
             category=property.category,
-            base_indent=indent,
-            indent=indent,
         )
     ]
     lines: list[str] = [
         f"{{",
         f"{__}using Class = environment;",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
-        *property_binds,
+        *format_lines(property_binds, prefix=INDENT),
         f"}}",
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
 def projectile_bind(
     *,
     nb_class_name: str,
     properties: list[Property],
-    base_indent: str = "",
-    indent: str = "\t",
 ) -> list[str]:
-    __ = indent
+    __ = INDENT
     property_binds = [
         line
         for property in properties
@@ -122,18 +112,16 @@ def projectile_bind(
             name=property.name,
             type=property.type,
             category=property.category,
-            base_indent=indent,
-            indent=indent,
         )
     ]
     lines: list[str] = [
         f"{{",
         f"{__}using Class = projectile;",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
-        *property_binds,
+        *format_lines(property_binds, prefix=INDENT),
         f"}}",
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
 def _property_bind(
@@ -141,14 +129,10 @@ def _property_bind(
     name: str,
     type: str,
     category: str,
-    base_indent: str,
-    indent: str,
 ) -> list[str]:
     if category == "constant":
         return _constant_property_bind(
             name=name,
-            base_indent=base_indent,
-            indent=indent,
         )
     dispatch = {
         "curve": _curve_property_bind,
@@ -158,25 +142,21 @@ def _property_bind(
     return dispatch[category](
         name=name,
         type=type,
-        base_indent=base_indent,
-        indent=indent,
     )
 
 
-def _constant_property_bind(*, name: str, base_indent: str, indent: str) -> list[str]:
-    __ = indent
+def _constant_property_bind(*, name: str) -> list[str]:
+    __ = INDENT
     lines: list[str] = [
         f"nb_class",
         f'{__}.def("set_{name}", &Class::set_{name})',
         f'{__}.def("{name}", &Class::{name});',
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
-def _curve_property_bind(
-    *, name: str, type: str, base_indent: str, indent: str
-) -> list[str]:
-    __ = indent
+def _curve_property_bind(*, name: str, type: str) -> list[str]:
+    __ = INDENT
     lines: list[str] = [
         f"nb_class",
         f'{__}.def("set_{name}", nb::overload_cast<{type}>(&Class::set_{name}))',
@@ -185,13 +165,11 @@ def _curve_property_bind(
         f'{__}.def("set_{name}", [](Class &self, std::vector<scalar> keys, std::vector<{type}> values) -> Class & {{ return self.set_{name}(std::move(keys), std::move(values)); }})',
         f'{__}.def("{name}", &Class::{name});',
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
-def _field_property_bind(
-    *, name: str, type: str, base_indent: str, indent: str
-) -> list[str]:
-    __ = indent
+def _field_property_bind(*, name: str, type: str) -> list[str]:
+    __ = INDENT
     lines: list[str] = [
         f"nb_class",
         f'{__}.def("set_{name}", nb::overload_cast<{type}>(&Class::set_{name}))',
@@ -201,4 +179,4 @@ def _field_property_bind(
         f'{__}.def("set_{name}", [](Class &self, std::function<{type}(vector3)> field, scalar interpolator_step) -> Class & {{ return self.set_{name}(std::move(field), interpolator_step); }})',
         f'{__}.def("{name}", &Class::{name});',
     ]
-    return [base_indent + line for line in lines]
+    return lines

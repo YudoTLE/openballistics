@@ -1,103 +1,105 @@
-from .spec import Parameter
+from itertools import product
 from typing import NamedTuple
+
+from .constants import INDENT
+from .utils import format_lines
+from .spec import Parameter
 
 
 def ballistics_api(
     *,
     weapon_parameters: list[Parameter],
     class_name: str,
-    base_indent: str = "",
-    indent: str = "\t",
 ) -> list[str]:
     lines = [
         f"template <typename Derived>",
         f"struct ballistics<Derived, trajectory_model::{class_name}<Derived>>",
         f"{{",
-        *_compute_final_position_api(weapon_parameters, prefix=indent, indent=indent),
-        *_compute_trajectory_api(weapon_parameters, prefix=indent, indent=indent),
-        *_optimize_time_of_flight_api(weapon_parameters, prefix=indent, indent=indent),
-        *_solve_time_of_flight_api(weapon_parameters, prefix=indent, indent=indent),
-        *_optimize_launch_direction_api(
-            weapon_parameters, prefix=indent, indent=indent
-        ),
-        *_optimize_launch_angles_api(weapon_parameters, prefix=indent, indent=indent),
-        *_solve_launch_direction_api(weapon_parameters, prefix=indent, indent=indent),
-        *_solve_launch_angles_api(weapon_parameters, prefix=indent, indent=indent),
-        *_solve_launch_direction_and_time_of_flight_api(
-            weapon_parameters, prefix=indent, indent=indent
-        ),
-        *_solve_launch_angles_and_time_of_flight_api(
-            weapon_parameters, prefix=indent, indent=indent
+        *format_lines(
+            [
+                *_compute_final_position_api(weapon_parameters),
+                *_compute_trajectory_api(weapon_parameters),
+                *_optimize_time_of_flight_api(weapon_parameters),
+                *_solve_time_of_flight_api(weapon_parameters),
+                *_optimize_launch_direction_api(weapon_parameters),
+                *_optimize_launch_angles_api(weapon_parameters),
+                *_solve_launch_direction_api(weapon_parameters),
+                *_solve_launch_angles_api(weapon_parameters),
+                *_solve_launch_direction_and_time_of_flight_api(weapon_parameters),
+                *_solve_launch_angles_and_time_of_flight_api(weapon_parameters),
+            ],
+            prefix=INDENT,
         ),
         f"}};",
     ]
-    return [base_indent + line for line in lines]
+    return lines
 
 
-class DirectionOverload(NamedTuple):
+class Overload(NamedTuple):
+    id: str
     parameter: str
     forwarded: str
 
 
-class VelocityOverload(NamedTuple):
-    parameter: str | None
-    forwarded: str
-
-
-_DIRECTION_OVERLOADS = [
-    DirectionOverload(
-        "const vector3 &launch_direction", "launch_direction.stableNormalized()"
+DIRECTION_OVERLOADS = [
+    Overload(
+        id="direction",
+        parameter="const vector3 &launch_direction",
+        forwarded="launch_direction.stableNormalized()",
     ),
-    DirectionOverload(
-        "const angles &launch_angles", "launch_angles.to_unit_direction()"
+    Overload(
+        id="angles",
+        parameter="const angles &launch_angles",
+        forwarded="launch_angles.to_unit_direction()",
     ),
 ]
 
-_VELOCITY_OVERLOADS = [
-    VelocityOverload("const vector3 &platform_velocity", "platform_velocity"),
-    VelocityOverload(None, "vector3::Zero()"),
+VELOCITY_OVERLOADS = [
+    Overload(
+        id="moving",
+        parameter="const vector3 &platform_velocity",
+        forwarded="platform_velocity",
+    ),
+    Overload(id="stationary", parameter="__SKIP__", forwarded="vector3::Zero()"),
 ]
 
 
-def _compute_final_position_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _compute_final_position_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for direction_overload in _DIRECTION_OVERLOADS:
-        for velocity_overload in _VELOCITY_OVERLOADS:
-            lines += [
-                f"[[nodiscard]] vector3 compute_final_position(",
-                f"{__}const vector3 &launch_position,",
-                f"{__}{direction_overload.parameter},",
-                *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
-                *_model_parameter_decls(weapon_parameters, indent, ","),
-                f"{__}const scalar time_of_flight) const",
-                f"{{",
-                f"{__}return static_cast<const Derived *>(this)->compute_final_position_impl(",
-                f"{__}{__}launch_position,",
-                f"{__}{__}{direction_overload.forwarded},",
-                f"{__}{__}{velocity_overload.forwarded},",
-                f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
-                f"{__}{__}time_of_flight);",
-                f"}}",
-            ]
-    return [prefix + line for line in lines]
+    for direction_overload, velocity_overload in product(
+        DIRECTION_OVERLOADS, VELOCITY_OVERLOADS
+    ):
+        lines += [
+            f"[[nodiscard]] vector3 compute_final_position(",
+            f"{__}const vector3 &launch_position,",
+            f"{__}{direction_overload.parameter},",
+            f"{__}{velocity_overload.parameter},",
+            *_model_parameter_decls(weapon_parameters),
+            f"{__}const scalar time_of_flight) const",
+            f"{{",
+            f"{__}return static_cast<const Derived *>(this)->compute_final_position_impl(",
+            f"{__}{__}launch_position,",
+            f"{__}{__}{direction_overload.forwarded},",
+            f"{__}{__}{velocity_overload.forwarded},",
+            f"{__}{__}{_model_parameter_args(weapon_parameters)},",
+            f"{__}{__}time_of_flight);",
+            f"}}",
+        ]
+    return lines
 
 
-def _compute_trajectory_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _compute_trajectory_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for direction_overload in _DIRECTION_OVERLOADS:
-        for velocity_overload in _VELOCITY_OVERLOADS:
+    for direction_overload in DIRECTION_OVERLOADS:
+        for velocity_overload in VELOCITY_OVERLOADS:
             lines += [
                 f"[[nodiscard]] std::vector<vector3> compute_trajectory(",
                 f"{__}const vector3 &launch_position,",
                 f"{__}{direction_overload.parameter},",
-                *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
-                *_model_parameter_decls(weapon_parameters, indent, ","),
+                f"{__}{velocity_overload.parameter},",
+                *_model_parameter_decls(weapon_parameters),
                 f"{__}const scalar time_of_flight,",
                 f"{__}const scalar sample_interval = 0.2) const",
                 f"{{",
@@ -105,29 +107,27 @@ def _compute_trajectory_api(
                 f"{__}{__}launch_position,",
                 f"{__}{__}{direction_overload.forwarded},",
                 f"{__}{__}{velocity_overload.forwarded},",
-                f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+                f"{__}{__}{_model_parameter_args(weapon_parameters)},",
                 f"{__}{__}time_of_flight,",
                 f"{__}{__}sample_interval);",
                 f"}}",
             ]
-    return [prefix + line for line in lines]
+    return lines
 
 
-def _optimize_time_of_flight_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _optimize_time_of_flight_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for direction_overload in _DIRECTION_OVERLOADS:
-        for velocity_overload in _VELOCITY_OVERLOADS:
+    for direction_overload in DIRECTION_OVERLOADS:
+        for velocity_overload in VELOCITY_OVERLOADS:
             lines += [
                 f"template <typename TargetPosition>",
                 f"[[nodiscard]] scalar optimize_time_of_flight(",
                 f"{__}const vector3 &launch_position,",
                 f"{__}{direction_overload.parameter},",
-                *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+                f"{__}{velocity_overload.parameter},",
                 f"{__}const TargetPosition &target_position,",
-                *_model_parameter_decls(weapon_parameters, indent, ","),
+                *_model_parameter_decls(weapon_parameters),
                 f"{__}const scalar min_time_of_flight,",
                 f"{__}const scalar max_time_of_flight,",
                 f"{__}const priority solution_priority = priority::earliest,",
@@ -138,31 +138,29 @@ def _optimize_time_of_flight_api(
                 f"{__}{__}{direction_overload.forwarded},",
                 f"{__}{__}{velocity_overload.forwarded},",
                 f"{__}{__}target_position,",
-                f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+                f"{__}{__}{_model_parameter_args(weapon_parameters)},",
                 f"{__}{__}min_time_of_flight,",
                 f"{__}{__}max_time_of_flight,",
                 f"{__}{__}solution_priority,",
                 f"{__}{__}max_iterations);",
                 f"}}",
             ]
-    return [prefix + line for line in lines]
+    return lines
 
 
-def _solve_time_of_flight_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _solve_time_of_flight_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for direction_overload in _DIRECTION_OVERLOADS:
-        for velocity_overload in _VELOCITY_OVERLOADS:
+    for direction_overload in DIRECTION_OVERLOADS:
+        for velocity_overload in VELOCITY_OVERLOADS:
             lines += [
                 f"template <typename TargetPosition>",
                 f"[[nodiscard]] std::optional<scalar> solve_time_of_flight(",
                 f"{__}const vector3 &launch_position,",
                 f"{__}{direction_overload.parameter},",
-                *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+                f"{__}{velocity_overload.parameter},",
                 f"{__}const TargetPosition &target_position,",
-                *_model_parameter_decls(weapon_parameters, indent, ","),
+                *_model_parameter_decls(weapon_parameters),
                 f"{__}const scalar min_time_of_flight,",
                 f"{__}const scalar max_time_of_flight,",
                 f"{__}const scalar miss_distance_threshold = 1.0,",
@@ -174,7 +172,7 @@ def _solve_time_of_flight_api(
                 f"{__}{__}{direction_overload.forwarded},",
                 f"{__}{__}{velocity_overload.forwarded},",
                 f"{__}{__}target_position,",
-                f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+                f"{__}{__}{_model_parameter_args(weapon_parameters)},",
                 f"{__}{__}min_time_of_flight,",
                 f"{__}{__}max_time_of_flight,",
                 f"{__}{__}miss_distance_threshold,",
@@ -182,22 +180,20 @@ def _solve_time_of_flight_api(
                 f"{__}{__}max_iterations);",
                 f"}}",
             ]
-    return [prefix + line for line in lines]
+    return lines
 
 
-def _optimize_launch_direction_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _optimize_launch_direction_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for velocity_overload in _VELOCITY_OVERLOADS:
+    for velocity_overload in VELOCITY_OVERLOADS:
         lines += [
             f"template <typename TargetPosition>",
             f"[[nodiscard]] vector3 optimize_launch_direction(",
             f"{__}const vector3 &launch_position,",
-            *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+            f"{__}{velocity_overload.parameter},",
             f"{__}const TargetPosition &target_position,",
-            *_model_parameter_decls(weapon_parameters, indent, ","),
+            *_model_parameter_decls(weapon_parameters),
             f"{__}const scalar time_of_flight,",
             f"{__}const uint32_t max_iterations = 25) const",
             f"{{",
@@ -205,27 +201,25 @@ def _optimize_launch_direction_api(
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
             f"{__}{__}target_position,",
-            f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+            f"{__}{__}{_model_parameter_args(weapon_parameters)},",
             f"{__}{__}time_of_flight,",
             f"{__}{__}max_iterations);",
             f"}}",
         ]
-    return [prefix + line for line in lines]
+    return lines
 
 
-def _optimize_launch_angles_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _optimize_launch_angles_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for velocity_overload in _VELOCITY_OVERLOADS:
+    for velocity_overload in VELOCITY_OVERLOADS:
         lines += [
             f"template <typename TargetPosition>",
             f"[[nodiscard]] angles optimize_launch_angles(",
             f"{__}const vector3 &launch_position,",
-            *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+            f"{__}{velocity_overload.parameter},",
             f"{__}const TargetPosition &target_position,",
-            *_model_parameter_decls(weapon_parameters, indent, ","),
+            *_model_parameter_decls(weapon_parameters),
             f"{__}const scalar time_of_flight,",
             f"{__}const uint32_t max_iterations = 25) const",
             f"{{",
@@ -234,27 +228,25 @@ def _optimize_launch_angles_api(
             f"{__}{__}{__}launch_position,",
             f"{__}{__}{__}{velocity_overload.forwarded},",
             f"{__}{__}{__}target_position,",
-            f"{__}{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+            f"{__}{__}{__}{_model_parameter_args(weapon_parameters)},",
             f"{__}{__}{__}time_of_flight,",
             f"{__}{__}{__}max_iterations));",
             f"}}",
         ]
-    return [prefix + line for line in lines]
+    return lines
 
 
-def _solve_launch_direction_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _solve_launch_direction_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for velocity_overload in _VELOCITY_OVERLOADS:
+    for velocity_overload in VELOCITY_OVERLOADS:
         lines += [
             f"template <typename TargetPosition>",
             f"[[nodiscard]] std::optional<vector3> solve_launch_direction(",
             f"{__}const vector3 &launch_position,",
-            *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+            f"{__}{velocity_overload.parameter},",
             f"{__}const TargetPosition &target_position,",
-            *_model_parameter_decls(weapon_parameters, indent, ","),
+            *_model_parameter_decls(weapon_parameters),
             f"{__}const scalar time_of_flight,",
             f"{__}const scalar miss_distance_threshold = 1.0,",
             f"{__}const uint32_t max_iterations = 25) const",
@@ -263,28 +255,26 @@ def _solve_launch_direction_api(
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
             f"{__}{__}target_position,",
-            f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+            f"{__}{__}{_model_parameter_args(weapon_parameters)},",
             f"{__}{__}time_of_flight,",
             f"{__}{__}miss_distance_threshold,",
             f"{__}{__}max_iterations);",
             f"}}",
         ]
-    return [prefix + line for line in lines]
+    return lines
 
 
-def _solve_launch_angles_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
-) -> list[str]:
-    __ = indent
+def _solve_launch_angles_api(weapon_parameters: list[Parameter]) -> list[str]:
+    __ = INDENT
     lines: list[str] = []
-    for velocity_overload in _VELOCITY_OVERLOADS:
+    for velocity_overload in VELOCITY_OVERLOADS:
         lines += [
             f"template <typename TargetPosition>",
             f"[[nodiscard]] std::optional<angles> solve_launch_angles(",
             f"{__}const vector3 &launch_position,",
-            *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+            f"{__}{velocity_overload.parameter},",
             f"{__}const TargetPosition &target_position,",
-            *_model_parameter_decls(weapon_parameters, indent, ","),
+            *_model_parameter_decls(weapon_parameters),
             f"{__}const scalar time_of_flight,",
             f"{__}const scalar miss_distance_threshold = 1.0,",
             f"{__}const uint32_t max_iterations = 25) const",
@@ -293,7 +283,7 @@ def _solve_launch_angles_api(
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
             f"{__}{__}target_position,",
-            f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+            f"{__}{__}{_model_parameter_args(weapon_parameters)},",
             f"{__}{__}time_of_flight,",
             f"{__}{__}miss_distance_threshold,",
             f"{__}{__}max_iterations);",
@@ -302,22 +292,22 @@ def _solve_launch_angles_api(
             f"{__}return angles::from_unit_direction(launch_direction.value());",
             f"}}",
         ]
-    return [prefix + line for line in lines]
+    return lines
 
 
 def _solve_launch_direction_and_time_of_flight_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
+    weapon_parameters: list[Parameter],
 ) -> list[str]:
-    __ = indent
+    __ = INDENT
     lines: list[str] = []
-    for velocity_overload in _VELOCITY_OVERLOADS:
+    for velocity_overload in VELOCITY_OVERLOADS:
         lines += [
             f"template <typename TargetPosition>",
             f"[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(",
             f"{__}const vector3 &launch_position,",
-            *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+            f"{__}{velocity_overload.parameter},",
             f"{__}TargetPosition &&target_position,",
-            *_model_parameter_decls(weapon_parameters, indent, ","),
+            *_model_parameter_decls(weapon_parameters),
             f"{__}const scalar min_time_of_flight,",
             f"{__}const scalar max_time_of_flight,",
             f"{__}const scalar miss_distance_threshold = 1.0,",
@@ -330,7 +320,7 @@ def _solve_launch_direction_and_time_of_flight_api(
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
             f"{__}{__}target_position,",
-            f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+            f"{__}{__}{_model_parameter_args(weapon_parameters)},",
             f"{__}{__}min_time_of_flight,",
             f"{__}{__}max_time_of_flight,",
             f"{__}{__}miss_distance_threshold,",
@@ -340,22 +330,22 @@ def _solve_launch_direction_and_time_of_flight_api(
             f"{__}{__}launch_direction_max_iterations);",
             f"}}",
         ]
-    return [prefix + line for line in lines]
+    return lines
 
 
 def _solve_launch_angles_and_time_of_flight_api(
-    weapon_parameters: list[Parameter], prefix: str, indent: str
+    weapon_parameters: list[Parameter],
 ) -> list[str]:
-    __ = indent
+    __ = INDENT
     lines: list[str] = []
-    for velocity_overload in _VELOCITY_OVERLOADS:
+    for velocity_overload in VELOCITY_OVERLOADS:
         lines += [
             f"template <typename TargetPosition>",
             f"[[nodiscard]] std::optional<std::pair<angles, scalar>> solve_launch_angles_and_time_of_flight(",
             f"{__}const vector3 &launch_position,",
-            *(f"{indent}{p}," for p in [velocity_overload.parameter] if p),
+            f"{__}{velocity_overload.parameter},",
             f"{__}TargetPosition &&target_position,",
-            *_model_parameter_decls(weapon_parameters, indent, ","),
+            *_model_parameter_decls(weapon_parameters),
             f"{__}const scalar min_time_of_flight,",
             f"{__}const scalar max_time_of_flight,",
             f"{__}const scalar miss_distance_threshold = 1.0,",
@@ -368,7 +358,7 @@ def _solve_launch_angles_and_time_of_flight_api(
             f"{__}{__}launch_position,",
             f"{__}{__}{velocity_overload.forwarded},",
             f"{__}{__}target_position,",
-            f"{__}{__}{{{', '.join(_model_parameter_args(weapon_parameters))}}},",
+            f"{__}{__}{_model_parameter_args(weapon_parameters)},",
             f"{__}{__}min_time_of_flight,",
             f"{__}{__}max_time_of_flight,",
             f"{__}{__}miss_distance_threshold,",
@@ -381,19 +371,17 @@ def _solve_launch_angles_and_time_of_flight_api(
             f"{__}return std::make_pair(angles::from_unit_direction(result->first), result->second);",
             f"}}",
         ]
-    return [prefix + line for line in lines]
+    return lines
 
 
 def _model_parameter_decls(
-    weapon_parameters: list[Parameter], prefix: str = "", suffix: str = ""
+    weapon_parameters: list[Parameter],
 ) -> list[str]:
     return [
-        f"{prefix}{f'{p.qualifier} ' if p.qualifier else ''}{p.type} {p.name}{suffix}"
+        f"{INDENT}{f'{p.qualifier} ' if p.qualifier else ''}{p.type} {p.name},"
         for p in weapon_parameters
     ]
 
 
-def _model_parameter_args(
-    weapon_parameters: list[Parameter], prefix: str = "", suffix: str = ""
-) -> list[str]:
-    return [f"{prefix}{p.name}{suffix}" for p in weapon_parameters]
+def _model_parameter_args(weapon_parameters: list[Parameter]) -> str:
+    return "{" + ", ".join(p.name for p in weapon_parameters) + "}"

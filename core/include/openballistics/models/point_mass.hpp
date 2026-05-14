@@ -64,7 +64,7 @@ namespace openballistics::models
 
             const scalar C_D_eff = C_D_0 * i * f_D;
 
-            const scalar S = 0.25 * numbers::pi<scalar> * d * d;
+            const scalar S = 0.25 * numbers::pi_v<scalar> * d * d;
 
             dydt.template head<3>() = u_;
             dydt.template tail<3>() = g_ - 0.5 * rho * S * C_D_eff / m * v * v_;

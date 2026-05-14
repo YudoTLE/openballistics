@@ -576,7 +576,7 @@ namespace openballistics
             Eigen::NumericalDiff<Functor> diffFunctor(functor, 1e-7);
             Eigen::LevenbergMarquardt<Eigen::NumericalDiff<Functor>> lm(diffFunctor);
 
-            lm.setFactor(numbers::pi<scalar> * 0.1);
+            lm.setFactor(numbers::pi_v<scalar> * 0.1);
             lm.setMaxfev(max_iterations);
 
             lm.minimize(x);

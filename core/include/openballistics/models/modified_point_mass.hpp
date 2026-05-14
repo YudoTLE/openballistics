@@ -31,7 +31,7 @@ namespace openballistics::models
         {
             y << launch_position,
                 platform_velocity + launch_direction * parameters.muzzle_velocity,
-                2.0 * numbers::pi<scalar> * parameters.muzzle_velocity / parameters.twist_of_rifling;
+                2.0 * numbers::pi_v<scalar> * parameters.muzzle_velocity / parameters.twist_of_rifling;
         }
 
         void derivative(
@@ -70,7 +70,7 @@ namespace openballistics::models
             const scalar d = projectile.diameter();
             const scalar I_x = projectile.axial_moment_of_inertia();
 
-            const scalar S = 0.25 * numbers::pi<scalar> * d * d;
+            const scalar S = 0.25 * numbers::pi_v<scalar> * d * d;
 
             const scalar i = projectile.form_factor();
             const scalar f_D = projectile.drag_factor();

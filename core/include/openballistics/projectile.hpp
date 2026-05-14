@@ -2,8 +2,8 @@
 #define OPENBALLISTICS_PROJECTILE_HPP
 
 #include "./types.hpp"
-#include "./interpolator/lazy_linear.hpp"
-#include "./interpolator/linear.hpp"
+#include "./interpolators/lazy_linear.hpp"
+#include "./interpolators/linear.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <functional>
@@ -18,7 +18,7 @@ namespace openballistics
 	public:
 		projectile()
 		{
-#pragma region "CODEGEN PROJ-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN PROJECTILE-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			set_form_factor(1.0);
 			set_drag_factor(1.0);
 			set_lift_factor(1.0);
@@ -34,11 +34,11 @@ namespace openballistics
 			set_overturning_moment_coefficient(0.0);
 			set_cubic_overturning_moment_coefficient(0.0);
 			set_spin_damping_moment_coefficient(0.0);
-#pragma endregion "CODEGEN PROJ-DEF"
+#pragma endregion "CODEGEN PROJECTILE-DEF"
 		}
 
 	public:
-#pragma region "CODEGEN PROJ-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN PROJECTILE-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		projectile &set_mass(const scalar value)
 		{
 			m_mass_constant = value;
@@ -110,13 +110,13 @@ namespace openballistics
 		}
 		projectile &set_drag_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_drag_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_drag_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_drag_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_drag_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_drag_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_drag_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_drag_force_coefficient_source = 5;
 			return *this;
 		}
@@ -141,13 +141,13 @@ namespace openballistics
 		}
 		projectile &set_quadratic_yaw_drag_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_quadratic_yaw_drag_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_quadratic_yaw_drag_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_quadratic_yaw_drag_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_quadratic_yaw_drag_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_quadratic_yaw_drag_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_quadratic_yaw_drag_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_quadratic_yaw_drag_force_coefficient_source = 5;
 			return *this;
 		}
@@ -172,13 +172,13 @@ namespace openballistics
 		}
 		projectile &set_quartic_yaw_drag_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_quartic_yaw_drag_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_quartic_yaw_drag_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_quartic_yaw_drag_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_quartic_yaw_drag_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_quartic_yaw_drag_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_quartic_yaw_drag_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_quartic_yaw_drag_force_coefficient_source = 5;
 			return *this;
 		}
@@ -203,13 +203,13 @@ namespace openballistics
 		}
 		projectile &set_lift_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_lift_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_lift_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_lift_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_lift_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_lift_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_lift_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_lift_force_coefficient_source = 5;
 			return *this;
 		}
@@ -234,13 +234,13 @@ namespace openballistics
 		}
 		projectile &set_cubic_lift_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_cubic_lift_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_cubic_lift_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_cubic_lift_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_cubic_lift_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_cubic_lift_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_cubic_lift_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_cubic_lift_force_coefficient_source = 5;
 			return *this;
 		}
@@ -265,13 +265,13 @@ namespace openballistics
 		}
 		projectile &set_quintic_lift_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_quintic_lift_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_quintic_lift_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_quintic_lift_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_quintic_lift_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_quintic_lift_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_quintic_lift_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_quintic_lift_force_coefficient_source = 5;
 			return *this;
 		}
@@ -296,13 +296,13 @@ namespace openballistics
 		}
 		projectile &set_magnus_force_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_magnus_force_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_magnus_force_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_magnus_force_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_magnus_force_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_magnus_force_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_magnus_force_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_magnus_force_coefficient_source = 5;
 			return *this;
 		}
@@ -327,13 +327,13 @@ namespace openballistics
 		}
 		projectile &set_overturning_moment_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_overturning_moment_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_overturning_moment_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_overturning_moment_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_overturning_moment_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_overturning_moment_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_overturning_moment_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_overturning_moment_coefficient_source = 5;
 			return *this;
 		}
@@ -358,13 +358,13 @@ namespace openballistics
 		}
 		projectile &set_cubic_overturning_moment_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_cubic_overturning_moment_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_cubic_overturning_moment_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_cubic_overturning_moment_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_cubic_overturning_moment_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_cubic_overturning_moment_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_cubic_overturning_moment_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_cubic_overturning_moment_coefficient_source = 5;
 			return *this;
 		}
@@ -389,19 +389,19 @@ namespace openballistics
 		}
 		projectile &set_spin_damping_moment_coefficient(std::function<scalar(scalar)> curve, const scalar interpolator_step)
 		{
-			m_spin_damping_moment_coefficient_curve_interpolator = interpolator::lazy_linear<scalar>(std::move(curve), interpolator_step);
+			m_spin_damping_moment_coefficient_curve_interpolator = interpolators::lazy_linear<scalar>(std::move(curve), interpolator_step);
 			m_spin_damping_moment_coefficient_source = 4;
 			return *this;
 		}
 		projectile &set_spin_damping_moment_coefficient(std::vector<scalar> machs, std::vector<scalar> values)
 		{
-			m_spin_damping_moment_coefficient_table = interpolator::linear<scalar>(std::move(machs), std::move(values));
+			m_spin_damping_moment_coefficient_table = interpolators::linear<scalar>(std::move(machs), std::move(values));
 			m_spin_damping_moment_coefficient_source = 5;
 			return *this;
 		}
-#pragma endregion "CODEGEN PROJ-SET"
+#pragma endregion "CODEGEN PROJECTILE-SET"
 
-#pragma region "CODEGEN PROJ-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN PROJECTILE-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar mass() const
 		{
 			if (m_mass_source == 1) return m_mass_constant;
@@ -574,10 +574,10 @@ namespace openballistics
 			default: throw std::bad_optional_access{};
 			}
 		}
-#pragma endregion "CODEGEN PROJ-GET"
+#pragma endregion "CODEGEN PROJECTILE-GET"
 
 	private:
-#pragma region "CODEGEN PROJ-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN PROJECTILE-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		bool m_mass_source = 0;
 		scalar m_mass_constant;
 
@@ -601,72 +601,72 @@ namespace openballistics
 		scalar m_drag_force_coefficient_constant;
 		scalar (*m_drag_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_drag_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_drag_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_drag_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_drag_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_drag_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_quadratic_yaw_drag_force_coefficient_source = 0;
 		scalar m_quadratic_yaw_drag_force_coefficient_constant;
 		scalar (*m_quadratic_yaw_drag_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_quadratic_yaw_drag_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_quadratic_yaw_drag_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_quadratic_yaw_drag_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_quadratic_yaw_drag_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_quadratic_yaw_drag_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_quartic_yaw_drag_force_coefficient_source = 0;
 		scalar m_quartic_yaw_drag_force_coefficient_constant;
 		scalar (*m_quartic_yaw_drag_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_quartic_yaw_drag_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_quartic_yaw_drag_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_quartic_yaw_drag_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_quartic_yaw_drag_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_quartic_yaw_drag_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_lift_force_coefficient_source = 0;
 		scalar m_lift_force_coefficient_constant;
 		scalar (*m_lift_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_lift_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_lift_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_lift_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_lift_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_lift_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_cubic_lift_force_coefficient_source = 0;
 		scalar m_cubic_lift_force_coefficient_constant;
 		scalar (*m_cubic_lift_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_cubic_lift_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_cubic_lift_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_cubic_lift_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_cubic_lift_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_cubic_lift_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_quintic_lift_force_coefficient_source = 0;
 		scalar m_quintic_lift_force_coefficient_constant;
 		scalar (*m_quintic_lift_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_quintic_lift_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_quintic_lift_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_quintic_lift_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_quintic_lift_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_quintic_lift_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_magnus_force_coefficient_source = 0;
 		scalar m_magnus_force_coefficient_constant;
 		scalar (*m_magnus_force_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_magnus_force_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_magnus_force_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_magnus_force_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_magnus_force_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_magnus_force_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_overturning_moment_coefficient_source = 0;
 		scalar m_overturning_moment_coefficient_constant;
 		scalar (*m_overturning_moment_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_overturning_moment_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_overturning_moment_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_overturning_moment_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_overturning_moment_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_overturning_moment_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_cubic_overturning_moment_coefficient_source = 0;
 		scalar m_cubic_overturning_moment_coefficient_constant;
 		scalar (*m_cubic_overturning_moment_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_cubic_overturning_moment_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_cubic_overturning_moment_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_cubic_overturning_moment_coefficient_table{{0.0}, {0.0}};
+		interpolators::lazy_linear<scalar> m_cubic_overturning_moment_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_cubic_overturning_moment_coefficient_table{{0.0}, {0.0}};
 
 		uint8_t m_spin_damping_moment_coefficient_source = 0;
 		scalar m_spin_damping_moment_coefficient_constant;
 		scalar (*m_spin_damping_moment_coefficient_curve)(scalar);
 		std::function<scalar(scalar)> m_spin_damping_moment_coefficient_curve_virtual;
-		interpolator::lazy_linear<scalar> m_spin_damping_moment_coefficient_curve_interpolator;
-		interpolator::linear<scalar> m_spin_damping_moment_coefficient_table{{0.0}, {0.0}};
-#pragma endregion "CODEGEN PROJ-MEM"
+		interpolators::lazy_linear<scalar> m_spin_damping_moment_coefficient_curve_interpolator;
+		interpolators::linear<scalar> m_spin_damping_moment_coefficient_table{{0.0}, {0.0}};
+#pragma endregion "CODEGEN PROJECTILE-MEM"
 	};
 }
 

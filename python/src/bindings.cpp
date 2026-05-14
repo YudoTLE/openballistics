@@ -32,7 +32,7 @@ NB_MODULE(_core, m)
 
 #pragma region "CODEGEN BIND" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	{
-		using Class = ballistics<trajectory_model::modified_point_mass, integrator::runge_kutta_4>;
+		using Class = ballistics<models::modified_point_mass, integrators::runge_kutta_4>;
 		auto nb_class = nb::class_<Class>(m, "MPMRK4").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
@@ -60,7 +60,7 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, const scalar muzzle_velocity, const scalar twist_of_rifling, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const priority solution_priority, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
-		using Class = ballistics<trajectory_model::modified_point_mass, integrator::runge_kutta_dormand_prince_5>;
+		using Class = ballistics<models::modified_point_mass, integrators::runge_kutta_dormand_prince_5>;
 		auto nb_class = nb::class_<Class>(m, "MPMRK45").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
@@ -88,7 +88,7 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, const scalar muzzle_velocity, const scalar twist_of_rifling, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const priority solution_priority, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
-		using Class = ballistics<trajectory_model::point_mass, integrator::runge_kutta_4>;
+		using Class = ballistics<models::point_mass, integrators::runge_kutta_4>;
 		auto nb_class = nb::class_<Class>(m, "PMRK4").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
@@ -116,7 +116,7 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, const scalar muzzle_velocity, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const priority solution_priority, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
-		using Class = ballistics<trajectory_model::point_mass, integrator::runge_kutta_dormand_prince_5>;
+		using Class = ballistics<models::point_mass, integrators::runge_kutta_dormand_prince_5>;
 		auto nb_class = nb::class_<Class>(m, "PMRK45").def(nb::init<>());
 		nb_class
 			.def_rw("integrator", &Class::integrator)
@@ -144,14 +144,14 @@ NB_MODULE(_core, m)
 			.def("solve_launch_angles_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, const scalar muzzle_velocity, const scalar min_time_of_flight, const scalar max_time_of_flight, const scalar miss_distance_threshold, const priority solution_priority, const scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_angles_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
-		using Class = integrator::runge_kutta_4;
+		using Class = integrators::runge_kutta_4;
 		auto nb_class = nb::class_<Class>(m, "RK4").def(nb::init<>());
 		nb_class
 			.def("set_step", &Class::set_step)
 			.def("step", &Class::step);
 	}
 	{
-		using Class = integrator::runge_kutta_dormand_prince_5;
+		using Class = integrators::runge_kutta_dormand_prince_5;
 		auto nb_class = nb::class_<Class>(m, "RK45").def(nb::init<>());
 		nb_class
 			.def("set_absolute_tolerance", &Class::set_absolute_tolerance)

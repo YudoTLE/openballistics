@@ -1,5 +1,5 @@
-#ifndef OPENBALLISTICS_INTERPOLATOR_LAZY_LINEAR_HPP
-#define OPENBALLISTICS_INTERPOLATOR_LAZY_LINEAR_HPP
+#ifndef OPENBALLISTICS_INTERPOLATORS_LAZY_LINEAR_HPP
+#define OPENBALLISTICS_INTERPOLATORS_LAZY_LINEAR_HPP
 
 #include "../types.hpp"
 #include <array>
@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-namespace openballistics::interpolator
+namespace openballistics::interpolators
 {
     template <typename Value, size_t ChunkBits = 20>
     class [[nodiscard]] lazy_linear
@@ -99,4 +99,4 @@ namespace openballistics::interpolator
     };
 }
 
-#endif // OPENBALLISTICS_INTERPOLATOR_LAZY_LINEAR_HPP
+#endif // OPENBALLISTICS_INTERPOLATORS_LAZY_LINEAR_HPP

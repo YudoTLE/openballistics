@@ -1,4 +1,4 @@
-id: INT-RK45
+id: INTEGRATOR-RK45
 class_name: runge_kutta_dormand_prince_5
 nb_class_name: RK45
 description: Adaptive-step fifth-order Runge-Kutta Dormand-Prince integrator.

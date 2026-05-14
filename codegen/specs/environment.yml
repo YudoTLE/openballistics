@@ -1,4 +1,4 @@
-id: ENV
+id: ENVIRONMENT
 nb_class_name: Environment
 description: Environment model with physical atmospheric properties.
 

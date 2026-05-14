@@ -3,7 +3,7 @@ from typing import NamedTuple
 
 from .constants import INDENT
 from .utils import format_lines
-from .spec import Parameter
+from .specs import Parameter
 
 
 def ballistics_api(
@@ -13,7 +13,7 @@ def ballistics_api(
 ) -> list[str]:
     lines = [
         f"template <typename Derived>",
-        f"struct ballistics<Derived, trajectory_model::{class_name}<Derived>>",
+        f"struct ballistics<Derived, models::{class_name}<Derived>>",
         f"{{",
         *format_lines(
             [

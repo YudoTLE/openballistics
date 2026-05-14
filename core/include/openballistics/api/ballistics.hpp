@@ -3,16 +3,16 @@
 
 #include "../types.hpp"
 #include "../enums.hpp"
-#include "../trajectory_model.hpp"
+#include "../models.hpp"
 
 namespace openballistics::api::detail
 {
     template <typename Derived, typename Model>
     struct ballistics;
 
-#pragma region "CODEGEN TM-PM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN MODEL-PM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	template <typename Derived>
-	struct ballistics<Derived, trajectory_model::point_mass<Derived>>
+	struct ballistics<Derived, models::point_mass<Derived>>
 	{
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
@@ -579,11 +579,11 @@ namespace openballistics::api::detail
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
 		}
 	};
-#pragma endregion "CODEGEN TM-PM-API"
+#pragma endregion "CODEGEN MODEL-PM-API"
 
-#pragma region "CODEGEN TM-MPM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN MODEL-MPM-API" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 	template <typename Derived>
-	struct ballistics<Derived, trajectory_model::modified_point_mass<Derived>>
+	struct ballistics<Derived, models::modified_point_mass<Derived>>
 	{
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
@@ -1178,7 +1178,7 @@ namespace openballistics::api::detail
 			return std::make_pair(angles::from_unit_direction(result->first), result->second);
 		}
 	};
-#pragma endregion "CODEGEN TM-MPM-API"
+#pragma endregion "CODEGEN MODEL-MPM-API"
 }
 
 #endif // OPENBALLISTICS_API_BALLISTICS_HPP

@@ -2,8 +2,8 @@
 #define OPENBALLISTICS_ENVIRONMENT_HPP
 
 #include "./types.hpp"
-#include "./interpolator/lazy_linear.hpp"
-#include "./interpolator/lazy_trilinear.hpp"
+#include "./interpolators/lazy_linear.hpp"
+#include "./interpolators/lazy_trilinear.hpp"
 #include <cstdint>
 #include <functional>
 #include <utility>
@@ -85,18 +85,18 @@ namespace openballistics
 	public:
 	environment()
         {
-#pragma region "CODEGEN ENV-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN ENVIRONMENT-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			set_adiabatic_index(1.4);
 			set_specific_gas_constant(287.058);
 			set_temperature(288.15);
 			set_pressure(101325.0);
 			set_gravity(vector3(0.0, 0.0, -9.80665));
 			set_wind_velocity(vector3(0.0, 0.0, 0.0));
-#pragma endregion "CODEGEN ENV-DEF"
+#pragma endregion "CODEGEN ENVIRONMENT-DEF"
         }
 
     public:
-#pragma region "CODEGEN ENV-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN ENVIRONMENT-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		environment &set_adiabatic_index(const scalar value)
 		{
 			m_adiabatic_index_constant = value;
@@ -141,13 +141,13 @@ namespace openballistics
 		}
 		environment &set_temperature(std::function<scalar(scalar)> profile, const scalar interpolator_step)
 		{
-			m_temperature_profile_interpolator = interpolator::lazy_linear<scalar>(std::move(profile), interpolator_step);
+			m_temperature_profile_interpolator = interpolators::lazy_linear<scalar>(std::move(profile), interpolator_step);
 			m_temperature_source = 6;
 			return *this;
 		}
 		environment &set_temperature(std::function<scalar(vector3)> field, const scalar interpolator_step)
 		{
-			m_temperature_field_property_interpolator = interpolator::lazy_trilinear<scalar>(std::move(field), interpolator_step);
+			m_temperature_field_property_interpolator = interpolators::lazy_trilinear<scalar>(std::move(field), interpolator_step);
 			m_temperature_source = 7;
 			return *this;
 		}
@@ -184,13 +184,13 @@ namespace openballistics
 		}
 		environment &set_pressure(std::function<scalar(scalar)> profile, const scalar interpolator_step)
 		{
-			m_pressure_profile_interpolator = interpolator::lazy_linear<scalar>(std::move(profile), interpolator_step);
+			m_pressure_profile_interpolator = interpolators::lazy_linear<scalar>(std::move(profile), interpolator_step);
 			m_pressure_source = 6;
 			return *this;
 		}
 		environment &set_pressure(std::function<scalar(vector3)> field, const scalar interpolator_step)
 		{
-			m_pressure_field_property_interpolator = interpolator::lazy_trilinear<scalar>(std::move(field), interpolator_step);
+			m_pressure_field_property_interpolator = interpolators::lazy_trilinear<scalar>(std::move(field), interpolator_step);
 			m_pressure_source = 7;
 			return *this;
 		}
@@ -227,13 +227,13 @@ namespace openballistics
 		}
 		environment &set_gravity(std::function<vector3(scalar)> profile, const scalar interpolator_step)
 		{
-			m_gravity_profile_interpolator = interpolator::lazy_linear<vector3>(std::move(profile), interpolator_step);
+			m_gravity_profile_interpolator = interpolators::lazy_linear<vector3>(std::move(profile), interpolator_step);
 			m_gravity_source = 6;
 			return *this;
 		}
 		environment &set_gravity(std::function<vector3(vector3)> field, const scalar interpolator_step)
 		{
-			m_gravity_field_property_interpolator = interpolator::lazy_trilinear<vector3>(std::move(field), interpolator_step);
+			m_gravity_field_property_interpolator = interpolators::lazy_trilinear<vector3>(std::move(field), interpolator_step);
 			m_gravity_source = 7;
 			return *this;
 		}
@@ -270,19 +270,19 @@ namespace openballistics
 		}
 		environment &set_wind_velocity(std::function<vector3(scalar)> profile, const scalar interpolator_step)
 		{
-			m_wind_velocity_profile_interpolator = interpolator::lazy_linear<vector3>(std::move(profile), interpolator_step);
+			m_wind_velocity_profile_interpolator = interpolators::lazy_linear<vector3>(std::move(profile), interpolator_step);
 			m_wind_velocity_source = 6;
 			return *this;
 		}
 		environment &set_wind_velocity(std::function<vector3(vector3)> field, const scalar interpolator_step)
 		{
-			m_wind_velocity_field_property_interpolator = interpolator::lazy_trilinear<vector3>(std::move(field), interpolator_step);
+			m_wind_velocity_field_property_interpolator = interpolators::lazy_trilinear<vector3>(std::move(field), interpolator_step);
 			m_wind_velocity_source = 7;
 			return *this;
 		}
-#pragma endregion "CODEGEN ENV-SET"
+#pragma endregion "CODEGEN ENVIRONMENT-SET"
 
-#pragma region "CODEGEN ENV-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN ENVIRONMENT-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar adiabatic_index() const
 		{
 			return m_adiabatic_index_constant;
@@ -352,10 +352,10 @@ namespace openballistics
 			default: throw std::bad_optional_access{};
 			}
 		}
-#pragma endregion "CODEGEN ENV-GET"
+#pragma endregion "CODEGEN ENVIRONMENT-GET"
 
     private:
-#pragma region "CODEGEN ENV-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN ENVIRONMENT-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		scalar m_adiabatic_index_constant;
 
 		scalar m_specific_gas_constant_constant;
@@ -366,8 +366,8 @@ namespace openballistics
 		scalar (*m_temperature_field)(const vector3 &);
 		std::function<scalar(scalar)> m_temperature_profile_virtual;
 		std::function<scalar(vector3)> m_temperature_field_property_virtual;
-		interpolator::lazy_linear<scalar> m_temperature_profile_interpolator;
-		interpolator::lazy_trilinear<scalar> m_temperature_field_property_interpolator;
+		interpolators::lazy_linear<scalar> m_temperature_profile_interpolator;
+		interpolators::lazy_trilinear<scalar> m_temperature_field_property_interpolator;
 
 		uint8_t m_pressure_source = 0;
 		scalar m_pressure_constant;
@@ -375,8 +375,8 @@ namespace openballistics
 		scalar (*m_pressure_field)(const vector3 &);
 		std::function<scalar(scalar)> m_pressure_profile_virtual;
 		std::function<scalar(vector3)> m_pressure_field_property_virtual;
-		interpolator::lazy_linear<scalar> m_pressure_profile_interpolator;
-		interpolator::lazy_trilinear<scalar> m_pressure_field_property_interpolator;
+		interpolators::lazy_linear<scalar> m_pressure_profile_interpolator;
+		interpolators::lazy_trilinear<scalar> m_pressure_field_property_interpolator;
 
 		uint8_t m_gravity_source = 0;
 		vector3 m_gravity_constant;
@@ -384,8 +384,8 @@ namespace openballistics
 		vector3 (*m_gravity_field)(const vector3 &);
 		std::function<vector3(scalar)> m_gravity_profile_virtual;
 		std::function<vector3(vector3)> m_gravity_field_property_virtual;
-		interpolator::lazy_linear<vector3> m_gravity_profile_interpolator;
-		interpolator::lazy_trilinear<vector3> m_gravity_field_property_interpolator;
+		interpolators::lazy_linear<vector3> m_gravity_profile_interpolator;
+		interpolators::lazy_trilinear<vector3> m_gravity_field_property_interpolator;
 
 		uint8_t m_wind_velocity_source = 0;
 		vector3 m_wind_velocity_constant;
@@ -393,9 +393,9 @@ namespace openballistics
 		vector3 (*m_wind_velocity_field)(const vector3 &);
 		std::function<vector3(scalar)> m_wind_velocity_profile_virtual;
 		std::function<vector3(vector3)> m_wind_velocity_field_property_virtual;
-		interpolator::lazy_linear<vector3> m_wind_velocity_profile_interpolator;
-		interpolator::lazy_trilinear<vector3> m_wind_velocity_field_property_interpolator;
-#pragma endregion "CODEGEN ENV-MEM"
+		interpolators::lazy_linear<vector3> m_wind_velocity_profile_interpolator;
+		interpolators::lazy_trilinear<vector3> m_wind_velocity_field_property_interpolator;
+#pragma endregion "CODEGEN ENVIRONMENT-MEM"
     };
 }
 

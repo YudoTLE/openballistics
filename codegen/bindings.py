@@ -1,6 +1,6 @@
 from .constants import INDENT
 from .utils import format_lines
-from .spec import Property, Parameter
+from .specs import Property, Parameter
 
 
 def ballistics_bind(
@@ -66,7 +66,7 @@ def integrator_bind(
     ]
     lines: list[str] = [
         f"{{",
-        f"{__}using Class = integrator::{class_name};",
+        f"{__}using Class = integrators::{class_name};",
         f'{__}auto nb_class = nb::class_<Class>(m, "{nb_class_name}").def(nb::init<>());',
         *format_lines(property_binds, prefix=INDENT),
         f"}}",

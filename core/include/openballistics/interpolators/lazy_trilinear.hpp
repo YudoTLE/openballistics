@@ -1,5 +1,5 @@
-#ifndef OPENBALLISTICS_INTERPOLATOR_LAZY_TRILINEAR_HPP
-#define OPENBALLISTICS_INTERPOLATOR_LAZY_TRILINEAR_HPP
+#ifndef OPENBALLISTICS_INTERPOLATORS_LAZY_TRILINEAR_HPP
+#define OPENBALLISTICS_INTERPOLATORS_LAZY_TRILINEAR_HPP
 
 #include "../types.hpp"
 #include <array>
@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <utility>
 
-namespace openballistics::interpolator
+namespace openballistics::interpolators
 {
     template <typename Value, size_t ChunkBits = 4>
     class [[nodiscard]] lazy_trilinear
@@ -238,4 +238,4 @@ namespace openballistics::interpolator
     };
 }
 
-#endif // OPENBALLISTICS_INTERPOLATOR_LAZY_TRILINEAR_HPP
+#endif // OPENBALLISTICS_INTERPOLATORS_LAZY_TRILINEAR_HPP

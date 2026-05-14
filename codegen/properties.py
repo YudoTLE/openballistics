@@ -1,5 +1,5 @@
 from .constants import INDENT
-from .spec import Property
+from .specs import Property
 
 
 def property_setter(
@@ -160,13 +160,13 @@ def _curve_property_setter(*, name: str, type: str, class_name: str) -> list[str
         f"}}",
         f"{class_name} &set_{name}(std::function<{type}(scalar)> curve, const scalar interpolator_step)",
         f"{{",
-        f"{__}m_{name}_curve_interpolator = interpolator::lazy_linear<{type}>(std::move(curve), interpolator_step);",
+        f"{__}m_{name}_curve_interpolator = interpolators::lazy_linear<{type}>(std::move(curve), interpolator_step);",
         f"{__}m_{name}_source = 4;",
         f"{__}return *this;",
         f"}}",
         f"{class_name} &set_{name}(std::vector<scalar> machs, std::vector<{type}> values)",
         f"{{",
-        f"{__}m_{name}_table = interpolator::linear<{type}>(std::move(machs), std::move(values));",
+        f"{__}m_{name}_table = interpolators::linear<{type}>(std::move(machs), std::move(values));",
         f"{__}m_{name}_source = 5;",
         f"{__}return *this;",
         f"}}",
@@ -199,8 +199,8 @@ def _curve_property_member(*, name: str, type: str) -> list[str]:
         f"{type} m_{name}_constant;",
         f"{type} (*m_{name}_curve)(scalar);",
         f"std::function<{type}(scalar)> m_{name}_curve_virtual;",
-        f"interpolator::lazy_linear<{type}> m_{name}_curve_interpolator;",
-        f"interpolator::linear<{type}> m_{name}_table{{{{0.0}}, {{0.0}}}};",
+        f"interpolators::lazy_linear<{type}> m_{name}_curve_interpolator;",
+        f"interpolators::linear<{type}> m_{name}_table{{{{0.0}}, {{0.0}}}};",
     ]
     return lines
 
@@ -240,13 +240,13 @@ def _field_property_setter(*, name: str, type: str, class_name: str) -> list[str
         f"}}",
         f"{class_name} &set_{name}(std::function<{type}(scalar)> profile, const scalar interpolator_step)",
         f"{{",
-        f"{__}m_{name}_profile_interpolator = interpolator::lazy_linear<{type}>(std::move(profile), interpolator_step);",
+        f"{__}m_{name}_profile_interpolator = interpolators::lazy_linear<{type}>(std::move(profile), interpolator_step);",
         f"{__}m_{name}_source = 6;",
         f"{__}return *this;",
         f"}}",
         f"{class_name} &set_{name}(std::function<{type}(vector3)> field, const scalar interpolator_step)",
         f"{{",
-        f"{__}m_{name}_field_property_interpolator = interpolator::lazy_trilinear<{type}>(std::move(field), interpolator_step);",
+        f"{__}m_{name}_field_property_interpolator = interpolators::lazy_trilinear<{type}>(std::move(field), interpolator_step);",
         f"{__}m_{name}_source = 7;",
         f"{__}return *this;",
         f"}}",
@@ -283,7 +283,7 @@ def _field_property_member(*, name: str, type: str) -> list[str]:
         f"{type} (*m_{name}_field)(const vector3 &);",
         f"std::function<{type}(scalar)> m_{name}_profile_virtual;",
         f"std::function<{type}(vector3)> m_{name}_field_property_virtual;",
-        f"interpolator::lazy_linear<{type}> m_{name}_profile_interpolator;",
-        f"interpolator::lazy_trilinear<{type}> m_{name}_field_property_interpolator;",
+        f"interpolators::lazy_linear<{type}> m_{name}_profile_interpolator;",
+        f"interpolators::lazy_trilinear<{type}> m_{name}_field_property_interpolator;",
     ]
     return lines

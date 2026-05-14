@@ -1,12 +1,12 @@
-#ifndef OPENBALLISTICS_INTEGRATOR_RUNGE_KUTTA_4_HPP
-#define OPENBALLISTICS_INTEGRATOR_RUNGE_KUTTA_4_HPP
+#ifndef OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_4_HPP
+#define OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_4_HPP
 
 #include "../types.hpp"
 #include <utility>
 #include <optional>
 #include <algorithm>
 
-namespace openballistics::integrator
+namespace openballistics::integrators
 {
     class runge_kutta_4
     {
@@ -124,32 +124,32 @@ namespace openballistics::integrator
     public:
         runge_kutta_4()
         {
-#pragma region "CODEGEN INT-RK4-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INTEGRATOR-RK4-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			set_step(1e-3);
-#pragma endregion "CODEGEN INT-RK4-DEF"
+#pragma endregion "CODEGEN INTEGRATOR-RK4-DEF"
         }
 
     public:
-#pragma region "CODEGEN INT-RK4-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INTEGRATOR-RK4-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		runge_kutta_4 &set_step(const scalar value)
 		{
 			m_step_constant = value;
 			return *this;
 		}
-#pragma endregion "CODEGEN INT-RK4-SET"
+#pragma endregion "CODEGEN INTEGRATOR-RK4-SET"
 
-#pragma region "CODEGEN INT-RK4-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INTEGRATOR-RK4-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		[[nodiscard]] scalar step() const
 		{
 			return m_step_constant;
 		}
-#pragma endregion "CODEGEN INT-RK4-GET"
+#pragma endregion "CODEGEN INTEGRATOR-RK4-GET"
 
     private:
-#pragma region "CODEGEN INT-RK4-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN INTEGRATOR-RK4-MEM" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 		scalar m_step_constant;
-#pragma endregion "CODEGEN INT-RK4-MEM"
+#pragma endregion "CODEGEN INTEGRATOR-RK4-MEM"
     };
 }
 
-#endif // OPENBALLISTICS_INTEGRATOR_RUNGE_KUTTA_4_HPP
+#endif // OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_4_HPP

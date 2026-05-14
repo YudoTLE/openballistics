@@ -49,7 +49,7 @@ class ProjectileSpec(BaseSpec):
     properties: list[Property]
 
 
-def load_trajectory_model_specs(dir: Path) -> list[TrajectoryModelSpec]:
+def load_model_specs(dir: Path) -> list[TrajectoryModelSpec]:
     specs: list[TrajectoryModelSpec] = []
     if not dir.exists():
         return specs

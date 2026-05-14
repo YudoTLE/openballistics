@@ -1,12 +1,12 @@
-#ifndef OPENBALLISTICS_INTERPOLATOR_LINEAR_HPP
-#define OPENBALLISTICS_INTERPOLATOR_LINEAR_HPP
+#ifndef OPENBALLISTICS_INTERPOLATORS_LINEAR_HPP
+#define OPENBALLISTICS_INTERPOLATORS_LINEAR_HPP
 
 #include "../types.hpp"
 #include <algorithm>
 #include <stdexcept>
 #include <vector>
 
-namespace openballistics::interpolator
+namespace openballistics::interpolators
 {
     template <typename Value>
     class [[nodiscard]] linear
@@ -64,4 +64,4 @@ namespace openballistics::interpolator
         std::vector<value_type> m_slopes;
     };
 }
-#endif // OPENBALLISTICS_INTERPOLATOR_LINEAR_HPP
+#endif // OPENBALLISTICS_INTERPOLATORS_LINEAR_HPP

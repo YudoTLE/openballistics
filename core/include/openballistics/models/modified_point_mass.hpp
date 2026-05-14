@@ -1,12 +1,12 @@
-#ifndef OPENBALLISTICS_TRAJECTORY_MODEL_MODIFIED_POINT_MASS_HPP
-#define OPENBALLISTICS_TRAJECTORY_MODEL_MODIFIED_POINT_MASS_HPP
+#ifndef OPENBALLISTICS_MODELS_MODIFIED_POINT_MASS_HPP
+#define OPENBALLISTICS_MODELS_MODIFIED_POINT_MASS_HPP
 
 #include "../types.hpp"
 #include "../numbers.hpp"
 #include <Eigen/Dense>
 #include <cmath>
 
-namespace openballistics::trajectory_model
+namespace openballistics::models
 {
     template <typename Derived>
     class modified_point_mass
@@ -15,10 +15,10 @@ namespace openballistics::trajectory_model
         using state = Eigen::Matrix<scalar, 7, 1>;
         struct weapon_parameters
         {
-#pragma region "CODEGEN TM-MPM-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+#pragma region "CODEGEN MODEL-MPM-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			scalar muzzle_velocity;
 			scalar twist_of_rifling;
-#pragma endregion "CODEGEN TM-MPM-DEF"
+#pragma endregion "CODEGEN MODEL-MPM-DEF"
         };
 
     protected:
@@ -147,4 +147,4 @@ namespace openballistics::trajectory_model
     };
 }
 
-#endif // OPENBALLISTICS_TRAJECTORY_MODEL_MODIFIED_POINT_MASS_HPP
+#endif // OPENBALLISTICS_MODELS_MODIFIED_POINT_MASS_HPP

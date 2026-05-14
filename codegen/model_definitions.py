@@ -1,4 +1,4 @@
-from .spec import Parameter
+from .specs import Parameter
 
 
 def model_weapon_definition(

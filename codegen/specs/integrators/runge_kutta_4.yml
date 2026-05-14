@@ -1,4 +1,4 @@
-id: INT-RK4
+id: INTEGRATOR-RK4
 class_name: runge_kutta_4
 nb_class_name: RK4
 description: Fixed-step fourth-order Runge-Kutta integrator.

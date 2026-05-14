@@ -1,20 +1,20 @@
 from pathlib import Path
 from itertools import product
 
-from .constants import INDENT
-from .utils import format_lines
-from .property import *
-from .spec import *
+from .constants import *
+from .utils import *
+from .properties import *
+from .specs import *
 from .patcher import *
-from .api import *
-from .definition import *
-from .binding import *
+from .ballistics_api import *
+from .model_definitions import *
+from .bindings import *
 
 ROOT = Path(__file__).parent.parent
-SPEC = ROOT / "codegen" / "spec"
+SPEC = ROOT / "codegen" / "specs"
 
-trajectory_model_specs = load_trajectory_model_specs(SPEC / "trajectory_model")
-integrator_specs = load_integrator_specs(SPEC / "integrator")
+model_specs = load_model_specs(SPEC / "models")
+integrator_specs = load_integrator_specs(SPEC / "integrators")
 environment_spec = load_environment_spec(SPEC / "environment.yml")
 projectile_spec = load_projectile_spec(SPEC / "projectile.yml")
 
@@ -29,16 +29,14 @@ def generate_binding():
 
     bind_patch: list[str] = []
 
-    for trajectory_model_spec, integrator_spec in product(
-        trajectory_model_specs, integrator_specs
-    ):
+    for model_spec, integrator_spec in product(model_specs, integrator_specs):
         bind_patch.append(
             "\n".join(
                 format_lines(
                     ballistics_bind(
-                        class_name=f"ballistics<trajectory_model::{trajectory_model_spec.class_name}, integrator::{integrator_spec.class_name}>",
-                        nb_class_name=f"{trajectory_model_spec.nb_class_name}{integrator_spec.nb_class_name}",
-                        weapon_parameters=trajectory_model_spec.weapon_parameters,
+                        class_name=f"ballistics<models::{model_spec.class_name}, integrators::{integrator_spec.class_name}>",
+                        nb_class_name=f"{model_spec.nb_class_name}{integrator_spec.nb_class_name}",
+                        weapon_parameters=model_spec.weapon_parameters,
                     ),
                     prefix=BASE_INDENT,
                 )
@@ -86,19 +84,19 @@ def generate_binding():
     patches.append((BIND_CODE, "\n".join(bind_patch)))
 
 
-def generate_trajectory_model_core():
+def generate_model_core():
     global patches
 
     BASE_INDENT = "\t\t\t"
 
-    for trajectory_model_spec in trajectory_model_specs:
+    for model_spec in model_specs:
 
-        DEFINITION_CODE = trajectory_model_spec.id + "-DEF"
+        DEFINITION_CODE = model_spec.id + "-DEF"
 
         definition_patch = "\n".join(
             format_lines(
                 model_weapon_definition(
-                    weapon_parameters=trajectory_model_spec.weapon_parameters,
+                    weapon_parameters=model_spec.weapon_parameters,
                 ),
                 prefix=BASE_INDENT,
             )
@@ -323,14 +321,14 @@ def generate_api_core():
 
     BASE_INDENT = "\t"
 
-    for trajectory_model_spec in trajectory_model_specs:
-        api_code = trajectory_model_spec.id + "-API"
+    for model_spec in model_specs:
+        api_code = model_spec.id + "-API"
 
         api_patch = "\n".join(
             format_lines(
                 ballistics_api(
-                    weapon_parameters=trajectory_model_spec.weapon_parameters,
-                    class_name=trajectory_model_spec.class_name,
+                    weapon_parameters=model_spec.weapon_parameters,
+                    class_name=model_spec.class_name,
                 ),
                 prefix=BASE_INDENT,
             )
@@ -342,7 +340,7 @@ def generate_api_core():
 
 
 generate_binding()
-generate_trajectory_model_core()
+generate_model_core()
 generate_integrator_core()
 generate_environemnt_core()
 generate_projectile_core()

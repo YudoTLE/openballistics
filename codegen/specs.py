@@ -27,7 +27,7 @@ class BaseSpec:
 
 
 @dataclass(kw_only=True)
-class TrajectoryModelSpec(BaseSpec):
+class ModelSpec(BaseSpec):
     tag: str
     class_name: str
     weapon_parameters: list[Parameter]
@@ -49,15 +49,15 @@ class ProjectileSpec(BaseSpec):
     properties: list[Property]
 
 
-def load_model_specs(dir: Path) -> list[TrajectoryModelSpec]:
-    specs: list[TrajectoryModelSpec] = []
+def load_model_specs(dir: Path) -> list[ModelSpec]:
+    specs: list[ModelSpec] = []
     if not dir.exists():
         return specs
     for yaml_file in dir.glob("*.yml"):
         with open(yaml_file, "r", encoding="utf-8") as f:
             data = yaml.safe_load(f)
         specs.append(
-            TrajectoryModelSpec(
+            ModelSpec(
                 id=data["id"],
                 tag=data["tag"],
                 class_name=data["class_name"],

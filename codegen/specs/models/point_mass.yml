@@ -1,4 +1,5 @@
 id: MODEL-PM
+tag: pm
 class_name: point_mass
 nb_class_name: PM
 description: Basic point mass model with aerodynamic drag.

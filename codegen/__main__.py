@@ -333,7 +333,7 @@ def generate_api_core():
                 ballistics_api(
                     weapon_parameters=model_spec.weapon_parameters,
                     class_name=model_spec.class_name,
-                    model_id=model_spec.id,
+                    model_tag=model_spec.tag,
                     docs=api_docs,
                 ),
                 prefix=BASE_INDENT,

@@ -42,7 +42,7 @@ def ballistics_api(
     *,
     weapon_parameters: list[Parameter],
     class_name: str,
-    model_id: str,
+    model_tag: str,
     docs: ApiDocs,
 ) -> list[str]:
     lines = [
@@ -51,14 +51,14 @@ def ballistics_api(
         f"{{",
         *format_lines(
             [
-                *_compute_final_position_api(weapon_parameters, docs, model_id),
-                *_compute_trajectory_api(weapon_parameters, docs, model_id),
-                *_optimize_time_of_flight_api(weapon_parameters, docs, model_id),
-                *_solve_time_of_flight_api(weapon_parameters, docs, model_id),
-                *_optimize_launch_direction_api(weapon_parameters, docs, model_id),
-                *_solve_launch_direction_api(weapon_parameters, docs, model_id),
+                *_compute_final_position_api(weapon_parameters, docs, model_tag),
+                *_compute_trajectory_api(weapon_parameters, docs, model_tag),
+                *_optimize_time_of_flight_api(weapon_parameters, docs, model_tag),
+                *_solve_time_of_flight_api(weapon_parameters, docs, model_tag),
+                *_optimize_launch_direction_api(weapon_parameters, docs, model_tag),
+                *_solve_launch_direction_api(weapon_parameters, docs, model_tag),
                 *_solve_launch_direction_and_time_of_flight_api(
-                    weapon_parameters, docs, model_id
+                    weapon_parameters, docs, model_tag
                 ),
             ],
             prefix=INDENT,
@@ -69,28 +69,29 @@ def ballistics_api(
 
 
 class Overload(NamedTuple):
-    id: str
+    tag: str
     parameter: str
     forwarded: str
 
 
 VELOCITY_OVERLOADS = [
     Overload(
-        id="moving",
+        tag="moving",
         parameter="const vector3 &platform_velocity",
         forwarded="platform_velocity",
     ),
-    Overload(id="stationary", parameter="__SKIP__", forwarded="vector3::Zero()"),
+    Overload(tag="stationary", parameter="__SKIP__", forwarded="vector3::Zero()"),
 ]
 
 
 def _compute_final_position_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, "direction", velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
+        print(model_tag)
         lines += [
             *_generate_doxygen(docs, "compute_final_position", active_tags),
             f"[[nodiscard]] vector3 compute_final_position(",
@@ -112,12 +113,12 @@ def _compute_final_position_api(
 
 
 def _compute_trajectory_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, "direction", velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
         lines += [
             *_generate_doxygen(docs, "compute_trajectory", active_tags),
             f"[[nodiscard]] std::vector<vector3> compute_trajectory(",
@@ -141,12 +142,12 @@ def _compute_trajectory_api(
 
 
 def _optimize_time_of_flight_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, "direction", velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
         lines += [
             *_generate_doxygen(docs, "optimize_time_of_flight", active_tags),
             f"template <typename TargetPosition>",
@@ -177,12 +178,12 @@ def _optimize_time_of_flight_api(
 
 
 def _solve_time_of_flight_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, "direction", velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
         lines += [
             *_generate_doxygen(docs, "solve_time_of_flight", active_tags),
             f"template <typename TargetPosition>",
@@ -215,12 +216,12 @@ def _solve_time_of_flight_api(
 
 
 def _optimize_launch_direction_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
         lines += [
             *_generate_doxygen(docs, "optimize_launch_direction", active_tags),
             f"template <typename TargetPosition>",
@@ -245,12 +246,12 @@ def _optimize_launch_direction_api(
 
 
 def _solve_launch_direction_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
         lines += [
             *_generate_doxygen(docs, "solve_launch_direction", active_tags),
             f"template <typename TargetPosition>",
@@ -277,12 +278,12 @@ def _solve_launch_direction_api(
 
 
 def _solve_launch_direction_and_time_of_flight_api(
-    weapon_parameters: list[Parameter], docs: ApiDocs, model_id: str
+    weapon_parameters: list[Parameter], docs: ApiDocs, model_tag: str
 ) -> list[str]:
     __ = INDENT
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
-        active_tags = {model_id, velocity_overload.id}
+        active_tags = {model_tag, velocity_overload.tag}
         lines += [
             *_generate_doxygen(
                 docs, "solve_launch_direction_and_time_of_flight", active_tags

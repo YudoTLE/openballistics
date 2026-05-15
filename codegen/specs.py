@@ -28,6 +28,7 @@ class BaseSpec:
 
 @dataclass(kw_only=True)
 class TrajectoryModelSpec(BaseSpec):
+    tag: str
     class_name: str
     weapon_parameters: list[Parameter]
 
@@ -58,6 +59,7 @@ def load_model_specs(dir: Path) -> list[TrajectoryModelSpec]:
         specs.append(
             TrajectoryModelSpec(
                 id=data["id"],
+                tag=data["tag"],
                 class_name=data["class_name"],
                 nb_class_name=data["nb_class_name"],
                 description=data.get("description"),

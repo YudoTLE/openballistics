@@ -1,4 +1,5 @@
 id: MODEL-MPM
+tag: mpm
 class_name: modified_point_mass
 nb_class_name: MPM
 description: Modified point mass model accounting for spin and aerodynamic asymmetry.

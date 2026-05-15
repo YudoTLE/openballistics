@@ -19,6 +19,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @returns 3D position vector of the projectile at the specified time of flight [m]
 		[[nodiscard]] vector3 compute_final_position(
@@ -39,6 +40,7 @@ namespace openballistics::api::detail
 		/// @details Integrates the projectile's equations of motion from the initial launch state over the exact duration specified by the time of flight, returning the resulting 3D position vector.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @returns 3D position vector of the projectile at the specified time of flight [m]
 		[[nodiscard]] vector3 compute_final_position(
@@ -59,6 +61,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param sample_interval Time step interval for sampling points along the computed trajectory [s]
 		/// @returns Sequence of 3D position vectors sampled at fixed time intervals along the flight path [m]
@@ -82,6 +85,7 @@ namespace openballistics::api::detail
 		/// @details Integrates the projectile's equations of motion from the initial launch state over the specified time of flight, sampling and returning the 3D position vectors at fixed time intervals.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param sample_interval Time step interval for sampling points along the computed trajectory [s]
 		/// @returns Sequence of 3D position vectors sampled at fixed time intervals along the flight path [m]
@@ -106,6 +110,7 @@ namespace openballistics::api::detail
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param solution_priority Criteria used to select a solution when multiple valid trajectories exist
@@ -139,6 +144,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param solution_priority Criteria used to select a solution when multiple valid trajectories exist
@@ -172,6 +178,7 @@ namespace openballistics::api::detail
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -208,6 +215,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -243,6 +251,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
 		/// @returns Direction vector that minimizes the miss distance to the target at the specified time of flight
@@ -267,6 +276,7 @@ namespace openballistics::api::detail
 		/// @details Uses the Levenberg-Marquardt algorithm to iteratively adjust the launch direction vector, minimizing the distance between the projectile's final position and the target's position exactly at the specified time of flight.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
 		/// @returns Direction vector that minimizes the miss distance to the target at the specified time of flight
@@ -291,6 +301,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
@@ -318,6 +329,7 @@ namespace openballistics::api::detail
 		/// @details Optimizes the launch direction vector numerically and verifies if the resulting trajectory terminates within the specified miss distance threshold of the target. Returns empty if no valid orientation satisfies the threshold constraint.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
@@ -345,6 +357,7 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -384,6 +397,7 @@ namespace openballistics::api::detail
 		/// @details Combines a root-finding algorithm (TOMS-748) for the time of flight with Levenberg-Marquardt optimization for the launch direction, progressively refining both iteratively until the projectile trajectory intersects the target within the allowable miss distance threshold.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -430,6 +444,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @returns 3D position vector of the projectile at the specified time of flight [m]
 		[[nodiscard]] vector3 compute_final_position(
@@ -451,6 +467,8 @@ namespace openballistics::api::detail
 		/// @details Integrates the projectile's equations of motion from the initial launch state over the exact duration specified by the time of flight, returning the resulting 3D position vector.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @returns 3D position vector of the projectile at the specified time of flight [m]
 		[[nodiscard]] vector3 compute_final_position(
@@ -472,6 +490,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param sample_interval Time step interval for sampling points along the computed trajectory [s]
 		/// @returns Sequence of 3D position vectors sampled at fixed time intervals along the flight path [m]
@@ -496,6 +516,8 @@ namespace openballistics::api::detail
 		/// @details Integrates the projectile's equations of motion from the initial launch state over the specified time of flight, sampling and returning the 3D position vectors at fixed time intervals.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param sample_interval Time step interval for sampling points along the computed trajectory [s]
 		/// @returns Sequence of 3D position vectors sampled at fixed time intervals along the flight path [m]
@@ -521,6 +543,8 @@ namespace openballistics::api::detail
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param solution_priority Criteria used to select a solution when multiple valid trajectories exist
@@ -555,6 +579,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param solution_priority Criteria used to select a solution when multiple valid trajectories exist
@@ -589,6 +615,8 @@ namespace openballistics::api::detail
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -626,6 +654,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param launch_direction Direction vector representing the orientation of the launch
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -662,6 +692,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
 		/// @returns Direction vector that minimizes the miss distance to the target at the specified time of flight
@@ -687,6 +719,8 @@ namespace openballistics::api::detail
 		/// @details Uses the Levenberg-Marquardt algorithm to iteratively adjust the launch direction vector, minimizing the distance between the projectile's final position and the target's position exactly at the specified time of flight.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
 		/// @returns Direction vector that minimizes the miss distance to the target at the specified time of flight
@@ -712,6 +746,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
@@ -740,6 +776,8 @@ namespace openballistics::api::detail
 		/// @details Optimizes the launch direction vector numerically and verifies if the resulting trajectory terminates within the specified miss distance threshold of the target. Returns empty if no valid orientation satisfies the threshold constraint.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param time_of_flight Total duration of the projectile's flight from launch [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
 		/// @param max_iterations Maximum number of allowed iterations for the launch direction numerical solver
@@ -768,6 +806,8 @@ namespace openballistics::api::detail
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param platform_velocity Velocity vector of the launching platform relative to the global environment [m/s]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]
@@ -808,6 +848,8 @@ namespace openballistics::api::detail
 		/// @details Combines a root-finding algorithm (TOMS-748) for the time of flight with Levenberg-Marquardt optimization for the launch direction, progressively refining both iteratively until the projectile trajectory intersects the target within the allowable miss distance threshold.
 		/// @param launch_position Position vector representing the origin of the launch [m]
 		/// @param target_position Static position vector or a time-dependent callable function representing the target's position over time [m]
+		/// @param muzzle_velocity Scalar initial launch speed of the projectile relative to the launching platform [m/s]
+		/// @param twist_of_rifling Rifling twist rate characterizing the weapon barrel
 		/// @param min_time_of_flight Lower time of flight bound [s]
 		/// @param max_time_of_flight Upper time of flight bound [s]
 		/// @param miss_distance_threshold Maximum acceptable distance tolerance for identifying a successful target hit [m]

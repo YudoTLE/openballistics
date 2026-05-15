@@ -5,6 +5,7 @@
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![PyPI](https://img.shields.io/pypi/v/openballistics.svg)](https://pypi.org/project/openballistics/)
+[![PyPI Downloads](https://img.shields.io/pepy/dt/openballistics?label=pypi%20downloads)](https://pepy.tech/project/openballistics)
 [![C++](https://img.shields.io/badge/C++-17+-00599C.svg)](https://isocpp.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 

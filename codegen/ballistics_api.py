@@ -292,7 +292,7 @@ def _solve_launch_direction_and_time_of_flight_api(
             f"[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(",
             f"{__}const vector3 &launch_position,",
             f"{__}{velocity_overload.parameter},",
-            f"{__}TargetPosition &&target_position,",
+            f"{__}const TargetPosition &target_position,",
             *_model_parameter_decls(weapon_parameters),
             f"{__}scalar min_time_of_flight,",
             f"{__}scalar max_time_of_flight,",

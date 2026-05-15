@@ -370,7 +370,7 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
-			TargetPosition &&target_position,
+			const TargetPosition &target_position,
 			scalar muzzle_velocity,
 			scalar min_time_of_flight,
 			scalar max_time_of_flight,
@@ -409,7 +409,7 @@ namespace openballistics::api::detail
 		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
-			TargetPosition &&target_position,
+			const TargetPosition &target_position,
 			scalar muzzle_velocity,
 			scalar min_time_of_flight,
 			scalar max_time_of_flight,
@@ -820,7 +820,7 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
-			TargetPosition &&target_position,
+			const TargetPosition &target_position,
 			scalar muzzle_velocity,
 			scalar twist_of_rifling,
 			scalar min_time_of_flight,
@@ -861,7 +861,7 @@ namespace openballistics::api::detail
 		template <typename TargetPosition>
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
-			TargetPosition &&target_position,
+			const TargetPosition &target_position,
 			scalar muzzle_velocity,
 			scalar twist_of_rifling,
 			scalar min_time_of_flight,

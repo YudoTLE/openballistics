@@ -9,14 +9,17 @@ from .patcher import *
 from .ballistics_api import *
 from .model_definitions import *
 from .bindings import *
+from .docs import *
 
 ROOT = Path(__file__).parent.parent
 SPEC = ROOT / "codegen" / "specs"
+DOCS = ROOT / "codegen" / "docs"
 
 model_specs = load_model_specs(SPEC / "models")
 integrator_specs = load_integrator_specs(SPEC / "integrators")
 environment_spec = load_environment_spec(SPEC / "environment.yml")
 projectile_spec = load_projectile_spec(SPEC / "projectile.yml")
+api_docs = load_api_docs(DOCS / "ballistics_api.yml")
 
 patches: list[tuple[str, str]] = []
 
@@ -318,6 +321,7 @@ def generate_projectile_core():
 
 def generate_api_core():
     global patches
+    global api_docs
 
     BASE_INDENT = "\t"
 
@@ -329,6 +333,8 @@ def generate_api_core():
                 ballistics_api(
                     weapon_parameters=model_spec.weapon_parameters,
                     class_name=model_spec.class_name,
+                    model_id=model_spec.id,
+                    docs=api_docs,
                 ),
                 prefix=BASE_INDENT,
             )

@@ -270,24 +270,36 @@ namespace openballistics::integrators
 
     public:
 #pragma region "CODEGEN INTEGRATOR-RK45-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+		/// @brief Sets the `absolute_tolerance`
+		/// @param value Constant value.
+		/// @return Reference to the current object.
 		runge_kutta_dormand_prince_5 &set_absolute_tolerance(const scalar value)
 		{
 			m_absolute_tolerance_constant = value;
 			return *this;
 		}
 
+		/// @brief Sets the `relative_tolerance`
+		/// @param value Constant value.
+		/// @return Reference to the current object.
 		runge_kutta_dormand_prince_5 &set_relative_tolerance(const scalar value)
 		{
 			m_relative_tolerance_constant = value;
 			return *this;
 		}
 
+		/// @brief Sets the `max_step`
+		/// @param value Constant value.
+		/// @return Reference to the current object.
 		runge_kutta_dormand_prince_5 &set_max_step(const scalar value)
 		{
 			m_max_step_constant = value;
 			return *this;
 		}
 
+		/// @brief Sets the `first_step`
+		/// @param value Constant value.
+		/// @return Reference to the current object.
 		runge_kutta_dormand_prince_5 &set_first_step(const scalar value)
 		{
 			m_first_step_constant = value;
@@ -296,21 +308,29 @@ namespace openballistics::integrators
 #pragma endregion "CODEGEN INTEGRATOR-RK45-SET"
 
 #pragma region "CODEGEN INTEGRATOR-RK45-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+		/// @brief Gets the `absolute_tolerance`.
+		/// @return `absolute_tolerance`.
 		[[nodiscard]] scalar absolute_tolerance() const
 		{
 			return m_absolute_tolerance_constant;
 		}
 
+		/// @brief Gets the `relative_tolerance`.
+		/// @return `relative_tolerance`.
 		[[nodiscard]] scalar relative_tolerance() const
 		{
 			return m_relative_tolerance_constant;
 		}
 
+		/// @brief Gets the `max_step`.
+		/// @return `max_step`.
 		[[nodiscard]] scalar max_step() const
 		{
 			return m_max_step_constant;
 		}
 
+		/// @brief Gets the `first_step`.
+		/// @return `first_step`.
 		[[nodiscard]] scalar first_step() const
 		{
 			return m_first_step_constant;

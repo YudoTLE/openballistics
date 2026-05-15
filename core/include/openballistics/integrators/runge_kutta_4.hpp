@@ -131,6 +131,9 @@ namespace openballistics::integrators
 
     public:
 #pragma region "CODEGEN INTEGRATOR-RK4-SET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+		/// @brief Sets the `step`
+		/// @param value Constant value.
+		/// @return Reference to the current object.
 		runge_kutta_4 &set_step(const scalar value)
 		{
 			m_step_constant = value;
@@ -139,6 +142,8 @@ namespace openballistics::integrators
 #pragma endregion "CODEGEN INTEGRATOR-RK4-SET"
 
 #pragma region "CODEGEN INTEGRATOR-RK4-GET" // AUTO-GENERATED - DO NOT EDIT MANUALLY
+		/// @brief Gets the `step`.
+		/// @return `step`.
 		[[nodiscard]] scalar step() const
 		{
 			return m_step_constant;

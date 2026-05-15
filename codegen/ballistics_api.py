@@ -91,7 +91,6 @@ def _compute_final_position_api(
     lines: list[str] = []
     for velocity_overload in VELOCITY_OVERLOADS:
         active_tags = {model_tag, velocity_overload.tag}
-        print(model_tag)
         lines += [
             *_generate_doxygen(docs, "compute_final_position", active_tags),
             f"[[nodiscard]] vector3 compute_final_position(",

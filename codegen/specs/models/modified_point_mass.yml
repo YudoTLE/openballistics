@@ -6,12 +6,10 @@ description: Modified point mass model accounting for spin and aerodynamic asymm
 weapon_parameters:
   - name: muzzle_velocity
     type: scalar
-    qualifier: const
     description: Initial projectile velocity at the muzzle. [m/s]
 
   - name: twist_of_rifling
     type: scalar
-    qualifier: const
     description: Barrel rifling twist rate. [m/turn]
 
 projectile_compatibilities:

@@ -25,8 +25,8 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight) const
+			scalar muzzle_velocity,
+			scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
@@ -44,8 +44,8 @@ namespace openballistics::api::detail
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight) const
+			scalar muzzle_velocity,
+			scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
@@ -66,9 +66,9 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight,
-			const scalar sample_interval = 0.2) const
+			scalar muzzle_velocity,
+			scalar time_of_flight,
+			scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
 				launch_position,
@@ -88,9 +88,9 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight,
-			const scalar sample_interval = 0.2) const
+			scalar muzzle_velocity,
+			scalar time_of_flight,
+			scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
 				launch_position,
@@ -117,11 +117,11 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
 				launch_position,
@@ -149,11 +149,11 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
 				launch_position,
@@ -184,12 +184,12 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
 				launch_position,
@@ -219,12 +219,12 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
 				launch_position,
@@ -251,9 +251,9 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar time_of_flight,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -274,9 +274,9 @@ namespace openballistics::api::detail
 		[[nodiscard]] vector3 optimize_launch_direction(
 			const vector3 &launch_position,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar time_of_flight,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -300,10 +300,10 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -326,10 +326,10 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::optional<vector3> solve_launch_direction(
 			const vector3 &launch_position,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -358,14 +358,14 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
 			TargetPosition &&target_position,
-			const scalar muzzle_velocity,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const scalar time_of_flight_segment_size = 0.5,
-			const uint32_t time_of_flight_max_iterations = 30,
-			const uint32_t launch_direction_max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			scalar time_of_flight_segment_size = 0.5,
+			uint32_t time_of_flight_max_iterations = 30,
+			uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -396,14 +396,14 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
 			TargetPosition &&target_position,
-			const scalar muzzle_velocity,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const scalar time_of_flight_segment_size = 0.5,
-			const uint32_t time_of_flight_max_iterations = 30,
-			const uint32_t launch_direction_max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			scalar time_of_flight_segment_size = 0.5,
+			uint32_t time_of_flight_max_iterations = 30,
+			uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -436,9 +436,9 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
@@ -456,9 +456,9 @@ namespace openballistics::api::detail
 		[[nodiscard]] vector3 compute_final_position(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight) const
 		{
 			return static_cast<const Derived *>(this)->compute_final_position_impl(
 				launch_position,
@@ -479,10 +479,10 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight,
-			const scalar sample_interval = 0.2) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight,
+			scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
 				launch_position,
@@ -502,10 +502,10 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::vector<vector3> compute_trajectory(
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight,
-			const scalar sample_interval = 0.2) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight,
+			scalar sample_interval = 0.2) const
 		{
 			return static_cast<const Derived *>(this)->compute_trajectory_impl(
 				launch_position,
@@ -532,12 +532,12 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
 				launch_position,
@@ -565,12 +565,12 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->optimize_time_of_flight_impl(
 				launch_position,
@@ -601,13 +601,13 @@ namespace openballistics::api::detail
 			const vector3 &launch_direction,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
 				launch_position,
@@ -637,13 +637,13 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &launch_direction,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const uint32_t max_iterations = 30) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			uint32_t max_iterations = 30) const
 		{
 			return static_cast<const Derived *>(this)->solve_time_of_flight_impl(
 				launch_position,
@@ -670,10 +670,10 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -694,10 +694,10 @@ namespace openballistics::api::detail
 		[[nodiscard]] vector3 optimize_launch_direction(
 			const vector3 &launch_position,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->optimize_launch_direction_impl(
 				launch_position,
@@ -721,11 +721,11 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -748,11 +748,11 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::optional<vector3> solve_launch_direction(
 			const vector3 &launch_position,
 			const TargetPosition &target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const uint32_t max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			uint32_t max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_impl(
 				launch_position,
@@ -781,15 +781,15 @@ namespace openballistics::api::detail
 			const vector3 &launch_position,
 			const vector3 &platform_velocity,
 			TargetPosition &&target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const scalar time_of_flight_segment_size = 0.5,
-			const uint32_t time_of_flight_max_iterations = 30,
-			const uint32_t launch_direction_max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			scalar time_of_flight_segment_size = 0.5,
+			uint32_t time_of_flight_max_iterations = 30,
+			uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,
@@ -820,15 +820,15 @@ namespace openballistics::api::detail
 		[[nodiscard]] std::optional<std::pair<vector3, scalar>> solve_launch_direction_and_time_of_flight(
 			const vector3 &launch_position,
 			TargetPosition &&target_position,
-			const scalar muzzle_velocity,
-			const scalar twist_of_rifling,
-			const scalar min_time_of_flight,
-			const scalar max_time_of_flight,
-			const scalar miss_distance_threshold = 1.0,
-			const priority solution_priority = priority::earliest,
-			const scalar time_of_flight_segment_size = 0.5,
-			const uint32_t time_of_flight_max_iterations = 30,
-			const uint32_t launch_direction_max_iterations = 25) const
+			scalar muzzle_velocity,
+			scalar twist_of_rifling,
+			scalar min_time_of_flight,
+			scalar max_time_of_flight,
+			scalar miss_distance_threshold = 1.0,
+			priority solution_priority = priority::earliest,
+			scalar time_of_flight_segment_size = 0.5,
+			uint32_t time_of_flight_max_iterations = 30,
+			uint32_t launch_direction_max_iterations = 25) const
 		{
 			return static_cast<const Derived *>(this)->solve_launch_direction_and_time_of_flight_impl(
 				launch_position,

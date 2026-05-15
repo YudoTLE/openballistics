@@ -10,9 +10,9 @@ def ballistics_bind(
     weapon_parameters: list[Parameter],
 ) -> list[str]:
     __ = INDENT
-    forward = ", ".join([f"{p.qualifier} {p.type}" for p in weapon_parameters])
+    forward = ", ".join([f"{p.type}" for p in weapon_parameters])
     forward_named = ", ".join(
-        [f"{p.qualifier} {p.type} {p.name}" for p in weapon_parameters]
+        [f"{p.type} {p.name}" for p in weapon_parameters]
     )
     forward_args = ", ".join([p.name for p in weapon_parameters])
     lines = [

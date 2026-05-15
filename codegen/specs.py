@@ -16,7 +16,6 @@ class Property:
 class Parameter:
     name: str
     type: str
-    qualifier: str | None = None
     description: str | None = None
 
 

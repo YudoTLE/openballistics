@@ -6,7 +6,6 @@ description: Basic point mass model with aerodynamic drag.
 weapon_parameters:
   - name: muzzle_velocity
     type: scalar
-    qualifier: const
     description: Initial projectile velocity at the muzzle. [m/s]
 
 projectile_compatibilities:

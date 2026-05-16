@@ -20,14 +20,38 @@ NB_MODULE(_core, m)
 	}
 	{
 		using Class = angles;
-		nb::class_<Class>(m, "Angles")
+		nb::class_<Class>(m, "Angles",
+						  R"doc(Represents a 3D direction using azimuth and elevation angles.
+
+Angles are stored in radians. Azimuth is measured in the XY plane from +X toward +Y, and elevation is measured from the XY plane toward +Z.)doc")
 			.def(nb::init<scalar, scalar>(),
 				 nb::arg("azimuth"),
-				 nb::arg("elevation"))
-			.def_prop_ro("azimuth", &Class::azimuth)
-			.def_prop_ro("elevation", &Class::elevation)
-			.def("to_direction", &Class::to_unit_direction)
-			.def_static("from_direction", &Class::from_direction);
+				 nb::arg("elevation"),
+				 R"doc(Creates an angle pair from azimuth and elevation values.
+
+Args:
+    azimuth: Horizontal angle in the XY plane from +X toward +Y [rad].
+    elevation: Vertical angle from the XY plane toward +Z [rad].)doc")
+			.def_prop_ro("azimuth", &Class::azimuth,
+						 "Horizontal angle in the XY plane from +X toward +Y [rad].")
+			.def_prop_ro("elevation", &Class::elevation,
+						 "Vertical angle from the XY plane toward +Z [rad].")
+			.def("to_direction", &Class::to_unit_direction,
+				 R"doc(Converts the angle pair to a unit direction vector.
+
+Returns:
+    3D unit direction vector represented by the stored angles.)doc")
+			.def_static("from_direction", &Class::from_direction,
+						nb::arg("direction"),
+						R"doc(Computes azimuth and elevation from a direction vector.
+
+The input direction is normalized before extracting the angles.
+
+Args:
+    direction: Non-zero direction vector.
+
+Returns:
+    Angles representing the normalized direction.)doc");
 	}
 
 #pragma region "CODEGEN BIND" // AUTO-GENERATED - DO NOT EDIT MANUALLY
@@ -41,16 +65,26 @@ NB_MODULE(_core, m)
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
 		using Class = ballistics<models::modified_point_mass, integrators::rk45>;
@@ -62,16 +96,26 @@ NB_MODULE(_core, m)
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar twist_of_rifling, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, twist_of_rifling, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
 		using Class = ballistics<models::point_mass, integrators::rk4>;
@@ -83,16 +127,26 @@ NB_MODULE(_core, m)
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
 		using Class = ballistics<models::point_mass, integrators::rk45>;
@@ -104,16 +158,26 @@ NB_MODULE(_core, m)
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations) { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
-			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations) { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
-			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations) { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
-			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations) { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
-			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations) { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("optimize_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.optimize_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, solution_priority, max_iterations); })
+			.def("solve_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &launch_direction, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, const uint32_t max_iterations)
+				 { return self.solve_time_of_flight(launch_position, launch_direction, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, max_iterations); })
+			.def("optimize_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, const uint32_t max_iterations)
+				 { return self.optimize_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, max_iterations); })
+			.def("solve_launch_direction", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar time_of_flight, scalar miss_distance_threshold, const uint32_t max_iterations)
+				 { return self.solve_launch_direction(launch_position, platform_velocity, target_position, muzzle_velocity, time_of_flight, miss_distance_threshold, max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const vector3 &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); })
+			.def("solve_launch_direction_and_time_of_flight", [](const Class &self, const vector3 &launch_position, const vector3 &platform_velocity, const std::function<vector3(scalar)> &target_position, scalar muzzle_velocity, scalar min_time_of_flight, scalar max_time_of_flight, scalar miss_distance_threshold, const priority solution_priority, scalar time_of_flight_segment_size, const uint32_t time_of_flight_max_iterations, const uint32_t launch_direction_max_iterations)
+				 { return self.solve_launch_direction_and_time_of_flight(launch_position, platform_velocity, target_position, muzzle_velocity, min_time_of_flight, max_time_of_flight, miss_distance_threshold, solution_priority, time_of_flight_segment_size, time_of_flight_max_iterations, launch_direction_max_iterations); });
 	}
 	{
 		using Class = integrators::rk4;
@@ -149,31 +213,47 @@ NB_MODULE(_core, m)
 			.def("specific_gas_constant", &Class::specific_gas_constant);
 		nb_class
 			.def("set_temperature", nb::overload_cast<scalar>(&Class::set_temperature))
-			.def("set_temperature", [](Class &self, std::function<scalar(scalar)> profile) -> Class & { return self.set_temperature(std::move(profile)); })
-			.def("set_temperature", [](Class &self, std::function<scalar(vector3)> field) -> Class & { return self.set_temperature(std::move(field)); })
-			.def("set_temperature", [](Class &self, std::function<scalar(scalar)> profile, scalar interpolator_step) -> Class & { return self.set_temperature(std::move(profile), interpolator_step); })
-			.def("set_temperature", [](Class &self, std::function<scalar(vector3)> field, scalar interpolator_step) -> Class & { return self.set_temperature(std::move(field), interpolator_step); })
+			.def("set_temperature", [](Class &self, std::function<scalar(scalar)> profile) -> Class &
+				 { return self.set_temperature(std::move(profile)); })
+			.def("set_temperature", [](Class &self, std::function<scalar(vector3)> field) -> Class &
+				 { return self.set_temperature(std::move(field)); })
+			.def("set_temperature", [](Class &self, std::function<scalar(scalar)> profile, scalar interpolator_step) -> Class &
+				 { return self.set_temperature(std::move(profile), interpolator_step); })
+			.def("set_temperature", [](Class &self, std::function<scalar(vector3)> field, scalar interpolator_step) -> Class &
+				 { return self.set_temperature(std::move(field), interpolator_step); })
 			.def("temperature", &Class::temperature);
 		nb_class
 			.def("set_pressure", nb::overload_cast<scalar>(&Class::set_pressure))
-			.def("set_pressure", [](Class &self, std::function<scalar(scalar)> profile) -> Class & { return self.set_pressure(std::move(profile)); })
-			.def("set_pressure", [](Class &self, std::function<scalar(vector3)> field) -> Class & { return self.set_pressure(std::move(field)); })
-			.def("set_pressure", [](Class &self, std::function<scalar(scalar)> profile, scalar interpolator_step) -> Class & { return self.set_pressure(std::move(profile), interpolator_step); })
-			.def("set_pressure", [](Class &self, std::function<scalar(vector3)> field, scalar interpolator_step) -> Class & { return self.set_pressure(std::move(field), interpolator_step); })
+			.def("set_pressure", [](Class &self, std::function<scalar(scalar)> profile) -> Class &
+				 { return self.set_pressure(std::move(profile)); })
+			.def("set_pressure", [](Class &self, std::function<scalar(vector3)> field) -> Class &
+				 { return self.set_pressure(std::move(field)); })
+			.def("set_pressure", [](Class &self, std::function<scalar(scalar)> profile, scalar interpolator_step) -> Class &
+				 { return self.set_pressure(std::move(profile), interpolator_step); })
+			.def("set_pressure", [](Class &self, std::function<scalar(vector3)> field, scalar interpolator_step) -> Class &
+				 { return self.set_pressure(std::move(field), interpolator_step); })
 			.def("pressure", &Class::pressure);
 		nb_class
 			.def("set_gravity", nb::overload_cast<vector3>(&Class::set_gravity))
-			.def("set_gravity", [](Class &self, std::function<vector3(scalar)> profile) -> Class & { return self.set_gravity(std::move(profile)); })
-			.def("set_gravity", [](Class &self, std::function<vector3(vector3)> field) -> Class & { return self.set_gravity(std::move(field)); })
-			.def("set_gravity", [](Class &self, std::function<vector3(scalar)> profile, scalar interpolator_step) -> Class & { return self.set_gravity(std::move(profile), interpolator_step); })
-			.def("set_gravity", [](Class &self, std::function<vector3(vector3)> field, scalar interpolator_step) -> Class & { return self.set_gravity(std::move(field), interpolator_step); })
+			.def("set_gravity", [](Class &self, std::function<vector3(scalar)> profile) -> Class &
+				 { return self.set_gravity(std::move(profile)); })
+			.def("set_gravity", [](Class &self, std::function<vector3(vector3)> field) -> Class &
+				 { return self.set_gravity(std::move(field)); })
+			.def("set_gravity", [](Class &self, std::function<vector3(scalar)> profile, scalar interpolator_step) -> Class &
+				 { return self.set_gravity(std::move(profile), interpolator_step); })
+			.def("set_gravity", [](Class &self, std::function<vector3(vector3)> field, scalar interpolator_step) -> Class &
+				 { return self.set_gravity(std::move(field), interpolator_step); })
 			.def("gravity", &Class::gravity);
 		nb_class
 			.def("set_wind_velocity", nb::overload_cast<vector3>(&Class::set_wind_velocity))
-			.def("set_wind_velocity", [](Class &self, std::function<vector3(scalar)> profile) -> Class & { return self.set_wind_velocity(std::move(profile)); })
-			.def("set_wind_velocity", [](Class &self, std::function<vector3(vector3)> field) -> Class & { return self.set_wind_velocity(std::move(field)); })
-			.def("set_wind_velocity", [](Class &self, std::function<vector3(scalar)> profile, scalar interpolator_step) -> Class & { return self.set_wind_velocity(std::move(profile), interpolator_step); })
-			.def("set_wind_velocity", [](Class &self, std::function<vector3(vector3)> field, scalar interpolator_step) -> Class & { return self.set_wind_velocity(std::move(field), interpolator_step); })
+			.def("set_wind_velocity", [](Class &self, std::function<vector3(scalar)> profile) -> Class &
+				 { return self.set_wind_velocity(std::move(profile)); })
+			.def("set_wind_velocity", [](Class &self, std::function<vector3(vector3)> field) -> Class &
+				 { return self.set_wind_velocity(std::move(field)); })
+			.def("set_wind_velocity", [](Class &self, std::function<vector3(scalar)> profile, scalar interpolator_step) -> Class &
+				 { return self.set_wind_velocity(std::move(profile), interpolator_step); })
+			.def("set_wind_velocity", [](Class &self, std::function<vector3(vector3)> field, scalar interpolator_step) -> Class &
+				 { return self.set_wind_velocity(std::move(field), interpolator_step); })
 			.def("wind_velocity", &Class::wind_velocity);
 	}
 	{
@@ -205,63 +285,93 @@ NB_MODULE(_core, m)
 			.def("magnus_force_factor", &Class::magnus_force_factor);
 		nb_class
 			.def("set_drag_force_coefficient", nb::overload_cast<scalar>(&Class::set_drag_force_coefficient))
-			.def("set_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_drag_force_coefficient(std::move(curve)); })
-			.def("set_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_drag_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_drag_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_drag_force_coefficient(std::move(curve)); })
+			.def("set_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_drag_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_drag_force_coefficient(std::move(keys), std::move(values)); })
 			.def("drag_force_coefficient", &Class::drag_force_coefficient);
 		nb_class
 			.def("set_quadratic_yaw_drag_force_coefficient", nb::overload_cast<scalar>(&Class::set_quadratic_yaw_drag_force_coefficient))
-			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_quadratic_yaw_drag_force_coefficient(std::move(curve)); })
-			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_quadratic_yaw_drag_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_quadratic_yaw_drag_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_quadratic_yaw_drag_force_coefficient(std::move(curve)); })
+			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_quadratic_yaw_drag_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_quadratic_yaw_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_quadratic_yaw_drag_force_coefficient(std::move(keys), std::move(values)); })
 			.def("quadratic_yaw_drag_force_coefficient", &Class::quadratic_yaw_drag_force_coefficient);
 		nb_class
 			.def("set_quartic_yaw_drag_force_coefficient", nb::overload_cast<scalar>(&Class::set_quartic_yaw_drag_force_coefficient))
-			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_quartic_yaw_drag_force_coefficient(std::move(curve)); })
-			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_quartic_yaw_drag_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_quartic_yaw_drag_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_quartic_yaw_drag_force_coefficient(std::move(curve)); })
+			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_quartic_yaw_drag_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_quartic_yaw_drag_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_quartic_yaw_drag_force_coefficient(std::move(keys), std::move(values)); })
 			.def("quartic_yaw_drag_force_coefficient", &Class::quartic_yaw_drag_force_coefficient);
 		nb_class
 			.def("set_lift_force_coefficient", nb::overload_cast<scalar>(&Class::set_lift_force_coefficient))
-			.def("set_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_lift_force_coefficient(std::move(curve)); })
-			.def("set_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_lift_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_lift_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_lift_force_coefficient(std::move(curve)); })
+			.def("set_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_lift_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_lift_force_coefficient(std::move(keys), std::move(values)); })
 			.def("lift_force_coefficient", &Class::lift_force_coefficient);
 		nb_class
 			.def("set_cubic_lift_force_coefficient", nb::overload_cast<scalar>(&Class::set_cubic_lift_force_coefficient))
-			.def("set_cubic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_cubic_lift_force_coefficient(std::move(curve)); })
-			.def("set_cubic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_cubic_lift_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_cubic_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_cubic_lift_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_cubic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_cubic_lift_force_coefficient(std::move(curve)); })
+			.def("set_cubic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_cubic_lift_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_cubic_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_cubic_lift_force_coefficient(std::move(keys), std::move(values)); })
 			.def("cubic_lift_force_coefficient", &Class::cubic_lift_force_coefficient);
 		nb_class
 			.def("set_quintic_lift_force_coefficient", nb::overload_cast<scalar>(&Class::set_quintic_lift_force_coefficient))
-			.def("set_quintic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_quintic_lift_force_coefficient(std::move(curve)); })
-			.def("set_quintic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_quintic_lift_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_quintic_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_quintic_lift_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_quintic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_quintic_lift_force_coefficient(std::move(curve)); })
+			.def("set_quintic_lift_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_quintic_lift_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_quintic_lift_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_quintic_lift_force_coefficient(std::move(keys), std::move(values)); })
 			.def("quintic_lift_force_coefficient", &Class::quintic_lift_force_coefficient);
 		nb_class
 			.def("set_magnus_force_coefficient", nb::overload_cast<scalar>(&Class::set_magnus_force_coefficient))
-			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_magnus_force_coefficient(std::move(curve)); })
-			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_magnus_force_coefficient(std::move(curve), interpolator_step); })
-			.def("set_magnus_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_magnus_force_coefficient(std::move(keys), std::move(values)); })
+			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_magnus_force_coefficient(std::move(curve)); })
+			.def("set_magnus_force_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_magnus_force_coefficient(std::move(curve), interpolator_step); })
+			.def("set_magnus_force_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_magnus_force_coefficient(std::move(keys), std::move(values)); })
 			.def("magnus_force_coefficient", &Class::magnus_force_coefficient);
 		nb_class
 			.def("set_overturning_moment_coefficient", nb::overload_cast<scalar>(&Class::set_overturning_moment_coefficient))
-			.def("set_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_overturning_moment_coefficient(std::move(curve)); })
-			.def("set_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_overturning_moment_coefficient(std::move(curve), interpolator_step); })
-			.def("set_overturning_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_overturning_moment_coefficient(std::move(keys), std::move(values)); })
+			.def("set_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_overturning_moment_coefficient(std::move(curve)); })
+			.def("set_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_overturning_moment_coefficient(std::move(curve), interpolator_step); })
+			.def("set_overturning_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_overturning_moment_coefficient(std::move(keys), std::move(values)); })
 			.def("overturning_moment_coefficient", &Class::overturning_moment_coefficient);
 		nb_class
 			.def("set_cubic_overturning_moment_coefficient", nb::overload_cast<scalar>(&Class::set_cubic_overturning_moment_coefficient))
-			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_cubic_overturning_moment_coefficient(std::move(curve)); })
-			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_cubic_overturning_moment_coefficient(std::move(curve), interpolator_step); })
-			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_cubic_overturning_moment_coefficient(std::move(keys), std::move(values)); })
+			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_cubic_overturning_moment_coefficient(std::move(curve)); })
+			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_cubic_overturning_moment_coefficient(std::move(curve), interpolator_step); })
+			.def("set_cubic_overturning_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_cubic_overturning_moment_coefficient(std::move(keys), std::move(values)); })
 			.def("cubic_overturning_moment_coefficient", &Class::cubic_overturning_moment_coefficient);
 		nb_class
 			.def("set_spin_damping_moment_coefficient", nb::overload_cast<scalar>(&Class::set_spin_damping_moment_coefficient))
-			.def("set_spin_damping_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class & { return self.set_spin_damping_moment_coefficient(std::move(curve)); })
-			.def("set_spin_damping_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class & { return self.set_spin_damping_moment_coefficient(std::move(curve), interpolator_step); })
-			.def("set_spin_damping_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class & { return self.set_spin_damping_moment_coefficient(std::move(keys), std::move(values)); })
+			.def("set_spin_damping_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve) -> Class &
+				 { return self.set_spin_damping_moment_coefficient(std::move(curve)); })
+			.def("set_spin_damping_moment_coefficient", [](Class &self, std::function<scalar(scalar)> curve, scalar interpolator_step) -> Class &
+				 { return self.set_spin_damping_moment_coefficient(std::move(curve), interpolator_step); })
+			.def("set_spin_damping_moment_coefficient", [](Class &self, std::vector<scalar> keys, std::vector<scalar> values) -> Class &
+				 { return self.set_spin_damping_moment_coefficient(std::move(keys), std::move(values)); })
 			.def("spin_damping_moment_coefficient", &Class::spin_damping_moment_coefficient);
 	}
 #pragma endregion "CODEGEN BIND"

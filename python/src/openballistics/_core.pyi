@@ -12,18 +12,50 @@ class Priority(enum.Enum):
     latest = 1
 
 class Angles:
-    def __init__(self, azimuth: float, elevation: float) -> None: ...
+    """
+    Represents a 3D direction using azimuth and elevation angles.
+
+    Angles are stored in radians. Azimuth is measured in the XY plane from +X toward +Y, and elevation is measured from the XY plane toward +Z.
+    """
+
+    def __init__(self, azimuth: float, elevation: float) -> None:
+        """
+        Creates an angle pair from azimuth and elevation values.
+
+        Args:
+            azimuth: Horizontal angle in the XY plane from +X toward +Y [rad].
+            elevation: Vertical angle from the XY plane toward +Z [rad].
+        """
 
     @property
-    def azimuth(self) -> float: ...
+    def azimuth(self) -> float:
+        """Horizontal angle in the XY plane from +X toward +Y [rad]."""
 
     @property
-    def elevation(self) -> float: ...
+    def elevation(self) -> float:
+        """Vertical angle from the XY plane toward +Z [rad]."""
 
-    def to_direction(self) -> Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]: ...
+    def to_direction(self) -> Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]:
+        """
+        Converts the angle pair to a unit direction vector.
+
+        Returns:
+            3D unit direction vector represented by the stored angles.
+        """
 
     @staticmethod
-    def from_direction(arg: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')], /) -> Angles: ...
+    def from_direction(direction: Annotated[NDArray[numpy.float64], dict(shape=(3), order='C')]) -> Angles:
+        """
+        Computes azimuth and elevation from a direction vector.
+
+        The input direction is normalized before extracting the angles.
+
+        Args:
+            direction: Non-zero direction vector.
+
+        Returns:
+            Angles representing the normalized direction.
+        """
 
 class MPMRK4:
     def __init__(self) -> None: ...

@@ -1,5 +1,5 @@
-#ifndef OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_4_HPP
-#define OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_4_HPP
+#ifndef OPENBALLISTICS_INTEGRATORS_RK4_HPP
+#define OPENBALLISTICS_INTEGRATORS_RK4_HPP
 
 #include "../types.hpp"
 #include <utility>
@@ -8,7 +8,7 @@
 
 namespace openballistics::integrators
 {
-    class runge_kutta_4
+    class rk4
     {
     private:
         template <typename System, typename State>
@@ -122,7 +122,7 @@ namespace openballistics::integrators
         }
 
     public:
-        runge_kutta_4()
+        rk4()
         {
 #pragma region "CODEGEN INTEGRATOR-RK4-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			set_step(1e-3);
@@ -134,7 +134,7 @@ namespace openballistics::integrators
 		/// @brief Sets the `step`
 		/// @param value Constant value.
 		/// @return Reference to the current object.
-		runge_kutta_4 &set_step(const scalar value)
+		rk4 &set_step(const scalar value)
 		{
 			m_step_constant = value;
 			return *this;
@@ -157,4 +157,4 @@ namespace openballistics::integrators
     };
 }
 
-#endif // OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_4_HPP
+#endif // OPENBALLISTICS_INTEGRATORS_RK4_HPP

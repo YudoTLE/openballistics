@@ -1,5 +1,5 @@
-#ifndef OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_DORMAND_PRINCE_5_HPP
-#define OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_DORMAND_PRINCE_5_HPP
+#ifndef OPENBALLISTICS_INTEGRATORS_RK45_HPP
+#define OPENBALLISTICS_INTEGRATORS_RK45_HPP
 
 #include "../types.hpp"
 #include <utility>
@@ -9,7 +9,7 @@
 
 namespace openballistics::integrators
 {
-    class runge_kutta_dormand_prince_5
+    class rk45
     {
     private:
         static constexpr scalar c2 = 1.0 / 5.0;
@@ -258,7 +258,7 @@ namespace openballistics::integrators
         }
 
     public:
-        runge_kutta_dormand_prince_5()
+        rk45()
         {
 #pragma region "CODEGEN INTEGRATOR-RK45-DEF" // AUTO-GENERATED - DO NOT EDIT MANUALLY
 			set_absolute_tolerance(1e-6);
@@ -273,7 +273,7 @@ namespace openballistics::integrators
 		/// @brief Sets the `absolute_tolerance`
 		/// @param value Constant value.
 		/// @return Reference to the current object.
-		runge_kutta_dormand_prince_5 &set_absolute_tolerance(const scalar value)
+		rk45 &set_absolute_tolerance(const scalar value)
 		{
 			m_absolute_tolerance_constant = value;
 			return *this;
@@ -282,7 +282,7 @@ namespace openballistics::integrators
 		/// @brief Sets the `relative_tolerance`
 		/// @param value Constant value.
 		/// @return Reference to the current object.
-		runge_kutta_dormand_prince_5 &set_relative_tolerance(const scalar value)
+		rk45 &set_relative_tolerance(const scalar value)
 		{
 			m_relative_tolerance_constant = value;
 			return *this;
@@ -291,7 +291,7 @@ namespace openballistics::integrators
 		/// @brief Sets the `max_step`
 		/// @param value Constant value.
 		/// @return Reference to the current object.
-		runge_kutta_dormand_prince_5 &set_max_step(const scalar value)
+		rk45 &set_max_step(const scalar value)
 		{
 			m_max_step_constant = value;
 			return *this;
@@ -300,7 +300,7 @@ namespace openballistics::integrators
 		/// @brief Sets the `first_step`
 		/// @param value Constant value.
 		/// @return Reference to the current object.
-		runge_kutta_dormand_prince_5 &set_first_step(const scalar value)
+		rk45 &set_first_step(const scalar value)
 		{
 			m_first_step_constant = value;
 			return *this;
@@ -350,4 +350,4 @@ namespace openballistics::integrators
     };
 }
 
-#endif // OPENBALLISTICS_INTEGRATORS_RUNGE_KUTTA_DORMAND_PRINCE_5_HPP
+#endif // OPENBALLISTICS_INTEGRATORS_RK45_HPP

@@ -35,9 +35,9 @@ NB_MODULE(_core, m)
 		using Class = ballistics<models::modified_point_mass, integrators::rk4>;
 		auto nb_class = nb::class_<Class>(m, "MPMRK4").def(nb::init<>());
 		nb_class
-			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
-			.def_rw("projectile", &Class::projectile);
+			.def_rw("projectile", &Class::projectile)
+			.def_rw("integrator", &Class::integrator);
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
@@ -56,9 +56,9 @@ NB_MODULE(_core, m)
 		using Class = ballistics<models::modified_point_mass, integrators::rk45>;
 		auto nb_class = nb::class_<Class>(m, "MPMRK45").def(nb::init<>());
 		nb_class
-			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
-			.def_rw("projectile", &Class::projectile);
+			.def_rw("projectile", &Class::projectile)
+			.def_rw("integrator", &Class::integrator);
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
@@ -77,9 +77,9 @@ NB_MODULE(_core, m)
 		using Class = ballistics<models::point_mass, integrators::rk4>;
 		auto nb_class = nb::class_<Class>(m, "PMRK4").def(nb::init<>());
 		nb_class
-			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
-			.def_rw("projectile", &Class::projectile);
+			.def_rw("projectile", &Class::projectile)
+			.def_rw("integrator", &Class::integrator);
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))
@@ -98,9 +98,9 @@ NB_MODULE(_core, m)
 		using Class = ballistics<models::point_mass, integrators::rk45>;
 		auto nb_class = nb::class_<Class>(m, "PMRK45").def(nb::init<>());
 		nb_class
-			.def_rw("integrator", &Class::integrator)
 			.def_rw("environment", &Class::environment)
-			.def_rw("projectile", &Class::projectile);
+			.def_rw("projectile", &Class::projectile)
+			.def_rw("integrator", &Class::integrator);
 		nb_class
 			.def("compute_final_position", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar>(&Class::compute_final_position, nb::const_))
 			.def("compute_trajectory", nb::overload_cast<const vector3 &, const vector3 &, const vector3 &, scalar, scalar, scalar>(&Class::compute_trajectory, nb::const_))

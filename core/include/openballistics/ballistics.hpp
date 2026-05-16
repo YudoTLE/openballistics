@@ -48,9 +48,20 @@ namespace openballistics
         friend class api::detail::ballistics;
 
     public:
-        Integrator integrator;
         openballistics::environment environment;
         openballistics::projectile projectile;
+        Integrator integrator;
+
+    public:
+        ballistics(
+            openballistics::environment environment = {},
+            openballistics::projectile projectile = {},
+            Integrator integrator = {})
+            : environment(std::move(environment)),
+              projectile(std::move(projectile)),
+              integrator(std::move(integrator))
+        {
+        }
 
     private:
         [[nodiscard]] vector3 compute_final_position_impl(
